@@ -113,6 +113,32 @@ define([
             this.rerender(model);
         },
 
+        _onMultiselectableDoubleClick: function(cb, evt) {
+            var tr, rest = Array.prototype.slice.call(arguments, 2),
+                $tbody = this.$tbody,
+                tableOffset = $tbody.offset(),
+                tableSize = {
+                    height: $tbody.height(),
+                    width: $tbody.width()
+                },
+                insideTbody = function() {
+                    return (evt.pageX > tableOffset.left &&
+                            evt.pageX < (tableOffset.left + tableSize.width)) &&
+                           (evt.pageY > tableOffset.top &&
+                            evt.pageY < (tableOffset.top + tableSize.height));
+                },
+                trEl = function() {
+                    var $trs = $tbody.find('tr'),
+                        count = $trs.length,
+                        pct = (evt.pageY - tableOffset.top) / tableSize.height;
+                    return $trs.eq(Math.floor(pct * count))[0];
+                };
+            if (insideTbody()) {
+                var newEvt = $.Event(evt.type, {target: (tr = trEl())});
+                return cb.apply(tr, [newEvt].concat(rest));
+            }
+        },
+
         _onMultiselectableRowClick: function(evt) {
             var clickedModel = this._modelFromTr(evt.currentTarget);
             if (evt[mod] && clickedModel.get(this.get('selectedAttr'))) {
@@ -207,6 +233,21 @@ define([
         enable: function() {
             this.$el.removeClass('disabled');
             return this.propagate('enable');
+        },
+
+        on: function(evtName, delegate, callback) {
+            var self = this;
+            if (    /multi/i.test(self.get('selectable')) &&
+                    evtName === 'dblclick' &&
+                    delegate === 'tbody tr') {
+                self.on('dblclick', function() {
+                    var args = Array.prototype.slice.call(arguments, 0);
+                    self._onMultiselectableDoubleClick
+                        .apply(self, [callback].concat(args));
+                });
+            } else {
+                return self._super.apply(self, arguments);
+            }
         },
 
         rerender: function() {

@@ -1,6 +1,6 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 
-// things that are hard to test:
+// things that are hard to test (you'll want to manually test these):
 //  - correct placement of the spinner
 //  - double clicking multi-select rows
 
@@ -975,7 +975,7 @@ define([
 
     asyncTest('everything together', function() {
         setup({
-            appendTo: 'body',
+            appendTo: null,
             gridOptions: {
                 selectable: 'multi',
                 columnModelClass: ColumnModel.extend({
@@ -995,14 +995,16 @@ define([
                         MarblesColumn.extend({defaults: {name: 'enumeration_field'}})
                     ]
                 })
-            }
+            },
+            params: {limit: 100}
         }).then(function(g) {
-            g.on('dblclick', function(evt) {
-                var $el = evt.target.tagName.toLowerCase() === 'tr'?
-                    $(evt.target) : $(evt.target).closest('tr'),
-                    model = g._modelFromTr($el[0]);
+            var $viewport = $('<div class=viewport/>')
+                    .css({height: 400, overflow: 'auto'})
+                    .appendTo('body');
+            g.appendTo($viewport).on('dblclick', 'tbody tr', function(evt) {
+                var model = g._modelFromTr(evt.target);
                 if (model) {
-                    console.log('double click',model.get('name'));
+                    console.log('double click',model.get('text_field'));
                 } else {
                     console.log('double click -- no model');
                 }
