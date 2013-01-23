@@ -102,8 +102,8 @@ define([
             }, {}));
 
             var $header = this.$el.find('.header-wrapper'),
-                $rows = this.$el.find('.row-wrapper'),
-                $rowInnerWrapper = self.$rowInnerWrapper = this.$el.find('.row-inner-wrapper'),
+                $rows = this.$rowWrapper = this.$el.find('.row-wrapper'),
+                $rowInnerWrapper = this.$rowInnerWrapper = this.$el.find('.row-inner-wrapper'),
                 $rowTable = this.$el.find('.rows'),
                 scrollLoadDfd;
             //  - handle horizontal scroll
@@ -146,6 +146,32 @@ define([
                     scrollLoadDfd = collection.load().then(function(models) {});
                 }
             });
+            //  - keyboard navigation
+            this.$el.bind('keyup', 'tbody tr', function(evt) {
+                var selectModel, selectIndex,
+                    selected = self.selected(),
+                    models = self.get('models');
+
+                if (!selected || !self.$rowInnerWrapper.is(':visible')) {
+                    return;
+                }
+                if (evt.which === 13) {      //  - enter key
+                    self._trFromModel(selected).trigger('dblclick');
+                    console.log('trigger');
+                    return;
+                } else if (evt.which === 38) {             //  - up arrow
+                    selectIndex = models.indexOf(selected) - 1;
+                } else if (evt.which === 40) {      //  - down arrow
+                    selectIndex = models.indexOf(selected) + 1;
+                }
+                selectModel = models[selectIndex];
+                if (selectModel) {
+                    self.select(selectModel);
+                }
+            });
+            // this.el.onkeyup = function() {
+            //     console.log('onkeyup');
+            // };
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded

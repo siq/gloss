@@ -10,7 +10,7 @@
       </table>
     </div>
 
-    <div class=row-wrapper>
+    <div class=row-wrapper tabindex=-1>
       <div class=row-inner-wrapper><%/* semmantic markup ftw! */%>
         <table class=rows>
           <tbody></tbody>
