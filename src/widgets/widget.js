@@ -230,14 +230,15 @@ define([
             return this;
         },
 
-        propagate: function() {
-            if (this._childWidgets != null) {
-                var children = this._childWidgets, widget;
-                for (var i = 0, l = children.length; i < l; i++) {
-                    widget = children[i];
-                    widget.invoke.apply(widget, arguments);
+        propagate: function(method) {
+            var rest = Array.prototype.slice.call(arguments, 1);
+            _.each(registry.childWidgetsAndViews(this.node), function(child) {
+                if (_.isFunction(child[method])) {
+                    child[method].apply(child, rest);
+                } else {
+                    child.propagate.apply(child, [method].concat(rest));
                 }
-            }
+            });
             return this;
         },
 
