@@ -4,8 +4,9 @@ define([
     'vendor/t',
     'bedrock/class',
     'bedrock/assettable',
-    './widgets/widget'
-], function($, _, t, Class, asSettable, Widget) {
+    // './widgets/widget',
+    './widgets/registry'
+], function($, _, t, Class, asSettable, /*Widget,*/ Registry) {
     var viewCount = 0,
 
         // this is used strictly for debugging and internal purposes
@@ -13,12 +14,17 @@ define([
             return _.isNumber(which)? dbgview['v'+which] : dbgview[which];
         },
 
-        views = {},
+        registry = Registry.getInstance(),
+        views = registry.views,
+        // views = {},
 
-        isWidget = function(el) { return !!Widget.registry.get(el.id); },
-        toWidget = function(el) { return Widget.registry.get(el.id); },
+        // isWidget = function(el) { return !!Widget.registry.get(el.id); },
+        // toWidget = function(el) { return Widget.registry.get(el.id); },
+        isWidget = function(el) { return !!window.registry.get(el.id); },
+        toWidget = function(el) { return window.registry.get(el.id); },
         isView = function(el) { return !!el.getAttribute('view-name'); },
-        toView = function(el) { return views[el.getAttribute('view-name')]; },
+        // toView = function(el) { return views[el.getAttribute('view-name')]; },
+        toView = function(el) { return window.registry.views[el.getAttribute('view-name')]; },
 
         isPageEvent = function(eventName) {
             return (eventName.split('.')[0] in
@@ -184,14 +190,10 @@ define([
         propagate: function(method) {
             var rest = Array.prototype.slice.call(arguments, 1);
             _.each(this._childWidgetsAndViews(), function(child) {
-                if (child instanceof Widget) {
-                    child.invoke(method);
+                if (_.isFunction(child[method])) {
+                    child[method].apply(child, rest);
                 } else {
-                    if (_.isFunction(child[method])) {
-                        child[method].apply(child, rest);
-                    } else {
-                        child.propagate.apply(child, [method].concat(rest));
-                    }
+                    child.propagate.apply(child, [method].concat(rest));
                 }
             });
             return this;
@@ -272,6 +274,6 @@ define([
 
         return derivedClass;
     });
-
+    View.registry = window.registry = registry;
     return View;
 });
