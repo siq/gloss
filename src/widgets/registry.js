@@ -2,8 +2,9 @@ define([
     'vendor/jquery',
     'vendor/jquery-ui',
     'vendor/underscore',
+    'vendor/t',
     'bedrock/class'
-], function($, ui, _, Class) {
+], function($, ui, _, t, Class) {
     var isArray = _.isArray;
 
     var inBody = function($node) {
@@ -35,6 +36,33 @@ define([
                 widget._childWidgets = [];
             }
             widget.registry = this;
+        },
+
+        //  - get an elements child widgets and views from the registery
+        childWidgetsAndViews: function(el) {
+            var self = this,
+                children = [],
+                traverse = function(el) {
+                    var i, l, child, childNodes = el.childNodes, result = [];
+                    for (i = 0, l = childNodes.length; i < l; i++) {
+                        child = childNodes[i];
+                        if (child.nodeType === 1) {
+                            result.push({el: child});
+                        }
+                    }
+                    return result;
+                };
+            t.dfs(traverse(el), function(node) {
+                var id = node.el.id;
+                if (self.isWidget(node.el)) {
+                    children.push(self.toWidget(node.el));
+                } else if (self.isView(node.el)) {
+                    children.push(self.toView(node.el));
+                } else {
+                    node.children = traverse(node.el);
+                }
+            });
+            return children;
         },
 
         get: function(id) {
