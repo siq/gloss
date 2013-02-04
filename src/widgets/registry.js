@@ -244,6 +244,7 @@ define([
         getInstance: function () {
             if ( !instance ) {
                 instance = Registry();
+                window.registry = instance;
             }
             return instance;
         }

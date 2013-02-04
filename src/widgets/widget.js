@@ -460,6 +460,6 @@ define([
         };
     };
 
-    Widget.registry = window.registry = registry;
+    Widget.registry = registry;
     return Widget;
 });
