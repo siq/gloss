@@ -268,6 +268,6 @@ define([
 
         return derivedClass;
     });
-    View.registry = window.registry = registry;
+    View.registry = registry;
     return View;
 });
