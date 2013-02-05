@@ -14,7 +14,7 @@ define([
                     .appendTo(widget.node);
 
         widget.propagate('inc');
-        equal(count, 0);
+        equal(count, 1);
 
         asDynamicallyPropagated.call(MyWidget.prototype);
 
@@ -23,7 +23,7 @@ define([
                     .appendTo(widget2.node);
 
         widget2.propagate('inc');
-        equal(count, 1);
+        equal(count, 2);
     });
 
     start();
