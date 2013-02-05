@@ -29,8 +29,8 @@ define([
         return original;
     };
     
-    var registry = Registry.getInstance();
-    // var registry = Registry();
+    // var registry = Registry.getInstance();
+    var registry = Registry();
 
     $.fn.__append__ = $.fn.append;
     $.each(['after', 'append', 'before', 'prepend'], function(i, name) {

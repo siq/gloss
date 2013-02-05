@@ -235,19 +235,12 @@ define([
         }
     });
 
-    // var registry = Registry();
-    // return Registry;
     var instance;
-    return {
-        // Get the Singleton instance if one exists
-        // or create one if it doesn't
-        getInstance: function () {
-            if ( !instance ) {
-                instance = Registry();
-                window.registry = instance;
-            }
-            return instance;
+    return function () {
+        if ( !instance ) {
+            instance = Registry();
+            window.registry = instance;
         }
+        return instance;
     };
-
 });
