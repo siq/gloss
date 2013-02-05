@@ -184,5 +184,24 @@ define([
         equal(c.options.foo, 'bang', 'mixed-in options are overridden by base options');
     });
 
+    //  - Note that propagate only works on direct children not nested children
+    test('propagating hide works', function() {
+        var a, b, c, d;
+        a = Widget(['<div class=a>',
+                        '<div class=b></div>',
+                        '<div class=c>',
+                            '<div class=d></div>',
+                        '</div>',
+                    '</div>'].join(','));
+        b = Widget(a.$node.find('.b'));
+        c = Widget(a.$node.find('.c'));
+        d = Widget(a.$node.find('.d'));
+
+        a.propagate('hide');
+        equal(b.$node.hasClass('hidden'), true, 'widget `b` is hidden');
+        equal(c.$node.hasClass('hidden'), true, 'widget `c` is hidden');
+        equal(d.$node.hasClass('hidden'), false, "widget `d` is not hidden because it's nested");
+    });
+
     start();
 });
