@@ -3,12 +3,13 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     './../view',
+    './../widgets/registry',
     './../widgets/togglegroup',
     './../widgets/datepicker',
     './../widgets/textbox',
     './../widgets/checkbox',
     'tmpl!./propagation.mtpl'
-], function($, _, View, ToggleGroup, DatePicker, TextBox, CheckBox,
+], function($, _, View, Registry, ToggleGroup, DatePicker, TextBox, CheckBox,
     propagationTemplate) {
 
     test('instantiating a view', function() {
@@ -179,9 +180,10 @@ define([
 
     test('getting child widgets and views works', function() {
         var $el = $(propagationTemplate()),
+            registry = Registry(),
             widgets = widgetize($el),
             v = View({$el: $el}),
-            children = v._childWidgetsAndViews();
+            children = registry.childWidgetsAndViews($el[0]);
 
         console.log(children);
         ok(children[0] === widgets.created, 'datepicker included');
