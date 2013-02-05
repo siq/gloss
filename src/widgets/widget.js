@@ -29,7 +29,6 @@ define([
         return original;
     };
     
-    // var registry = Registry.getInstance();
     var registry = Registry();
 
     $.fn.__append__ = $.fn.append;
