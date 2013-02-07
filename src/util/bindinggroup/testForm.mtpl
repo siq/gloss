@@ -1,0 +1,39 @@
+<form class=myform>
+  <label data-for=id>ID:</label> <span data-bind=id></span>
+
+  <input data-bind=name placeholder="Name" />
+  <div class=messagelist data-for=name></div>
+
+  <input data-bind=required_field placeholder="you need to fill this out" />
+  <div class=messagelist data-for=required_field></div>
+
+  <label data-for=enumeration_field>choose a number</label>
+  <select data-bind=enumeration_field>
+    <option value=1>one</option>
+    <option value=2>two</option>
+    <option value=3>three</option>
+  </select>
+  <div class=messagelist data-for=enumeration_field></div>
+
+  <input type=number data-bind=default_field placeholder="how old are you"/>
+  <div class=messagelist data-for=default_field></div>
+
+  <input type=checkbox data-bind=boolean_field />
+  <label data-for=boolean_field>steal my credit card number</label>
+
+  <div data-for=composition.type class=togglegroup>
+    <button type=button value=attribute-filter>expression</button>
+    <button type=button value=datasource-list>datasource list</button>
+  </div>
+
+  <fieldset class=attribute-filter>
+    <textarea data-bind=composition.expression></textarea>
+    <div class=messagelist data-for=composition.expression></div>
+  </fieldset>
+
+  <fieldset class=datasource-list>
+    <label>Choose your datasources</label>
+    <div data-bind=composition.datasources class=powergrid></div>
+    <div class=messagelist data-for=composition.datasources></div>
+  </fieldset>
+</form>

@@ -5,7 +5,7 @@ define([
     'vendor/moment',
     'mesh/model',
     './../../widgets/widgetgroup',
-    './../binding',
+    './../oldbinding',
     'text!./testDataBindingAttribute.html',
     'text!./testWidgetGroup.html',
     'text!./testMixedBinding.html'
