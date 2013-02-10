@@ -2,16 +2,23 @@
   "name": "gloss",
   "description": "a Javascript UI framework",
   "contributors": [
-    "Aaron Stacy <astacy@storediq.com>",
-    "Jordan McCoy",
-    "Ralph Smith"
+    {
+      "name": "Aaron Stacy",
+      "email": "astacy@storediq.com"
+    },
+    {
+      "name": "Jordan McCoy"
+    },
+    {
+      "name": "Ralph Smith"
+    }
   ],
   "version": "1.0.108",
   "dependencies": {
-    "csi": "git+ssh://git@github.com:siq/csi.git",
-    "siq-vendor-js": "git+ssh://git@github.com:siq/siq-vendor-js.git",
-    "bedrockjs": "git+ssh://git@github.com:siq/bedrockjs.git",
-    "siq-mesh": "git+ssh://git@github.com:siq/mesh.git"
+    "csi": "git+ssh://git@github.com:siq/csi.git#release-7.2.1.0",
+    "siq-vendor-js": "git+ssh://git@github.com:siq/siq-vendor-js.git#release-7.2.1.0",
+    "bedrockjs": "git+ssh://git@github.com:siq/bedrockjs.git#release-7.2.1.0",
+    "siq-mesh": "git+ssh://git@github.com:siq/mesh.git#release-7.2.1.0"
   },
   "csi": {
     "name": "gloss",
@@ -37,5 +44,6 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
-  }
+  },
+  "gitHead": "ea55999d8a8992fb5a848a34ce2c77e281449f9d"
 }
