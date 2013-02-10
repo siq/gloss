@@ -2,11 +2,18 @@
   "name": "gloss",
   "description": "a Javascript UI framework",
   "contributors": [
-    "Aaron Stacy <astacy@storediq.com>",
-    "Jordan McCoy",
-    "Ralph Smith"
+    {
+      "name": "Aaron Stacy",
+      "email": "astacy@storediq.com"
+    },
+    {
+      "name": "Jordan McCoy"
+    },
+    {
+      "name": "Ralph Smith"
+    }
   ],
-  "version": "1.0.108",
+  "version": "1.0.109",
   "dependencies": {
     "csi": "git+ssh://git@github.com:siq/csi.git",
     "siq-vendor-js": "git+ssh://git@github.com:siq/siq-vendor-js.git",
@@ -37,5 +44,6 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
-  }
+  },
+  "gitHead": "ea55999d8a8992fb5a848a34ce2c77e281449f9d"
 }
