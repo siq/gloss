@@ -449,14 +449,16 @@ define([
         },
 
         show: function() {
-            var self = this;
+            var self = this, models;
             self._super.apply(this, arguments);
             this.spinner.instantiate();
             this._setScrollTop();
             // post render for columns
-            _.each(this.get('columnModel').columns, function(c) {
-                c._setThCellWidth();
-            });
+            if ((models = this.get('models')) && models.length) {
+                _.each(this.get('columnModel').columns, function(c) {
+                    c._setThCellWidth();
+                });
+            }
         },
 
         update: function(updated) {

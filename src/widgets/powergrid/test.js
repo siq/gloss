@@ -42,6 +42,13 @@ define([
         setup = utils.setup,
         trim = utils.trim;
 
+    function aboutEqual(a, b, msg, tolerance) {
+        var greater = a > b? a : b;
+        msg = msg == null? 'values are within ' + tolerance*100 + '%' : msg;
+        tolerance = tolerance || 0.02;
+        ok(Math.abs(a-b) / greater < tolerance, msg);
+    }
+
     asyncTest('everythings cool', function() {
         setup().then(function(g, options) {
             equal(g.get('models').length, options.params.limit);
@@ -646,6 +653,22 @@ define([
             } else {
                 ok(true, 'skipping this test for none webkit browsers');
             }
+            start();
+        });
+    });
+
+    asyncTest('showing after resize', function() {
+        setup({appendTo: 'body'}).then(function(g) {
+            var w, c = g.get('collection'), col = g.get('columnModel').columns[0];
+            col.set('width', 400);
+            g.del('collection');
+            Example.mockDelay(500);
+            g.hide();
+            g.show();
+            g.set('collection', Example.collection());
+            w = parseInt(col.el.style.width, 10);
+            ok(_.isNumber(w) && !_.isNaN(w), 'column header width is set to a number');
+            aboutEqual(w, 400, 'column header width is about 400px');
             start();
         });
     });
