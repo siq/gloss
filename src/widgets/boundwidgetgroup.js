@@ -108,7 +108,7 @@ define([
                     value[attr] = model.prop(field);
                 });
             } else if (isFunction(mapping)) {
-                value = mapping('getValue', model, name);
+                value = mapping('getValue', {model: model, name: name});
             } else if (isString(mapping)) {
                 value = model[mapping];
             } else {
@@ -227,7 +227,7 @@ define([
                     Class.nestedProp(modelIsh, field, value[attr]);
                 });
             } else if (isFunction(mapping)) {
-                modelIsh = mapping('toObject', name, value);
+                modelIsh = mapping('toObject', {name: name, value: value});
             } else if (isString(mapping)) {
                 Class.nestedProp(modelIsh, mapping, value);
             } else {

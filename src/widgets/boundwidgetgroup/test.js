@@ -115,5 +115,48 @@ define([
         }, 0);
     });
 
+    asyncTest('override mappings', function() {
+        var testValue = 'volume_id value',
+            testObject = {volume_id: testValue},
+            bwg = BoundWidgetGroup(template(), {
+                widgetize: true,
+                modelClass: TargetVolumeProfile,
+                bindings: [
+                    {widget: 'name', field: 'name'},
+                    {widget: 'volume_id', field: 'volume_id'}
+                ],
+                mappings: {
+                    // mapping('toObject', name, value);
+                    // mapping('getValue', model, name);
+                    volume_id: function(evt, opts) {
+                        if (evt === 'getValue') {
+                            ok(opts.hasOwnProperty('name'), 'getValue options include name');
+                            ok(opts.hasOwnProperty('model'), 'getValue options include model');
+                        } else if (evt === 'toObject') {
+                            ok(opts.hasOwnProperty('name'), 'toObject options include name');
+                            ok(opts.hasOwnProperty('value'), 'toObject options include value');
+                        }
+                        return (evt === 'getValue')? testValue : testObject;
+                    }
+                }
+            }),
+            model = bwg.getModel();
+
+        // mapping('getValue', {model: model, name: name});
+        var v = bwg.getModelValue('volume_id');
+        equal(v, testValue, 'volume_id is equal to the overridden value');
+        // mapping('toObject', {name: name, value: value});
+        var ov = bwg.toModelObject('volume_id');
+        equal(ov, testObject, 'volume_id is equal to the overridden value');
+
+        // getBoundValues honors mappings
+        // this is a bit of an awkward case if testObect did not contain a matching key
+        //      i.e. {test: testvalue} instead of {volume_id: testValue}
+        // then `getBoundValues would return `bv['volume_id'] === undefined`
+        var bv = bwg.getBoundValues();
+        equal(bv['volume_id'], testObject['volume_id'], 'boundValue volume_id is equal to the overridden value');
+        start();
+    });
+
     start();
 });
