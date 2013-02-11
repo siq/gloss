@@ -1,7 +1,7 @@
 <form class=myform>
   <label data-for=id>ID:</label> <span data-bind=id></span>
 
-  <input data-bind=name placeholder="Name" />
+  <input type=text data-bind=name placeholder="Name" />
   <div class=messagelist data-for=name></div>
 
   <input data-bind=required_field placeholder="you need to fill this out" />

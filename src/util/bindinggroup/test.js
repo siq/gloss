@@ -65,11 +65,15 @@ define([
             }
         });
     asyncTest('binding', function() {
-        var myForm = MyForm({model: NestedPolymorphicExample()}).appendTo('body');
+        var model,
+            myForm = MyForm({model: NestedPolymorphicExample()}).appendTo('body');
+
         ok(myForm);
-        window.m = myForm.get('model');
+        window.m = model = myForm.get('model');
         window.f = myForm;
         window.b = myForm.bindingGroup;
+
+        model.set({name: 'foo'});
         start();
     });
 

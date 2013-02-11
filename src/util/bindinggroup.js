@@ -16,8 +16,9 @@ define([
             this.set(options);
         },
         _autoInstantiateBindings: function() {
-            var self = this, root = self.get('$el')[0],
-                widgets = widgetize(self.get('$el'));
+            // var widgets = widgetize(self.get('$el')),
+            var widgets = this.get('widgets') || [],
+                self = this, root = self.get('$el')[0];
             t.dfs(root, function(el, parentEl, ctrl) {
                 var params, widget = _.find(widgets, function(w) {
                     return w.node === el? w : null;
@@ -51,6 +52,7 @@ define([
             });
         },
         update: function(changed) {
+            var model;
             if (changed.$el) {
                 this._autoInstantiateBindings();
             }
@@ -59,6 +61,12 @@ define([
                     if (_.indexOf(this.bindings, b) < 0) {
                         this.bindings.push(b);
                     }
+                });
+            }
+            if (changed.model) {
+                model = this.get('model');
+                _.each(this.get('bindings'), function(binding) {
+                    binding.set({model: model});
                 });
             }
         }
