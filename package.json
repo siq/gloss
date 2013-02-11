@@ -44,6 +44,5 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
-  },
-  "gitHead": "ea55999d8a8992fb5a848a34ce2c77e281449f9d"
+  }
 }
