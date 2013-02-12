@@ -623,7 +623,7 @@ define([
             if ($.browser.webkit) {
                 $container.show();
                 /* equal width of a grid that is now visible */
-                equal($header.width(), $rows.width(), 'header and row divs are the same width');
+                aboutEqual($header.width(), $rows.width(), 'header and row divs are the same width');
                 //  - scrollbars can mess this test up so check for equallity which should be true
                 //  - for webkit browsers. if it's not then add the scrollbar width which handles the
                 //  - none webkit case. At that point a failure is a failure
@@ -632,7 +632,7 @@ define([
                 if (headerTableWidth !== rowTableWidth) {
                     rowTableWidth += getScrollSizes().vertical;
                 }
-                equal(headerTableWidth, rowTableWidth, 'header and row tables are the same width');
+                aboutEqual(headerTableWidth, rowTableWidth, 'header and row tables are the same width');
             
                 $headerTable.find('thead th').each(function(i, el) {
                     var col = g.get('columnModel').columns[i],
@@ -647,7 +647,7 @@ define([
                     if (headerCellWidth !== rowCellWidth) {
                         rowCellWidth += Math.round(getScrollSizes().vertical / numberOfColumns);
                     }
-                    equal(rowCellWidth, headerCellWidth,
+                    aboutEqual(rowCellWidth, headerCellWidth,
                         'element width for row cell '+col.get('name')+' matches expected');
                 });
             } else {
@@ -666,6 +666,20 @@ define([
             g.hide();
             g.show();
             g.set('collection', Example.collection());
+            w = parseInt(col.el.style.width, 10);
+            ok(_.isNumber(w) && !_.isNaN(w), 'column header width is set to a number');
+            aboutEqual(w, 400, 'column header width is about 400px');
+            start();
+        });
+    });
+
+    asyncTest('resizing column with no data', function() {
+        setup().then(function(g) {
+            var w, col = g.get('columnModel').columns[0];
+            col.set('width', 400);
+            g.del('collection');
+            Example.mockDelay(500);
+            col.trigger('columnresize', {column: col, updated: 'width'});
             w = parseInt(col.el.style.width, 10);
             ok(_.isNumber(w) && !_.isNaN(w), 'column header width is set to a number');
             aboutEqual(w, 400, 'column header width is about 400px');

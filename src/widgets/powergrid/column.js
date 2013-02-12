@@ -8,6 +8,9 @@ define([
     'tmpl!./td.mtpl'
 ], function($, _, View, ResizeHandle, StyleUtils, thTemplate, tdTemplate) {
     var outerWidth = function($el, width) {
+        if (width === null || width === undefined) {
+            return;
+        }
         var minWidth = 10,
             actualWidth = width - _.reduce([
                 'margin-left', 'border-left-width', 'padding-left',
