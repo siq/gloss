@@ -8,14 +8,15 @@ define([
     'mesh/model',
     './../view',
     './ascollectionviewable',
+    './powergrid/askeyboardnavigatable',
     './powergrid/columnmodel',
     './spinner',
     './../util/sort',
     'tmpl!./powergrid/powergrid.mtpl',
     'tmpl!./powergrid/spinnerTr.mtpl',
     'css!./powergrid/powergrid.css'
-], function($, _, model, View, asCollectionViewable, ColumnModel, Spinner,
-    sort, template, loadingRowTmpl) {
+], function($, _, model, View, asCollectionViewable, asKeyboardNavigatable,
+    ColumnModel, Spinner, sort, template, loadingRowTmpl) {
 
     var EmptyColumnModel, PowerGrid,
         mod = /mac/i.test(navigator.userAgent)? 'metaKey' : 'ctrlKey';
@@ -26,6 +27,8 @@ define([
         defaults: {
             // could be true, false, or 'multi'
             selectable: false,
+            // true or false
+            keyboardNavigation: true,
 
             // things seem less buggy when we do mouseup as opposed to click
             selectableEvent: 'mouseup',
@@ -146,32 +149,6 @@ define([
                     scrollLoadDfd = collection.load().then(function(models) {});
                 }
             });
-            //  - keyboard navigation
-            this.$el.bind('keyup', 'tbody tr', function(evt) {
-                var selectModel, selectIndex,
-                    selected = self.selected(),
-                    models = self.get('models');
-
-                if (!selected || !self.$rowInnerWrapper.is(':visible')) {
-                    return;
-                }
-                if (evt.which === 13) {      //  - enter key
-                    self._trFromModel(selected).trigger('dblclick');
-                    console.log('trigger');
-                    return;
-                } else if (evt.which === 38) {             //  - up arrow
-                    selectIndex = models.indexOf(selected) - 1;
-                } else if (evt.which === 40) {      //  - down arrow
-                    selectIndex = models.indexOf(selected) + 1;
-                }
-                selectModel = models[selectIndex];
-                if (selectModel) {
-                    self.select(selectModel);
-                }
-            });
-            // this.el.onkeyup = function() {
-            //     console.log('onkeyup');
-            // };
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded
@@ -555,6 +532,7 @@ define([
     });
 
     asCollectionViewable.call(PowerGrid.prototype);
+    asKeyboardNavigatable.call(PowerGrid.prototype);
 
     return PowerGrid;
 });
