@@ -2,12 +2,15 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
+    'vendor/uuid',
+    'vendor/moment',
     'mesh/tests/nestedpolymorphicexample',
     './../../widgets/simpleview',
     './../widgetize',
     './../bindinggroup',
     'tmpl!./testForm.mtpl'
-], function($, _, NestedPolymorphicExample, SimpleView, widgetize, BindingGroup, testForm) {
+], function($, _, uuid, moment, NestedPolymorphicExample, SimpleView,
+    widgetize, BindingGroup, testForm) {
     var strings = {
             errors: {
                 invalid: 'There was an error',
@@ -28,14 +31,14 @@ define([
             template: testForm,
             _bindTypeChangeEvent: function() {
                 var self = this;
-                self.$el.on('change', '[data-for="composition.type"]', function() {
-                    var w = _.find(self.widgets, function(w) {
-                        return w.$node.is('[data-for="composition.type"]');
+                self.$el.on('change', '[data-bind="composition.type"]', function() {
+                    var widget = _.find(self.widgets, function(w) {
+                        return w.$node.is('[data-bind="composition.type"]');
                     });
-                    if (!w) {
+                    if (!widget) {
                         return;
                     }
-                    if (w.getValue() === 'attribute-filter') {
+                    if (widget.getValue() === 'attribute-filter') {
                         self.$el.find('.attribute-filter').removeClass('hidden');
                         self.$el.find('.datasource-list').addClass('hidden');
                     } else {
@@ -64,17 +67,45 @@ define([
                 }
             }
         });
-    asyncTest('binding', function() {
-        var model,
-            myForm = MyForm({model: NestedPolymorphicExample()}).appendTo('body');
 
-        ok(myForm);
-        window.m = model = myForm.get('model');
-        window.f = myForm;
-        window.b = myForm.bindingGroup;
-
-        model.set({name: 'foo'});
+    asyncTest('every binding has a prop', function() {
+        var model, myForm = MyForm({model: NestedPolymorphicExample()});
+        _.each(myForm.bindingGroup.bindings, function(binding) {
+            var name =  binding.get('prop')?    binding.get('prop') :
+                        binding.has('widget')?  binding.get('widget').node.outerHTML :
+                        binding.has('$el')?     binding.get('$el')[0].outerHTML : '';
+            ok(binding.get('prop') != null, 'binding has prop for ' + name);
+        });
         start();
+    });
+
+    asyncTest('binding', function() {
+        var initialValues,
+            myForm = MyForm().appendTo('body'),
+            m = NestedPolymorphicExample();
+
+        m.set(initialValues = {
+            id: uuid(),
+            name: 'foo',
+            required_field: 'bar',
+            enumeration_field: 2,
+            default_field: 13,
+            boolean_field: true,
+            'composition.type': 'attribute-filter',
+            'composition.expression': 'slower than molasses in january',
+            date_field: moment('2013-02-14')._d
+        }, {validate: true}).then(function() {
+            myForm.set({model: m});
+            ok(myForm);
+            window.m = myForm.get('model');
+            window.f = myForm;
+            window.b = myForm.bindingGroup;
+            start();
+        }, function(c, e) {
+            ok(false, 'initial set should have worked' +
+                JSON.stringify(e.serialize(), null, '  '));
+            start();
+        });
     });
 
     start();

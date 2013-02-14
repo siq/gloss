@@ -27,14 +27,14 @@ define([
             this._setValueFromModel();
         },
         _onUIChange: function() {
-            var model, prop = this.get('prop'),
-                value = this.has('widget') && this.get('widget').getValue();
-            if (value && (model = this.get('model'))) {
+            var model, value, widget, self = this, prop = self.get('prop');
+            if ((widget = self.get('widget')) && (model = self.get('model'))) {
+                value = widget.getValue();
                 model.set(prop, value, {validate: true})
                     .fail(function(changes, errors) {
                         var error = errors.forField(prop);
                         if (error) {
-                            this._handleSetFailure(prop, error);
+                            self._handleSetFailure(prop, error);
                         }
                     });
             }
@@ -80,22 +80,18 @@ define([
             }
 
             if (bindPropChange) {
+                this._setValueFromModel();
                 this.get('model').on('change', this._onPropChange);
             }
             if (bindUIChange) {
                 if (this.has('widget')) {
-                    this.get('widget')
-                        .off('change', this._onUIChange)
-                        .on('change', this._onUIChange);
+                    this.get('widget').on('change', this._onUIChange);
                 }
             }
         }
     });
 
-    asSettable.call(Binding.prototype, {
-        prop: null,
-        onChange: 'update'
-    });
+    asSettable.call(Binding.prototype, {onChange: 'update'});
 
     return Binding;
 });

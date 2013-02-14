@@ -65,17 +65,14 @@ define([
             }
             if (changed.model) {
                 model = this.get('model');
-                _.each(this.get('bindings'), function(binding) {
+                _.each(this.bindings, function(binding) {
                     binding.set({model: model});
                 });
             }
         }
     });
 
-    asSettable.call(BindingGroup.prototype, {
-        prop: null,
-        onChange: 'update'
-    });
+    asSettable.call(BindingGroup.prototype, {onChange: 'update'});
 
     return BindingGroup;
 });
