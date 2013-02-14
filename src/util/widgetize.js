@@ -77,7 +77,7 @@ define([
                 value = split[1],
                 widget = _.find(widgets, function(w) {
                     return  name === w.$node.attr('name') ||
-                            name === w.$node.attr('data-for');
+                            name === w.$node.attr('data-bind');
                 });
             if (widget) {
                 if (value != null) {
