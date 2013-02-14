@@ -36,6 +36,17 @@ define([
             if (!this.get('keyboardNavigation')) {
                 return;
             }
+            //  - We don't want the page to scroll when were trying to navigate
+            //  - with the keyboard so we're going to prevent that here.
+            var keys = [38,40];
+            this.$el.bind('keydown', 'tbody tr', function(evt) {
+                var key = evt.which;
+                if(_.contains(keys, key)) {
+                    evt.preventDefault();
+                    return false;
+                }
+                return true;
+            });
             this.$el.bind('keyup', 'tbody tr', function(evt) {
                 var selectModel, selectIndex,
                     selected = self.selected(),
@@ -61,6 +72,7 @@ define([
                 selectModel = models[selectIndex];
                 if (selectModel) {
                     self.select(selectModel);
+                    self._trFromModel(selectModel).focus();
                     self.$rowInnerWrapper.scrollTop(scrollTop);
                 }
             });
