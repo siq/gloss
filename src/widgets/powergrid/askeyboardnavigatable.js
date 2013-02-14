@@ -72,7 +72,7 @@ define([
                 selectModel = models[selectIndex];
                 if (selectModel) {
                     self.select(selectModel);
-                    self._trFromModel(selectModel).focus();
+                    // self._trFromModel(selectModel).focus();
                     self.$rowInnerWrapper.scrollTop(scrollTop);
                 }
             });
