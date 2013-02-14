@@ -59,7 +59,6 @@ define([
                 }
                 if (evt.which === 13) {      //  - enter key
                     self._trFromModel(selected).trigger('dblclick');
-                    console.log('trigger');
                     return;
                 } else if (evt.which === 38) {             //  - up arrow
                     selectIndex = models.indexOf(selected) - 1;
