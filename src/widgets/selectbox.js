@@ -23,8 +23,10 @@ define([
             width: null
         },
         create: function() {
-            var self = this, options = self.options, $replacement, disabled;
+            var self = this, options = self.options, $replacement, disabled, num;
             this._super();
+
+            num = this.$node.attr('data-type') === 'number'? true : false;
 
             self.entry = null;
             self.opened = false;
@@ -35,7 +37,7 @@ define([
                         entries = options.entries = options.entries || [];
                     entries.push({
                         content: $el.text(),
-                        value: $el.val()
+                        value: num? +$el.val() : $el.val()
                     });
                     if ($el.is(':selected')) {
                         self.entry = _.last(entries);
@@ -49,6 +51,7 @@ define([
                 self.$node.replaceWith($replacement = $('<div></div>'));
                 $replacement
                     .attr('name', self.$node.attr('name'))
+                    .attr('data-bind', self.$node.attr('data-bind'))
                     .attr('id', self.$node.attr('id'));
                 self.node = (self.$node = $replacement)[0];
             } else {

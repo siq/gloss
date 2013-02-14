@@ -7,9 +7,10 @@ define([
     './../../test/api/v1/targetvolume',
     'text!./../../test/api/v1/test/fixtures/targetvolume.json',
     'text!./selectbox.html',
-    'text!./disabledselectbox.html'
+    'text!./disabledselectbox.html',
+    'text!./numeric.html'
 ], function($, SelectBox, Form, Mock, TargetVolume, targetvolume_json, html,
-    disabledhtml) {
+    disabledhtml, numericHtml) {
 
     module("Select Box");
 
@@ -114,6 +115,19 @@ define([
         var sb = SelectBox($(disabledhtml).appendTo('#qunit-fixture'));
         ok(sb.getState('disabled'), 'selectbox widget is disabled');
         start();
+    });
+
+    test('data-type attribute set to number', function() {
+        var $h = $(numericHtml),
+            numeric = SelectBox($h.find('.numeric')),
+            textual = SelectBox($h.find('.textual'));
+
+        equal(numeric.getValue(), 1);
+        equal(textual.getValue(), '1');
+        numeric.setValue(2);
+        textual.setValue('2');
+        equal(numeric.getValue(), 2);
+        equal(textual.getValue(), '2');
     });
 
     start();
