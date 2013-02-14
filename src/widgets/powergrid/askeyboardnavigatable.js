@@ -51,7 +51,8 @@ define([
                 var selectModel, selectIndex,
                     selected = self.selected(),
                     models = self.get('models'),
-                    scrollTop = 0;
+                    scrollTop = 0,
+                    trHeight = self.$rowInnerWrapper.find('tr').first().height();
 
                 if (!selected || !self.$rowInnerWrapper.is(':visible')) {
                     return;
@@ -62,23 +63,21 @@ define([
                     return;
                 } else if (evt.which === 38) {             //  - up arrow
                     selectIndex = models.indexOf(selected) - 1;
-                    scrollTop = self.$rowInnerWrapper.scrollTop() -
-                                    self.$rowInnerWrapper.find('tr').first().height();
+                    scrollTop = self.$rowInnerWrapper.scrollTop() - trHeight;
                 } else if (evt.which === 40) {      //  - down arrow
                     selectIndex = models.indexOf(selected) + 1;
-                    scrollTop = self.$rowInnerWrapper.scrollTop() +
-                                    self.$rowInnerWrapper.find('tr').first().height();
+                    scrollTop = self.$rowInnerWrapper.scrollTop() + trHeight;
                 }
                 selectModel = models[selectIndex];
                 if (selectModel) {
                     self.select(selectModel);
-                    // self._trFromModel(selectModel).focus();
-                    self.$rowInnerWrapper.scrollTop(scrollTop);
+                    var top = self._trFromModel(selectModel).position().top,
+                        gridHeight = self.$rowInnerWrapper.height();
+                    if (top > gridHeight || top < trHeight) {
+                        self.$rowInnerWrapper.scrollTop(scrollTop);
+                    }
                 }
             });
-            // this.el.onkeyup = function() {
-            //     console.log('onkeyup');
-            // };
         };
 
         if(!this.afterInit) {
