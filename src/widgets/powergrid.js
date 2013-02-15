@@ -8,14 +8,13 @@ define([
     'mesh/model',
     './../view',
     './ascollectionviewable',
-    './powergrid/askeyboardnavigatable',
     './powergrid/columnmodel',
     './spinner',
     './../util/sort',
     'tmpl!./powergrid/powergrid.mtpl',
     'tmpl!./powergrid/spinnerTr.mtpl',
     'css!./powergrid/powergrid.css'
-], function($, _, model, View, asCollectionViewable, asKeyboardNavigatable,
+], function($, _, model, View, asCollectionViewable,
     ColumnModel, Spinner, sort, template, loadingRowTmpl) {
 
     var EmptyColumnModel, PowerGrid,
