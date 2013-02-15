@@ -8,7 +8,7 @@
   <div class=messagelist data-for=required_field></div>
 
   <label data-for=enumeration_field>choose a number</label>
-  <select data-bind=enumeration_feeld data-type=number>
+  <select data-bind=enumeration_field data-type=number>
     <option value=1>one</option>
     <option value=2>two</option>
     <option value=3>three</option>

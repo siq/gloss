@@ -79,6 +79,27 @@ define([
         start();
     });
 
+    function modelAndUiEqual(bindingGroup, values, exclusions) {
+        var checked = [];
+        _.each(values, function(val, key) {
+            var w, $el,
+                binding = _.find(bindingGroup.bindings, function(binding) {
+                    return binding.get('prop') === key;
+                }),
+                prop = binding && binding.get('prop');
+            equal(bindingGroup.get('model').get(key), val, 'model ' + key);
+            if (binding && (w = binding.get('widget'))) {
+                equal(w.getValue(), val, 'widget ' + prop);
+                checked.push(prop);
+            } else if (binding && ($el = binding.get('$el'))) {
+                equal($el.text(), val, '$el ' + prop);
+                checked.push(prop);
+            }
+        });
+        deepEqual(checked.concat(exclusions || []), _.keys(values),
+                'checked UI for all values');
+    }
+
     asyncTest('binding', function() {
         var initialValues,
             myForm = MyForm().appendTo('body'),
@@ -96,10 +117,7 @@ define([
             date_field: moment('2013-02-14')._d
         }, {validate: true}).then(function() {
             myForm.set({model: m});
-            ok(myForm);
-            window.m = myForm.get('model');
-            window.f = myForm;
-            window.b = myForm.bindingGroup;
+            modelAndUiEqual(myForm.bindingGroup, initialValues);
             start();
         }, function(c, e) {
             ok(false, 'initial set should have worked' +
