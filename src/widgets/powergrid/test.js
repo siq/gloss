@@ -908,6 +908,108 @@ define([
         });
     });
 
+    module('keyboard navigation');
+
+    asyncTest('pressing the up/down key selects the next row', function() {
+        setup({
+            gridOptions: {selectable: true},
+            params: {limit: 10}
+        }).then(function(g, options) {
+            var models = g.get('models'),
+                upKey = 38, downKey = 40,
+                e = jQuery.Event('keyup'),
+                $rowWrapper = g.$el.find('.row-wrapper'); // key event happen on the row-wrapper el
+
+            // no models selected
+            equal(g.selected(), undefined, 'no models selected');
+            g.select(models[5]);
+            equal(g.selected(), models[5], 'model 5 is selected');
+
+            e.which = upKey;
+            $rowWrapper.trigger(e);
+            setTimeout(function() {
+                equal(g.selected(), models[4], 'model 4 is selected');
+                e.which = downKey;
+                $rowWrapper.trigger(e);
+                setTimeout(function() {
+                    equal(g.selected(), models[5], 'model 5 is selected');
+                    start();
+                }, 0);
+            }, 0);
+        });
+    });
+
+    asyncTest('single row selected in multi-select mode', function() {
+        setup({
+            gridOptions: {selectable: 'multi'},
+            params: {limit: 10}
+        }).then(function(g, options) {
+            var models = g.get('models'),
+                upKey = 38, downKey = 40,
+                e = jQuery.Event('keyup'),
+                $rowWrapper = g.$el.find('.row-wrapper'); // key event happens on the row-wrapper el
+
+            // no models selected
+            equal(g.selected().length, 0, 'no models selected');
+            g.select(models[5]);
+            equal(g.selected()[0], models[5], 'model 5 is selected');
+
+            e.which = upKey;
+            $rowWrapper.trigger(e);
+            setTimeout(function() {
+                equal(g.selected()[0], models[4], 'model 4 is selected');
+                e.which = downKey;
+                $rowWrapper.trigger(e);
+                setTimeout(function() {
+                    equal(g.selected()[0], models[5], 'model 5 is selected');
+                    start();
+                }, 0);
+            }, 0);
+        });
+    });
+
+    asyncTest('mutiple rows selected in multi-select mode', function() {
+        setup({
+            gridOptions: {selectable: 'multi'},
+            params: {limit: 10}
+        }).then(function(g, options) {
+            var models = g.get('models'),
+                upKey = 38, downKey = 40, selected,
+                e = jQuery.Event('keyup'),
+                $rowWrapper = g.$el.find('.row-wrapper'); // key event happens on the row-wrapper el
+
+            // no models selected
+            equal(g.selected().length, 0, 'no models selected');
+            g.select(models[4]);
+            g.select(models[5], {dontUnselectOthers: true});
+            g.select(models[6], {dontUnselectOthers: true});
+            selected = g.selected();
+            ok(_.contains(selected, models[4]), 'model 4 is selected');
+            ok(_.contains(selected, models[5]), 'model 5 is selected');
+            ok(_.contains(selected, models[6]), 'model 6 is selected');
+
+            e.which = upKey;
+            $rowWrapper.trigger(e);
+            setTimeout(function() {
+                selected = g.selected();
+                equal(selected.length, 3, 'three models are still selected');
+                ok(_.contains(selected, models[4]), 'model 4 is selected');
+                ok(_.contains(selected, models[5]), 'model 5 is selected');
+                ok(_.contains(selected, models[6]), 'model 6 is selected');
+                e.which = downKey;
+                $rowWrapper.trigger(e);
+                setTimeout(function() {
+                    selected = g.selected();
+                    equal(selected.length, 3, 'three models are still selected');
+                    ok(_.contains(selected, models[4]), 'model 4 is selected');
+                    ok(_.contains(selected, models[5]), 'model 5 is selected');
+                    ok(_.contains(selected, models[6]), 'model 6 is selected');
+                    start();
+                }, 0);
+            }, 0);
+        });
+    });
+
     module('miscellaneous');
 
     asyncTest('bottom scroll bar not visible when vertical scrollbar appears', function() {
@@ -931,39 +1033,6 @@ define([
             ok(rowScrollWidth === rowWidth, 'horizontal scrollbar is not visible');
 
             start();
-        });
-    });
-
-    asyncTest('pressing the up/down key selects the next row', function() {
-        setup({
-            gridOptions: {selectable: true},
-            params: {limit: 10}
-        }).then(function(g, options) {
-            var models = g.get('models'),
-                upKey = 38, downKey = 40,
-                e = jQuery.Event('keyup'),
-                $rowWrapper = g.$el.find('.row-wrapper'); // key event happen on the row-wrapper el
-
-            g.$el.height(400);
-            // rerender so the height and width changes are pickued up
-            g.rerender();
-
-            // no models selected
-            equal(g.selected(), undefined, 'no models selected');
-            g.select(models[5]);
-            equal(g.selected(), models[5], 'model 5 is selected');
-
-            e.which = upKey;
-            $rowWrapper.trigger(e);
-            setTimeout(function() {
-                equal(g.selected(), models[4], 'model 4 is selected');
-                e.which = downKey;
-                $rowWrapper.trigger(e);
-                setTimeout(function() {
-                    equal(g.selected(), models[5], 'model 5 is selected');
-                    start();
-                }, 0);
-            }, 0);
         });
     });
 
