@@ -934,6 +934,39 @@ define([
         });
     });
 
+    asyncTest('pressing the up/down key selects the next row', function() {
+        setup({
+            gridOptions: {selectable: true},
+            params: {limit: 10}
+        }).then(function(g, options) {
+            var models = g.get('models'),
+                upKey = 38, downKey = 40,
+                e = jQuery.Event('keyup'),
+                $rowWrapper = g.$el.find('.row-wrapper'); // key event happen on the row-wrapper el
+
+            g.$el.height(400);
+            // rerender so the height and width changes are pickued up
+            g.rerender();
+
+            // no models selected
+            equal(g.selected(), undefined, 'no models selected');
+            g.select(models[5]);
+            equal(g.selected(), models[5], 'model 5 is selected');
+
+            e.which = upKey;
+            $rowWrapper.trigger(e);
+            setTimeout(function() {
+                equal(g.selected(), models[4], 'model 4 is selected');
+                e.which = downKey;
+                $rowWrapper.trigger(e);
+                setTimeout(function() {
+                    equal(g.selected(), models[5], 'model 5 is selected');
+                    start();
+                }, 0);
+            }, 0);
+        });
+    });
+
     module('all the marbles');
 
     var MarblesColumn = Column.extend({

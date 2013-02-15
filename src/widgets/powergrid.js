@@ -154,11 +154,12 @@ define([
         },
 
         _bindKeyboardNavigation: function() {
-            var self = this;
+            var self = this,
+                up = 38, down = 40, enter = 13;
 
             //  - We don't want the page to scroll when were trying to navigate
             //  - with the keyboard so we're going to prevent that here.
-            var keys = [38,40];
+            var keys = [up, down];
             this.$el.bind('keydown', 'tbody tr', function(evt) {
                 var key = evt.which;
                 if(_.contains(keys, key)) {
@@ -172,15 +173,20 @@ define([
                     selected = self.selected(),
                     models = self.get('models');
 
-                if (!selected || !self.$rowInnerWrapper.is(':visible')) {
+                //  - if we're doing multi-select and only one item is selected were good
+                if (selected instanceof Array) {
+                    selected = (selected.length === 1)? selected[0] : undefined;
+                }
+                if (!selected || !self.$rowInnerWrapper.is(':visible') ||
+                    (selected instanceof Array && selected.length > 1)) { // don't do key navigation on mutilselect
                     return;
                 }
-                if (evt.which === 13) {      //  - enter key
+                if (evt.which === enter) {      //  - enter key
                     self._trFromModel(selected).trigger('dblclick');
                     return;
-                } else if (evt.which === 38) {             //  - up arrow
+                } else if (evt.which === up) {             //  - up arrow
                     selectIndex = models.indexOf(selected) - 1;
-                } else if (evt.which === 40) {      //  - down arrow
+                } else if (evt.which === down) {      //  - down arrow
                     selectIndex = models.indexOf(selected) + 1;
                 }
                 selectedModel = models[selectIndex] || selected;
@@ -195,6 +201,14 @@ define([
                 trHeight = this.$rowInnerWrapper.find('tr').first().height(),
                 scrollTop = this.$rowInnerWrapper.scrollTop(),
                 scrollTo;
+
+            //  - if we're doing multi-select and only one item is selected were good
+            if (model instanceof Array) {
+                model = (model.length === 1)? model[0] : undefined;
+            }
+            if (!model) {
+                return;
+            }
 
             if (_.last(models) === model) {
                 // - this is the last row so just scroll to the bottom
