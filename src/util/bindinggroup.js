@@ -16,7 +16,6 @@ define([
             this.set(options);
         },
         _autoInstantiateBindings: function() {
-            // var widgets = widgetize(self.get('$el')),
             var widgets = this.get('widgets') || [],
                 self = this, root = self.get('$el')[0];
             t.dfs(root, function(el, parentEl, ctrl) {
@@ -37,9 +36,9 @@ define([
                 if (params) {
                     ctrl.cutoff = true;
                     params.strings = [];
-                    if (self.has('strings.field-errors.' + params.prop)) {
+                    if (self.has('strings.field_errors.' + params.prop)) {
                         params.strings.push(
-                            self.get('strings.field-errors.' + params.prop));
+                            self.get('strings.field_errors.' + params.prop));
                     }
                     if (self.has('strings.errors')) {
                         params.strings.push(self.get('strings.errors'));

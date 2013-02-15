@@ -20,7 +20,7 @@ define([
                 errors: {
                     duplicate: 'duplicate object'
                 },
-                'field-errors': {
+                field_errors: {
                     name: {
                         duplicate: 'something with that name already exists'
                     }
@@ -80,7 +80,7 @@ define([
     });
 
     function modelAndUiEqual(bindingGroup, values, exclusions) {
-        var checked = [];
+        var checked = [], unchecked;
         _.each(values, function(val, key) {
             var w, $el,
                 binding = _.find(bindingGroup.bindings, function(binding) {
@@ -96,8 +96,9 @@ define([
                 checked.push(prop);
             }
         });
-        deepEqual(checked.concat(exclusions || []), _.keys(values),
-                'checked UI for all values');
+        unchecked = _.difference(checked.concat(exclusions || []), _.keys(values));
+        equal(checked.concat(exclusions || []).length, _.keys(values).length);
+        deepEqual(unchecked, [], 'checked UI for all values');
     }
 
     asyncTest('binding', function() {
@@ -116,8 +117,18 @@ define([
             'composition.expression': 'slower than molasses in january',
             date_field: moment('2013-02-14')._d
         }, {validate: true}).then(function() {
+            var newValues = _.extend({}, initialValues, {
+                name: 'foo 2',
+                'composition.type': 'datasource-list',
+                'composition.expression': [uuid(), uuid()]
+            });
             myForm.set({model: m});
             modelAndUiEqual(myForm.bindingGroup, initialValues);
+            m.set(newValues);
+            modelAndUiEqual(myForm.bindingGroup, newValues);
+            window.m = myForm.get('model');
+            window.f = myForm;
+            window.b = myForm.bindingGroup;
             start();
         }, function(c, e) {
             ok(false, 'initial set should have worked' +
