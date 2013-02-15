@@ -151,6 +151,34 @@ define([
             });
         },
 
+        _focusModel: function(model) {
+            var models = this.get('models'),
+                headerHeight = this.$el.find('.header-wrapper').height(),
+                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
+                scrollTop = this.$rowInnerWrapper.scrollTop(),
+                scrollTo;
+
+            if (_.last(models) === model) {
+                // - this is the last row so just scroll to the bottom
+                scrollTo = this.$rowInnerWrapper.find('.rows').height();
+            } else if (_.first(models) === model) {
+                // - this is the first row so just scroll to the top
+                scrollTo = 0;
+            } else {
+                var top = this._trFromModel(model).position().top,
+                    gridHeight = this.$rowInnerWrapper.height();
+                if (top < trHeight) { // - row is above the grid view
+                    scrollTo = scrollTop - headerHeight + top;
+                } else if (top > gridHeight) { //  - row is below the grid view
+                    scrollTo = scrollTop - gridHeight + top;
+                }
+            }
+            if (typeof scrollTo === 'number') {
+                this.$rowInnerWrapper.scrollTop(scrollTo);
+                this._trFromModel(model).focus();
+            }
+        },
+
         //  - this function is used to determine if all that objects in a collection have been loaded
         //  - it should be overriden in the two layer search API case
         _isAllDataLoaded: function() {
@@ -217,8 +245,9 @@ define([
         _rerender: function() {
             var i, l, rows = [],
                 columns = this.get('columnModel'),
-                models = this.get('models');
-
+                models = this.get('models'),
+                selected = this.selected();
+                
             var start = (new Date()).valueOf();
 
             if (!columns || !models) {
@@ -264,6 +293,9 @@ define([
                 this._setScrollTop();
             }
 
+            if (selected) {
+                this._focusModel(selected);
+            }
             this._renderCount++;
             // console.log([
             //         'render time for',

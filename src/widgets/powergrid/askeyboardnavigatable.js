@@ -40,52 +40,10 @@ define([
                 self._focusModel(selectedModel);
             });
         };
-        var _rerenderExtend = function () {
-            var self = this, _rerender = this._rerender;
-            if (!this.get('keyboardNavigation')) {
-                return;
-            }
-            this._rerender = function() {
-                var selected = self.selected();
-                _rerender.call(self);
-                if (selected) {
-                    self._focusModel(selected);
-                }
-            };
-        };
-        this._focusModel = function(model) {
-            var models = this.get('models'),
-                headerHeight = this.$el.find('.header-wrapper').height(),
-                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
-                scrollTop = this.$rowInnerWrapper.scrollTop(),
-                scrollTo;
-
-            model = model || _.first(models);
-
-            if (_.last(models) === model) {
-                // - this is the last row so just scroll to the bottom
-                scrollTo = this.$rowInnerWrapper.find('.rows').height();
-            } else if (_.first(models) === model) {
-                // - this is the first row so just scroll to the top
-                scrollTo = 0;
-            } else {
-                var top = this._trFromModel(model).position().top,
-                    gridHeight = this.$rowInnerWrapper.height();
-                if (top < trHeight) { // - row is above the grid view
-                    scrollTo = scrollTop - headerHeight + top;
-                } else if (top > gridHeight) { //  - row is below the grid view
-                    scrollTo = scrollTop - gridHeight + top;
-                }
-            }
-            if (typeof scrollTo === 'number') {
-                this.$rowInnerWrapper.scrollTop(scrollTo);
-            }
-        };
 
         if(!this.afterInit) {
             this.afterInit = [];
         }
         this.afterInit.push(_bindKeyboardNavigation);
-        this.afterInit.push(_rerenderExtend);
     };
 });
