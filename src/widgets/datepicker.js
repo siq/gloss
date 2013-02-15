@@ -82,8 +82,7 @@ define([
             }
         },
         getValue: function() {
-            return this.options._selected &&
-                this.options._selected.format(this.options.format);
+            return this.options._selected && this.options._selected._d;
         },
         setValue: function(date, opts) {
             date = moment(date || null);

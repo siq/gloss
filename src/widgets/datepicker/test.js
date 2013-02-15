@@ -68,14 +68,14 @@ define([
             }
         },
         dateIsSelected = function(datePicker, date) {
-            date = _.isString(date)? moment(date) : date;
+            date = moment(date);
             if (datePicker.getValue() == null || date == null) {
                 ok(datePicker.getValue() == null && date == null);
                 equal(datePicker.monthView.$node.find('td.selected').length, 0);
                 equal(datePicker.$node.find('input[type=text]').val(), '');
                 return;
             }
-            equal(datePicker.getValue(), date.format('YYYY-MM-DD'));
+            equal(datePicker.getValue().toString(), date._d.toString());
             datePicker.monthView.$node.find('td').each(function(i, el) {
                 if ((new RegExp('^' + date.date().toString() + '$')).test($(el).text().trim())) {
                     ok($(el).hasClass('selected'), [
@@ -236,7 +236,8 @@ define([
                     .val('2010-'+mm+'-14')
                     .trigger($.Event('keyup', {which: 48}));
                 setTimeout(function() {
-                    equal(dp.getValue(), '2010-'+mm+'-14');
+                    equal(dp.getValue().toString(),
+                        moment('2010-'+mm+'-14')._d.toString());
                     start();
                 }, 15);
             }, 15);
