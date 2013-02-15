@@ -175,8 +175,8 @@ define([
             }
             if (typeof scrollTo === 'number') {
                 this.$rowInnerWrapper.scrollTop(scrollTo);
-                this._trFromModel(model).focus();
             }
+            this.$rowWrapper.focus();
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded
