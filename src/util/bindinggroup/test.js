@@ -5,11 +5,13 @@ define([
     'vendor/uuid',
     'vendor/moment',
     'mesh/tests/nestedpolymorphicexample',
+    'mesh/fields',
     './../../widgets/simpleview',
     './../widgetize',
     './../bindinggroup',
-    'tmpl!./testForm.mtpl'
-], function($, _, uuid, moment, NestedPolymorphicExample, SimpleView,
+    'tmpl!./testForm.mtpl',
+    'css!./test.css'
+], function($, _, uuid, moment, NestedPolymorphicExample, fields, SimpleView,
     widgetize, BindingGroup, testForm) {
     var strings = {
             errors: {
@@ -18,7 +20,7 @@ define([
             },
             myform: {
                 errors: {
-                    duplicate: 'duplicate object'
+                    duplicate: 'duplicate form object'
                 },
                 field_errors: {
                     name: {
@@ -27,6 +29,17 @@ define([
                 }
             }
         },
+        FinnickyModel = NestedPolymorphicExample.extend({
+            _validateOne: function(prop, value) {
+                if (prop === 'name' && value === 'duplicate name') {
+                    throw fields.ValidationError(null, {token: 'duplicate'});
+                }
+                if (prop === 'required_field' &&
+                    value === 'duplicate required_field') {
+                    throw fields.ValidationError(null, {token: 'duplicate'});
+                }
+            }
+        }),
         MyForm = SimpleView.extend({
             template: testForm,
             _bindTypeChangeEvent: function() {
@@ -68,16 +81,19 @@ define([
             }
         });
 
-    asyncTest('every binding has a prop', function() {
-        var model, myForm = MyForm({model: NestedPolymorphicExample()});
-        _.each(myForm.bindingGroup.bindings, function(binding) {
-            var name =  binding.get('prop')?    binding.get('prop') :
-                        binding.has('widget')?  binding.get('widget').node.outerHTML :
-                        binding.has('$el')?     binding.get('$el')[0].outerHTML : '';
-            ok(binding.get('prop') != null, 'binding has prop for ' + name);
-        });
-        start();
-    });
+    function initialValues() {
+        return {
+            id: uuid(),
+            name: 'foo',
+            required_field: 'bar',
+            enumeration_field: 2,
+            default_field: 13,
+            boolean_field: true,
+            'composition.type': 'attribute-filter',
+            'composition.expression': 'slower than molasses in january',
+            date_field: moment('2013-02-14')._d
+        };
+    }
 
     function modelAndUiEqual(bindingGroup, values, exclusions) {
         var checked = [], unchecked;
@@ -101,29 +117,58 @@ define([
         deepEqual(unchecked, [], 'checked UI for all values');
     }
 
-    asyncTest('binding', function() {
-        var initialValues,
-            myForm = MyForm().appendTo('body'),
-            m = NestedPolymorphicExample();
+    asyncTest('every binding has a prop', function() {
+        var model, myForm = MyForm({model: FinnickyModel()});
+        _.each(myForm.bindingGroup.bindings, function(binding) {
+            var name =  binding.get('prop')?    binding.get('prop') :
+                        binding.has('widget')?  binding.get('widget').node.outerHTML :
+                        binding.has('$el')?     binding.get('$el')[0].outerHTML : '';
+            ok(binding.get('prop') != null, 'binding has prop for ' + name);
+        });
+        start();
+    });
 
-        m.set(initialValues = {
-            id: uuid(),
-            name: 'foo',
-            required_field: 'bar',
-            enumeration_field: 2,
-            default_field: 13,
-            boolean_field: true,
-            'composition.type': 'attribute-filter',
-            'composition.expression': 'slower than molasses in january',
-            date_field: moment('2013-02-14')._d
-        }, {validate: true}).then(function() {
-            var newValues = _.extend({}, initialValues, {
+    asyncTest('error handling', function() {
+        var myForm = MyForm({model: FinnickyModel(initialValues())})
+                .appendTo('body'),
+            name = _.find(myForm.widgets, function(w) {
+                return w.$node.attr('data-bind') === 'name';
+            }),
+            requiredField = _.find(myForm.widgets, function(w) {
+                return w.$node.attr('data-bind') === 'required_field';
+            });
+
+        equal(name.options.messageList.$node.text(), '');
+        ok(!name.$node.hasClass('invalid'));
+        name.setValue('duplicate name');
+        equal(name.options.messageList.$node.text(),
+            strings.myform.field_errors.name.duplicate);
+        ok(name.$node.hasClass('invalid'));
+        name.setValue();
+        ok(/blank/.test(name.options.messageList.$node.text()));
+        ok(name.$node.hasClass('invalid'));
+        name.setValue('donezo');
+        // wait for animation timeout
+        setTimeout(function() {
+            equal(name.options.messageList.$node.is(':visible'), false);
+            ok(!name.$node.hasClass('invalid'));
+            start();
+        }, 500);
+    });
+
+    asyncTest('binding', function() {
+        var values = initialValues(),
+            myForm = MyForm().appendTo('body'),
+            m = FinnickyModel();
+
+        m.set(values, {validate: true}).then(function() {
+            var newValues = _.extend({}, values, {
                 name: 'foo 2',
                 'composition.type': 'datasource-list',
                 'composition.expression': [uuid(), uuid()]
             });
             myForm.set({model: m});
-            modelAndUiEqual(myForm.bindingGroup, initialValues);
+            modelAndUiEqual(myForm.bindingGroup, values);
             m.set(newValues);
             modelAndUiEqual(myForm.bindingGroup, newValues);
             window.m = myForm.get('model');

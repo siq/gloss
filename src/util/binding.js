@@ -12,13 +12,10 @@ define([
             return this.get('model').get(this.get('prop'));
         },
         _handleSetFailure: function(prop, error) {
-            var msg, messageList = this.get('widget.options.messageList'),
-                token = error && error.token;
-            if (messageList) {
-                msg = _.compact(_.pluck(this.get('strings'), token))[0] ||
-                      error.message || token;
-                messageList.append(msg);
-            }
+            var msg, widget = this.get('widget'), token = error && error.token;
+            msg = _.compact(_.pluck(this.get('strings'), token))[0] ||
+                  error.message || token;
+            widget.setStatus('invalid', msg);
         },
         _onPropChange: function(eventName, model, changed) {
             if (!changed[this.get('prop')]) {
@@ -30,13 +27,14 @@ define([
             var model, value, widget, self = this, prop = self.get('prop');
             if ((widget = self.get('widget')) && (model = self.get('model'))) {
                 value = widget.getValue();
-                model.set(prop, value, {validate: true})
-                    .fail(function(changes, errors) {
-                        var error = errors.forField(prop);
-                        if (error) {
-                            self._handleSetFailure(prop, error);
-                        }
-                    });
+                model.set(prop, value, {validate: true}).then(function() {
+                    widget.setStatus();
+                }, function(changes, errors) {
+                    var error = errors.forField(prop);
+                    if (error) {
+                        self._handleSetFailure(prop, error);
+                    }
+                });
             }
         },
         _setValueFromModel: function() {
@@ -47,18 +45,6 @@ define([
                 setValue(this._getValueFromModel());
             } else if (($el = this.get('$el'))) {
                 $el.text(this._getValueFromModel());
-            }
-        },
-        clearErrors: function() {
-            var messageList = this.get('widget.options.messageList');
-            if (messageList) {
-                messageList.clear();
-            }
-        },
-        showError: function(errorMessage) {
-            var messageList = this.get('widget.options.messageList');
-            if (messageList) {
-                messageList.push('invalid', errorMessage);
             }
         },
         update: function(changed) {

@@ -11,8 +11,8 @@ define([
     var registry = Widget().registry;
 
     var BindingGroup = Class.extend({
-        bindings: [],
         init: function(options) {
+            this.bindings = [];
             this.set(options);
         },
         _autoInstantiateBindings: function() {
