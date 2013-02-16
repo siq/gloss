@@ -185,9 +185,9 @@ define([
                     self._trFromModel(selected).trigger('dblclick');
                     return;
                 } else if (evt.which === up) {             //  - up arrow
-                    selectIndex = models.indexOf(selected) - 1;
+                    selectIndex = _.indexOf(models, selected) - 1;
                 } else if (evt.which === down) {      //  - down arrow
-                    selectIndex = models.indexOf(selected) + 1;
+                    selectIndex = _.indexOf(models, selected) + 1;
                 }
                 selectedModel = models[selectIndex] || selected;
                 self.select(selectedModel);
