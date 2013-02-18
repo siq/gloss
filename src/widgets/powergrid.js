@@ -173,6 +173,7 @@ define([
                     selected = self.selected(),
                     models = self.get('models');
 
+                evt.preventDefault();
                 //  - if we're doing multi-select and only one item is selected were good
                 if (selected instanceof Array) {
                     selected = (selected.length === 1)? selected[0] : undefined;
@@ -198,11 +199,14 @@ define([
                     return;
                 }
                 self.select(selectedModel);
-                self._focusModel(selectedModel);
+                self._focus(selectedModel);
+            });
+            this.$el.bind('mouseup', function() {
+                self._focus();
             });
         },
 
-        _focusModel: function(model) {
+        _focus: function(model) {
             var models = this.get('models'),
                 headerHeight = this.$el.find('.header-wrapper').height(),
                 trHeight = this.$rowInnerWrapper.find('tr').first().height(),
@@ -214,6 +218,7 @@ define([
                 model = (model.length === 1)? model[0] : undefined;
             }
             if (!model) {
+                this.$rowWrapper.focus();
                 return;
             }
 
@@ -353,7 +358,7 @@ define([
             }
 
             if (selected) {
-                this._focusModel(selected);
+                this._focus(selected);
             }
             this._renderCount++;
             // console.log([
