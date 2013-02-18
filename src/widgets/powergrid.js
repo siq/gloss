@@ -173,7 +173,6 @@ define([
                     selected = self.selected(),
                     models = self.get('models');
 
-                evt.preventDefault();
                 //  - if we're doing multi-select and only one item is selected were good
                 if (selected instanceof Array) {
                     selected = (selected.length === 1)? selected[0] : undefined;
