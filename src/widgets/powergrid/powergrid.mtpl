@@ -1,4 +1,5 @@
-<div class=powergrid>
+<% var tabindex = this.get('tabindex') || 0; %>
+<div class=powergrid <%=this.get('keyboardNavigation')? 'tabindex=' + tabindex : '' %>>
 
   <div class=grid-canvas>
 
@@ -10,7 +11,7 @@
       </table>
     </div>
 
-    <div class=row-wrapper tabindex=-1>
+    <div class=row-wrapper>
       <div class=row-inner-wrapper><%/* semmantic markup ftw! */%>
         <table class=rows>
           <tbody></tbody>

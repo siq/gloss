@@ -193,6 +193,8 @@ define([
                     //  - if no row is selected select the top row
                     selectIndex = (selected)?
                         _.indexOf(models, selected) + 1 : 0;
+                } else {
+                    return;
                 }
                 selectedModel = models[selectIndex] || selected;
                 if (!selectedModel) {
@@ -218,7 +220,7 @@ define([
                 model = (model.length === 1)? model[0] : undefined;
             }
             if (!model) {
-                this.$rowWrapper.focus();
+                this.$el.focus();
                 return;
             }
 
@@ -240,7 +242,7 @@ define([
             if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
                 this.$rowInnerWrapper.scrollTop(scrollTo);
             }
-            this.$rowWrapper.focus();
+            this.$el.focus();
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded
