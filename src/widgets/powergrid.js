@@ -155,7 +155,7 @@ define([
 
         _bindKeyboardNavigation: function() {
             var self = this,
-                up = 38, down = 40, enter = 13;
+                up = 38, down = 40, enter = 13, space = 32;
 
             //  - We don't want the page to scroll when were trying to navigate
             //  - with the keyboard so we're going to prevent that here.
@@ -177,19 +177,26 @@ define([
                 if (selected instanceof Array) {
                     selected = (selected.length === 1)? selected[0] : undefined;
                 }
-                if (!selected || !self.$rowInnerWrapper.is(':visible') ||
+                if (!self.$rowInnerWrapper.is(':visible') ||
                     (selected instanceof Array && selected.length > 1)) { // don't do key navigation on mutilselect
                     return;
                 }
-                if (evt.which === enter) {      //  - enter key
+                if (evt.which === enter || evt.which === space) {      //  - enter key
                     self._trFromModel(selected).trigger('dblclick');
                     return;
                 } else if (evt.which === up) {             //  - up arrow
-                    selectIndex = _.indexOf(models, selected) - 1;
+                    //  - if no row is selected select the bottom row
+                    selectIndex = (selected)?
+                        _.indexOf(models, selected) - 1 : models.length-1;
                 } else if (evt.which === down) {      //  - down arrow
-                    selectIndex = _.indexOf(models, selected) + 1;
+                    //  - if no row is selected select the top row
+                    selectIndex = (selected)?
+                        _.indexOf(models, selected) + 1 : 0;
                 }
                 selectedModel = models[selectIndex] || selected;
+                if (!selectedModel) {
+                    return;
+                }
                 self.select(selectedModel);
                 self._focusModel(selectedModel);
             });
@@ -225,7 +232,7 @@ define([
                     scrollTo = scrollTop - gridHeight + top;
                 }
             }
-            if (typeof scrollTo === 'number') {
+            if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
                 this.$rowInnerWrapper.scrollTop(scrollTo);
             }
             this.$rowWrapper.focus();
