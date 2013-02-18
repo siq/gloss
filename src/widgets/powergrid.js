@@ -175,7 +175,10 @@ define([
 
                 //  - if we're doing multi-select and only one item is selected were good
                 if (selected instanceof Array) {
-                    selected = (selected.length === 1)? selected[0] : undefined;
+                    if (selected.length !== 1) {
+                        return;
+                    }
+                    selected = selected[0];
                 }
                 if (!self.$rowInnerWrapper.is(':visible') ||
                     (selected instanceof Array && selected.length > 1)) { // don't do key navigation on mutilselect
