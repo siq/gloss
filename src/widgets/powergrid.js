@@ -103,9 +103,7 @@ define([
 
             var $header = this.$el.find('.header-wrapper'),
                 $rows = this.$el.find('.row-wrapper'),
-                $rowInnerWrapper = self.$rowInnerWrapper = this.$el.find('.row-inner-wrapper'),
-                $rowTable = this.$el.find('.rows'),
-                scrollLoadDfd;
+                $rowInnerWrapper = this.$rowInnerWrapper = this.$el.find('.row-inner-wrapper');
             //  - handle horizontal scroll
             $rowInnerWrapper.on('scroll', function(evt) {
                 var left = parseInt($header.css('left'), 10) || 0;
@@ -116,6 +114,16 @@ define([
                     });
                 }
             });
+            if (this.get('infiniteScroll')) {
+                this._bindInfiniteScroll();
+            }
+        },
+
+        _bindInfiniteScroll: function() {
+            var self = this,
+                $rowInnerWrapper = this.$rowInnerWrapper,
+                $rowTable = this.$el.find('.rows'),
+                scrollLoadDfd;
             //  - handle vertical scroll for infinite scrolling
             self.on('click', '.loading-text a.reload', function() {
                 self.scrollLoadSpinner.disable();
