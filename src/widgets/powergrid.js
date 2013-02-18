@@ -208,41 +208,6 @@ define([
             });
         },
 
-        _scrollTo: function(model) {
-            var models = this.get('models'),
-                headerHeight = this.$el.find('.header-wrapper').height(),
-                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
-                scrollTop = this.$rowInnerWrapper.scrollTop(),
-                scrollTo;
-
-            //  - if we're doing multi-select and only one item is selected were good
-            if (model instanceof Array) {
-                model = (model.length === 1)? model[0] : undefined;
-            }
-            if (!model) {
-                return;
-            }
-
-            if (_.last(models) === model) {
-                // - this is the last row so just scroll to the bottom
-                scrollTo = this.$rowInnerWrapper.find('.rows').height();
-            } else if (_.first(models) === model) {
-                // - this is the first row so just scroll to the top
-                scrollTo = 0;
-            } else {
-                var top = this._trFromModel(model).position().top,
-                    gridHeight = this.$rowInnerWrapper.height();
-                if (top < trHeight) { // - row is above the grid view
-                    scrollTo = scrollTop - headerHeight + top;
-                } else if (top > gridHeight) { //  - row is below the grid view
-                    scrollTo = scrollTop - gridHeight + top;
-                }
-            }
-            if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
-                this.$rowInnerWrapper.scrollTop(scrollTo);
-            }
-        },
-
         //  - this function is used to determine if all that objects in a collection have been loaded
         //  - it should be overriden in the two layer search API case
         _isAllDataLoaded: function() {
@@ -374,6 +339,41 @@ define([
             $(currentRow).remove();
             this._renderRowCount++;
             // console.log('rerendered row for', model.get('text_field'));
+        },
+
+        _scrollTo: function(model) {
+            var models = this.get('models'),
+                headerHeight = this.$el.find('.header-wrapper').height(),
+                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
+                scrollTop = this.$rowInnerWrapper.scrollTop(),
+                scrollTo;
+
+            //  - if we're doing multi-select and only one item is selected were good
+            if (model instanceof Array) {
+                model = (model.length === 1)? model[0] : undefined;
+            }
+            if (!model) {
+                return;
+            }
+
+            if (_.last(models) === model) {
+                // - this is the last row so just scroll to the bottom
+                scrollTo = this.$rowInnerWrapper.find('.rows').height();
+            } else if (_.first(models) === model) {
+                // - this is the first row so just scroll to the top
+                scrollTo = 0;
+            } else {
+                var top = this._trFromModel(model).position().top,
+                    gridHeight = this.$rowInnerWrapper.height();
+                if (top < trHeight) { // - row is above the grid view
+                    scrollTo = scrollTop - headerHeight + top;
+                } else if (top > gridHeight) { //  - row is below the grid view
+                    scrollTo = scrollTop - gridHeight + top;
+                }
+            }
+            if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
+                this.$rowInnerWrapper.scrollTop(scrollTo);
+            }
         },
 
         _setScrollTop: function() {
