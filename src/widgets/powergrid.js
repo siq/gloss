@@ -201,14 +201,14 @@ define([
                     return;
                 }
                 self.select(selectedModel);
-                self._focus(selectedModel);
+                self._scrollTo(selectedModel);
             });
             this.$el.bind('mouseup', function() {
-                self._focus();
+                self.$el.focus();
             });
         },
 
-        _focus: function(model) {
+        _scrollTo: function(model) {
             var models = this.get('models'),
                 headerHeight = this.$el.find('.header-wrapper').height(),
                 trHeight = this.$rowInnerWrapper.find('tr').first().height(),
@@ -220,7 +220,6 @@ define([
                 model = (model.length === 1)? model[0] : undefined;
             }
             if (!model) {
-                this.$el.focus();
                 return;
             }
 
@@ -242,7 +241,6 @@ define([
             if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
                 this.$rowInnerWrapper.scrollTop(scrollTo);
             }
-            this.$el.focus();
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded
@@ -360,7 +358,7 @@ define([
             }
 
             if (selected) {
-                this._focus(selected);
+                this._scrollTo(selected);
             }
             this._renderCount++;
             // console.log([
