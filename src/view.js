@@ -198,10 +198,13 @@ define([
         },
 
         render: function() {
-            var origClass, $tmp = $(this._renderHTML());
+            var origClass, $tmp = $(this._renderHTML()),
+                prop;
             if (this.$el) {
                 origClass = this.$el.attr('class');
                 this.$el.html($tmp.html()).addClass($tmp.attr('class'));
+                prop = this.$el.prop('tabindex') || $tmp.prop('tabindex');
+                this.$el.prop('tabindex', prop);
             } else {
                 this.$el = $tmp;
             }
