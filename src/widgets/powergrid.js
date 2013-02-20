@@ -14,8 +14,8 @@ define([
     'tmpl!./powergrid/powergrid.mtpl',
     'tmpl!./powergrid/spinnerTr.mtpl',
     'css!./powergrid/powergrid.css'
-], function($, _, model, View, asCollectionViewable, ColumnModel, Spinner,
-    sort, template, loadingRowTmpl) {
+], function($, _, model, View, asCollectionViewable,
+    ColumnModel, Spinner, sort, template, loadingRowTmpl) {
 
     var EmptyColumnModel, PowerGrid,
         mod = /mac/i.test(navigator.userAgent)? 'metaKey' : 'ctrlKey';
@@ -26,6 +26,8 @@ define([
         defaults: {
             // could be true, false, or 'multi'
             selectable: false,
+            // true or false
+            keyboardNavigation: true,
 
             // things seem less buggy when we do mouseup as opposed to click
             selectableEvent: 'mouseup',
@@ -154,6 +156,66 @@ define([
                     scrollLoadDfd = collection.load().then(function(models) {});
                 }
             });
+            if (this.get('keyboardNavigation')) {
+                this._bindKeyboardNavigation();
+            }
+        },
+
+        _bindKeyboardNavigation: function() {
+            var self = this,
+                up = 38, down = 40, enter = 13, space = 32;
+
+            //  - We don't want the page to scroll when were trying to navigate
+            //  - with the keyboard so we're going to prevent that here.
+            var keys = [up, down];
+            this.$el.bind('keydown', 'tbody tr', function(evt) {
+                var key = evt.which;
+                if(_.contains(keys, key)) {
+                    evt.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+            this.$el.bind('keyup', 'tbody tr', function(evt) {
+                var selectModel, selectIndex,
+                    selected = self.selected(),
+                    models = self.get('models');
+
+                //  - if we're doing multi-select and only one item is selected were good
+                if (selected instanceof Array) {
+                    if (selected.length !== 1) {
+                        return;
+                    }
+                    selected = selected[0];
+                }
+                if (!self.$rowInnerWrapper.is(':visible') ||
+                    (selected instanceof Array && selected.length > 1)) { // don't do key navigation on mutilselect
+                    return;
+                }
+                if (evt.which === enter || evt.which === space) {      //  - enter key
+                    self._trFromModel(selected).trigger('dblclick');
+                    return;
+                } else if (evt.which === up) {             //  - up arrow
+                    //  - if no row is selected select the bottom row
+                    selectIndex = (selected)?
+                        _.indexOf(models, selected) - 1 : models.length-1;
+                } else if (evt.which === down) {      //  - down arrow
+                    //  - if no row is selected select the top row
+                    selectIndex = (selected)?
+                        _.indexOf(models, selected) + 1 : 0;
+                } else {
+                    return;
+                }
+                selectedModel = models[selectIndex] || selected;
+                if (!selectedModel) {
+                    return;
+                }
+                self.select(selectedModel);
+                self._scrollTo(selectedModel);
+            });
+            this.$el.bind('mouseup', function() {
+                self.$el.focus();
+            });
         },
 
         //  - this function is used to determine if all that objects in a collection have been loaded
@@ -222,8 +284,9 @@ define([
         _rerender: function() {
             var i, l, rows = [],
                 columns = this.get('columnModel'),
-                models = this.get('models');
-
+                models = this.get('models'),
+                selected = this.selected();
+                
             var start = (new Date()).valueOf();
 
             if (!columns || !models) {
@@ -269,6 +332,9 @@ define([
                 this._setScrollTop();
             }
 
+            if (selected) {
+                this._scrollTo(selected);
+            }
             this._renderCount++;
             // console.log([
             //         'render time for',
@@ -283,6 +349,41 @@ define([
             $(currentRow).remove();
             this._renderRowCount++;
             // console.log('rerendered row for', model.get('text_field'));
+        },
+
+        _scrollTo: function(model) {
+            var models = this.get('models'),
+                headerHeight = this.$el.find('.header-wrapper').height(),
+                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
+                scrollTop = this.$rowInnerWrapper.scrollTop(),
+                scrollTo;
+
+            //  - if we're doing multi-select and only one item is selected were good
+            if (model instanceof Array) {
+                model = (model.length === 1)? model[0] : undefined;
+            }
+            if (!model) {
+                return;
+            }
+
+            if (_.last(models) === model) {
+                // - this is the last row so just scroll to the bottom
+                scrollTo = this.$rowInnerWrapper.find('.rows').height();
+            } else if (_.first(models) === model) {
+                // - this is the first row so just scroll to the top
+                scrollTo = 0;
+            } else {
+                var top = this._trFromModel(model).position().top,
+                    gridHeight = this.$rowInnerWrapper.height();
+                if (top < trHeight) { // - row is above the grid view
+                    scrollTo = scrollTop - headerHeight + top;
+                } else if (top > gridHeight) { //  - row is below the grid view
+                    scrollTo = scrollTop - gridHeight + top;
+                }
+            }
+            if (typeof scrollTo === 'number' && !isNaN(scrollTo)) {
+                this.$rowInnerWrapper.scrollTop(scrollTo);
+            }
         },
 
         _setScrollTop: function() {

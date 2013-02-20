@@ -1,4 +1,5 @@
-<div class=powergrid>
+<% var tabindex = this.get('tabindex') || 0; %>
+<div class=powergrid <%=this.get('keyboardNavigation')? 'tabindex=' + tabindex : '' %>>
 
   <div class=grid-canvas>
 
