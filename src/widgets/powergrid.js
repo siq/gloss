@@ -119,6 +119,9 @@ define([
             if (this.get('infiniteScroll')) {
                 this._bindInfiniteScroll();
             }
+            if (this.get('keyboardNavigation')) {
+                this._bindKeyboardNavigation();
+            }
         },
 
         _bindInfiniteScroll: function() {
@@ -156,9 +159,6 @@ define([
                     scrollLoadDfd = collection.load().then(function(models) {});
                 }
             });
-            if (this.get('keyboardNavigation')) {
-                this._bindKeyboardNavigation();
-            }
         },
 
         _bindKeyboardNavigation: function() {
