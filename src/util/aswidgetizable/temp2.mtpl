@@ -1,0 +1,14 @@
+<form>
+  <fieldset>
+    <button name=foo>Foo</button>
+  </fieldset>
+  <fieldset>
+    <input data-bind=barvalue type=text value=barvalue />
+  </fieldset>
+  <fieldset>
+    <button data-bind=baz name=baz>Foo</button>
+  </fieldset>
+  <fieldset>
+    <button data-bind=biz name=bing>Foo</button>
+  </fieldset>
+</form>
