@@ -209,7 +209,7 @@ define([
                 return;
             }
             return _.isFunction(template)?
-                template(this) : template;
+                template(this, this) : template;
         },
 
         propagate: function(method) {
