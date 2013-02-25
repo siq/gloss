@@ -7,9 +7,10 @@ define([
     './../widgets/datepicker',
     './../widgets/textbox',
     './../widgets/checkbox',
-    'tmpl!./propagation.mtpl'
+    'tmpl!./propagation.mtpl',
+    'tmpl!./extension.mtpl'
 ], function($, _, View, ToggleGroup, DatePicker, TextBox, CheckBox,
-    propagationTemplate) {
+    propagationTemplate, extensionTemplate) {
 
     test('instantiating a view', function() {
         var v = View();
@@ -210,6 +211,18 @@ define([
             'selected is disabled');
         equal(widgets.wontbedisabled.$node.is(':disabled'), false,
             'wontbedisabled is NOT disabled');
+    });
+
+    test('extending a view template with include', function() {
+        var view, V = View.extend({
+            template: extensionTemplate,
+            templates: {
+                extension: '<div class=extension>I extend the base template</div>'
+            }
+        });
+        view = V();
+        ok(view.$el.hasClass('base'), 'base template is rendered');
+        ok(view.$el.children().hasClass('extension'), 'extension template is rendered');
     });
 
     start();

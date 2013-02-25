@@ -64,6 +64,28 @@ define([
         // returns the DOM el and contents of the widget as a string.
         template: '<div></div>',
 
+        // this is used to extend a template.
+        //
+        // can be either a string or a template function.
+        //
+        // it is used by `View::include`
+        //     include: function(which) {
+        //        // if outerHTML wasn't readonly
+        //        var template = this.templates[which];
+        //        if (!template) {
+        //            return;
+        //        }
+        //        this.el.outerHTML = _.isFunction(template)?
+        //            template(this) : template;
+        //     }
+        //
+        // it should be used in a base template for extension
+        //     <form>
+        //         <h1>this is my base template</h1>
+        //         <%= this.include('footer') %>
+        //     </form>
+        templates: {},
+
         init: function(options) {
             var el, $el, viewName;
 
@@ -179,6 +201,15 @@ define([
         hide: function() {
             this.$el.addClass('hidden');
             return this;
+        },
+
+        include: function(which) {
+            var template = this.templates[which];
+            if (!template) {
+                return;
+            }
+            return _.isFunction(template)?
+                template(this) : template;
         },
 
         propagate: function(method) {
