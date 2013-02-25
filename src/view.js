@@ -70,7 +70,6 @@ define([
         //
         // it is used by `View::include`
         //     include: function(which) {
-        //        // if outerHTML wasn't readonly
         //        var template = this.templates[which];
         //        if (!template) {
         //            return;
