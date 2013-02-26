@@ -46,7 +46,28 @@ define([
         // you get when you run:
         //
         //     defaults = $.extend(true, parentDefaults, childDefaults);
-        defaults: {},
+        defaults: {
+            // this is used to extend a template.
+            //
+            // can be either a string or a template function.
+            //
+            // it is used by `View::include`
+            //     include: function(which) {
+            //        var template = this.templates[which];
+            //        if (!template) {
+            //            return;
+            //        }
+            //        this.el.outerHTML = _.isFunction(template)?
+            //            template(this) : template;
+            //     }
+            //
+            // it should be used in a base template for extension
+            //     <form>
+            //         <h1>this is my base template</h1>
+            //         <%= this.include('footer') %>
+            //     </form>
+            templates: {}
+        },
 
         // this is used to set the outerHTML of the DOM element corresponding
         // to this view.
@@ -63,27 +84,6 @@ define([
         //
         // returns the DOM el and contents of the widget as a string.
         template: '<div></div>',
-
-        // this is used to extend a template.
-        //
-        // can be either a string or a template function.
-        //
-        // it is used by `View::include`
-        //     include: function(which) {
-        //        var template = this.templates[which];
-        //        if (!template) {
-        //            return;
-        //        }
-        //        this.el.outerHTML = _.isFunction(template)?
-        //            template(this) : template;
-        //     }
-        //
-        // it should be used in a base template for extension
-        //     <form>
-        //         <h1>this is my base template</h1>
-        //         <%= this.include('footer') %>
-        //     </form>
-        templates: {},
 
         init: function(options) {
             var el, $el, viewName;
@@ -203,12 +203,9 @@ define([
         },
 
         include: function(which) {
-            var template = this.templates[which];
-            if (!template) {
-                return;
-            }
+            var template = this.get('templates')[which];
             return _.isFunction(template)?
-                template(this, this) : template;
+                template(this, this) : template || '';
         },
 
         propagate: function(method) {

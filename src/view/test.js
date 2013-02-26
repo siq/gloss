@@ -60,9 +60,11 @@ define([
         child = ChildViewClass();
         grandChild = GrandChildViewClass();
 
+        // All tests comparing the length of defaults will be +1
+        // because templates: {} is set in the defaults by default ... okay
         equal(ParentViewClass.prototype.defaults.parentDefault, 'foo');
         equal(ParentViewClass.prototype.defaults.overriddenDefault, 'bar');
-        equal(_.keys(ParentViewClass.prototype.defaults).length, 2);
+        equal(_.keys(ParentViewClass.prototype.defaults).length, 3);
 
         equal(par.get('parentDefault'), 'foo');
         equal(par.options.parentDefault, 'foo');
@@ -72,7 +74,7 @@ define([
         equal(ChildViewClass.prototype.defaults.parentDefault, 'foo');
         equal(ChildViewClass.prototype.defaults.childDefault, 'foo2');
         equal(ChildViewClass.prototype.defaults.overriddenDefault, 'bar2');
-        equal(_.keys(ChildViewClass.prototype.defaults).length, 3);
+        equal(_.keys(ChildViewClass.prototype.defaults).length, 4);
 
         equal(child.get('parentDefault'), 'foo');
         equal(child.options.parentDefault, 'foo');
@@ -85,7 +87,7 @@ define([
         equal(GrandChildViewClass.prototype.defaults.childDefault, 'foo2');
         equal(GrandChildViewClass.prototype.defaults.grandChildDefault, 'foo3');
         equal(GrandChildViewClass.prototype.defaults.overriddenDefault, 'bar3');
-        equal(_.keys(GrandChildViewClass.prototype.defaults).length, 4);
+        equal(_.keys(GrandChildViewClass.prototype.defaults).length, 5);
 
         equal(GrandChildViewClass.prototype.clobbered, 'bar2');
         ok(!GrandChildViewClass.prototype.hasOwnProperty('shouldntBeClobbered'));
@@ -216,8 +218,10 @@ define([
     test('extending a view template with include', function() {
         var view, V = View.extend({
             template: extensionTemplate,
-            templates: {
-                extension: '<div class=extension>I extend the base template</div>'
+            defaults: {
+                templates: {
+                    extension: '<div class=extension>I extend the base template</div>'
+                }
             }
         });
         view = V();
