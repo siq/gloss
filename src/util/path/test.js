@@ -34,5 +34,9 @@ define([
         equal(path.join('/', '/'), '/');
     });
 
+    test('/ foo bar baz', function() {
+        equal(path.join('/', 'foo', 'bar', 'baz'), '/foo/bar/baz');
+    });
+
     start();
 });

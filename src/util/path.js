@@ -16,7 +16,11 @@ define([
         },
 
         join: function(p1, p2) {
-            return path.normalize(p1 + '/' + p2);
+            var len = arguments.length,
+                rest = Array.prototype.slice.call(arguments, 1);
+            return len > 2?
+                path.join(p1, path.join.apply(path, rest)) :
+                path.normalize(p1 + '/' + p2);
         }
     };
 
