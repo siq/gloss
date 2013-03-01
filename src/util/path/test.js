@@ -30,5 +30,9 @@ define([
         equal(path.join('/', 'boom'), '/boom');
     });
 
+    test('/ /', function() {
+        equal(path.join('/', '/'), '/');
+    });
+
     start();
 });

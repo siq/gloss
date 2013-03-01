@@ -12,7 +12,7 @@ define([
                         memo.slice(0, -1) : memo.concat(d);
                 }, []).join(SEP) +
 
-                (p.substr(-1) === SEP? '/' : '');
+                (p.substr(-1) === SEP && !/^\/+$/.test(p)? '/' : '');
         },
 
         join: function(p1, p2) {
