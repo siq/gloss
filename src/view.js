@@ -1,11 +1,10 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    'vendor/t',
     'bedrock/class',
     'bedrock/assettable',
-    './widgets/widget'
-], function($, _, t, Class, asSettable, Widget) {
+    './widgets/registry'
+], function($, _, Class, asSettable, Registry) {
     var viewCount = 0,
 
         // this is used strictly for debugging and internal purposes
@@ -13,12 +12,8 @@ define([
             return _.isNumber(which)? dbgview['v'+which] : dbgview[which];
         },
 
-        views = {},
-
-        isWidget = function(el) { return !!Widget.registry.get(el.id); },
-        toWidget = function(el) { return Widget.registry.get(el.id); },
-        isView = function(el) { return !!el.getAttribute('view-name'); },
-        toView = function(el) { return views[el.getAttribute('view-name')]; },
+        registry = Registry();
+        views = registry.views,
 
         isPageEvent = function(eventName) {
             return (eventName.split('.')[0] in
@@ -136,31 +131,6 @@ define([
             views[viewName] = this;
         },
 
-        _childWidgetsAndViews: function() {
-            var children = [],
-                traverse = function(el) {
-                    var i, l, child, childNodes = el.childNodes, result = [];
-                    for (i = 0, l = childNodes.length; i < l; i++) {
-                        child = childNodes[i];
-                        if (child.nodeType === 1) {
-                            result.push({el: child});
-                        }
-                    }
-                    return result;
-                };
-            t.dfs(traverse(this.el), function(node) {
-                var id = node.el.id;
-                if (isWidget(node.el)) {
-                    children.push(toWidget(node.el));
-                } else if (isView(node.el)) {
-                    children.push(toView(node.el));
-                } else {
-                    node.children = traverse(node.el);
-                }
-            });
-            return children;
-        },
-
         // this provides a means for detecting when the user clicks outside of
         // this view:
         //
@@ -210,15 +180,11 @@ define([
 
         propagate: function(method) {
             var rest = Array.prototype.slice.call(arguments, 1);
-            _.each(this._childWidgetsAndViews(), function(child) {
-                if (child instanceof Widget) {
-                    child.invoke(method);
+            _.each(registry.childWidgetsAndViews(this.el), function(child) {
+                if (_.isFunction(child[method])) {
+                    child[method].apply(child, rest);
                 } else {
-                    if (_.isFunction(child[method])) {
-                        child[method].apply(child, rest);
-                    } else {
-                        child.propagate.apply(child, [method].concat(rest));
-                    }
+                    child.propagate.apply(child, [method].concat(rest));
                 }
             });
             return this;
@@ -302,6 +268,6 @@ define([
 
         return derivedClass;
     });
-
+    View.registry = registry;
     return View;
 });
