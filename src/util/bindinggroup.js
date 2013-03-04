@@ -23,7 +23,7 @@ define([
                     return w.node === el? w : null;
                 });
 
-                if (widget) {
+                if (widget && widget.$node.attr('data-bind')) {
                     params = {
                         prop: widget.$node.attr('data-bind'),
                         twoWay: true,
