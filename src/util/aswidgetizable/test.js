@@ -30,54 +30,54 @@ define([
 
     test('correctly widgetize descendents', function() {
         var view = View1(),
-            widgets = view.widgets;
-        ok(widgets[0]   instanceof Button,              'button 1');
-        ok(widgets[1]   instanceof Button,              'button 2');
+            widgets = view.options.widgets;
+        ok(widgets.button1              instanceof Button,              'button 1');
+        ok(widgets.button2              instanceof Button,              'button 2');
 
-        ok(widgets[2]   instanceof CheckBox,            'checkbox');
+        ok(widgets.checkbox1            instanceof CheckBox,            'checkbox');
 
-        ok(widgets[3]   instanceof TextBox,             'textbox 1');
-        ok(widgets[4]   instanceof TextBox,             'textbox 2');
-        ok(widgets[5]   instanceof TextBox,             'textbox 3');
-        ok(widgets[6]   instanceof TextBox,             'textbox 4');
+        ok(widgets.textbox1             instanceof TextBox,             'textbox 1');
+        ok(widgets.textbox2             instanceof TextBox,             'textbox 2');
+        ok(widgets.textbox3             instanceof TextBox,             'textbox 3');
+        ok(widgets.textbox4             instanceof TextBox,             'textbox 4');
 
-        ok(widgets[7]   instanceof NumberBox,           'numberbox');
+        ok(widgets.numberbox1           instanceof NumberBox,           'numberbox');
 
-        ok(widgets[8]   instanceof SelectBox,           'selectbox 1');
-        ok(widgets[9]   instanceof SelectBox,           'selectbox 2');
+        ok(widgets.selectbox1           instanceof SelectBox,           'selectbox 1');
+        ok(widgets.selectbox2           instanceof SelectBox,           'selectbox 2');
 
-        ok(widgets[10]  instanceof RadioGroup,          'radiogroup');
+        ok(widgets.radiogroup1          instanceof RadioGroup,          'radiogroup');
 
-        ok(widgets[11]  instanceof ToggleGroup,         'togglegroup');
+        ok(widgets.togglegroup1         instanceof ToggleGroup,         'togglegroup');
 
-        ok(widgets[12]  instanceof CheckBoxGroup,       'checkboxgroup');
+        ok(widgets.checkboxgroup1       instanceof CheckBoxGroup,       'checkboxgroup');
 
-        ok(widgets[13]  instanceof TextBox,             'filedset textbox 1');
-        ok(widgets[14]  instanceof TextBox,             'filedset textbox 2');
-        ok(widgets[15]  instanceof TextBox,             'filedset textbox 3');
-        ok(widgets[16]  instanceof TextBox,             'filedset textbox 4');
+        ok(widgets.fieldset1widget1     instanceof TextBox,             'filedset textbox 1');
+        ok(widgets.fieldset1widget2     instanceof TextBox,             'filedset textbox 2');
+        ok(widgets.fieldset1widget3     instanceof TextBox,             'filedset textbox 3');
+        ok(widgets.fieldset1widget4     instanceof TextBox,             'filedset textbox 4');
 
-        ok(widgets[17]  instanceof Multiselect,         'multiselect 1');
-        ok(widgets[18]  instanceof Multiselect,         'multiselect 2');
+        ok(widgets.multiselect1         instanceof Multiselect,         'multiselect 1');
+        ok(widgets['my-multiselect2']   instanceof Multiselect,         'multiselect 2');
 
-        ok(widgets[19]  instanceof DatePicker,          'datepicker');
+        ok(widgets.date                 instanceof DatePicker,          'datepicker');
     });
 
     test('getWidget with name OR data-bind attribute works', function() {
         var view = View2(),
-            widgets = view.widgets;
+            widgets = view.options.widgets;
 
-        equal(view.getWidget('foo'), widgets[0], 'foo button');
-        equal(view.getWidget('barvalue'), widgets[1], 'barvalue textbox');
+        ok(view.getWidget('foo') === widgets.foo, 'foo button');
+        ok(view.getWidget('barvalue') === widgets.barvalue, 'barvalue textbox');
     });
 
     test('getWidget with name AND data-bind attribute works', function() {
         var view = View2(),
-            widgets = view.widgets;
+            widgets = view.options.widgets;
 
-        equal(view.getWidget('baz'), widgets[2], 'baz button');
-        equal(view.getWidget('biz'), widgets[3], 'biz bing button');
-        equal(view.getWidget('biz'), view.getWidget('bing'), 'biz bing button');
+        ok(view.getWidget('baz') === widgets.baz, 'baz button');
+        ok(view.getWidget('biz') === widgets.biz, 'biz bing button');
+        ok(view.getWidget('biz') === view.getWidget('bing'), 'biz bing button');
     });
 
     start();
