@@ -33,16 +33,12 @@ define([
         },
         _bindSyntheticSubmit: function() {
             var self = this;
-            this.on('click', '[name=search]', function(evt) {
-                evt.preventDefault();
-                self.submit(evt);
-            });
-            this.on('keydown', '[name=q]', function(evt) {
-                if (evt.which === 13) {
-                    evt.preventDefault();
-                    self.submit(evt);
-                }
-            });
+            this.on('click', '[name=search]', self.submit)
+                .on('keyup', '[name=q],[name=search]', function(evt) {
+                    if (evt.which === 13) {
+                        self.submit(evt);
+                    }
+                });
         },
         _getPreviousParams: function() {
             return $.extend(true, {}, this.options.collection.query.params);
