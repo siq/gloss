@@ -10,7 +10,7 @@ define([
     './../widgets/checkbox',
     'tmpl!./propagation.mtpl',
     'tmpl!./extension.mtpl'
-], function($, _, View, Registery, ToggleGroup, DatePicker, TextBox, CheckBox,
+], function($, _, View, Registry, ToggleGroup, DatePicker, TextBox, CheckBox,
     propagationTemplate, extensionTemplate) {
 
     test('instantiating a view', function() {
