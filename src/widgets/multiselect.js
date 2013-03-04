@@ -47,7 +47,7 @@ define([
         },
 
         create: function() {
-            var $replacement, self = this, options = self.options;
+            var $replacement, $original, self = this, options = self.options;
 
             this._super();
 
@@ -62,11 +62,13 @@ define([
             }
 
             if (self.node.tagName.toLowerCase() === 'select') {
-                self.$node.replaceWith($replacement = $(self.nodeTemplate()));
-                $replacement.find('.ui-multiselect')
+                $replacement = $(self.nodeTemplate())
                     .attr('name', self.$node.attr('name'))
                     .attr('id', self.$node.attr('id'));
+                $original = self.$node;
                 self.node = (self.$node = $replacement)[0];
+                self.$node.insertAfter($original);
+                $original.remove();
             }
             if (!self.$node.hasClass('multiselect')) {
                 self.$node.addClass('multiselect');

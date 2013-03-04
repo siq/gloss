@@ -112,6 +112,21 @@ define([
             start();
         }, 15);
     });
-        
+
+    test('instantiating multiselect with select el preserves name', function() {
+        var $select = $('<select name=foo></select>'),
+            ms = Multiselect($select);
+        equal(ms.$node.attr('name'), 'foo');
+    });
+
+    test('replacing select element correctly modifies dom', function() {
+        var ms, $select = $('<select name=foo></select>').appendTo('#qunit-fixture');
+        equal($('#qunit-fixture').find('select').length, 1);
+        equal($('#qunit-fixture').find('.multiselect').length, 0);
+        ms = Multiselect($select);
+        equal($('#qunit-fixture').find('select').length, 0);
+        equal($('#qunit-fixture').find('.multiselect').length, 1);
+    });
+
     start();
 });
