@@ -1,10 +1,11 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 define([
+    'vendor/jquery',
     'vendor/underscore',
     './../powergridsearch',
     'mesh/tests/mockedexample',
     './../utils'
-], function(_, PowerGridSearch, Example, utils) {
+], function($, _, PowerGridSearch, Example, utils) {
     var setup = utils.setup;
 
     var MySearch = PowerGridSearch.extend({
@@ -267,6 +268,49 @@ define([
                 }, 0);
             });
         });
+    });
+
+    asyncTest('synthetic submit event on text field', function() {
+        var appendTo = 'body';
+        setup({appendTo: appendTo}).then(function(g) {
+            var originalLength = g.get('models').length,
+                $div = $('<div>').appendTo(appendTo),
+                search = MySearch($div, {collection: g.get('collection')})
+                            .appendTo(appendTo),
+                q = search.getWidget('q');
+
+            q.$node.focus();
+            q.setValue(700).trigger($.Event('keyup', {which: 13}));
+
+            setTimeout(function() {
+                var models = g.get('models');
+                ok(models.length < originalLength);
+                _.each(models, function(m) {ok(m.get('integer_field') > 700);});
+                start();
+            }, 0);
+        });
+    });
+
+    asyncTest('synthetic submit event on text field', function() {
+        var appendTo = '#qunit-fixture';
+        setup({appendTo: appendTo}).then(function(g) {
+            var originalLength = g.get('models').length,
+                $div = $('<div>').appendTo(appendTo),
+                search = MySearch($div, {collection: g.get('collection')})
+                            .appendTo(appendTo),
+                s = search.getWidget('q');
+
+            search.getWidget('q').setValue(700);
+            s.$node.focus().trigger($.Event('keyup', {which: 13}));
+
+            setTimeout(function() {
+                var models = g.get('models');
+                ok(models.length < originalLength);
+                _.each(models, function(m) {ok(m.get('integer_field') > 700);});
+                start();
+            }, 0);
+        });
+
     });
 
     start();
