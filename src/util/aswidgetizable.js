@@ -16,14 +16,13 @@ define([
                     widgetDict[data] = w;
                 }
             });
-            this.set('widgets', widgetDict);
+            return widgetDict;
         };
 
         this._initWidgets = _.wrap(this._initWidgets, function(func) {
             var rest = Array.prototype.slice.call(arguments, 1),
                 ret = func.apply(this, rest);
-                this.widgets = widgetize(this.$el);
-                widgetsDict.call(this, this.widgets);
+            this.set('widgets', widgetsDict(widgetize(this.$el)));
             return ret;
         });
         this.getWidget = function(name) {
