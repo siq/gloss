@@ -20,9 +20,25 @@ define([
                 this.getWidget('clear').disable();
             }
             this.on('submit', this.submit);
+            // we need to handle the submit event synthetically when the
+            // searchers root node is NOT a form.
+            // this is usually the case when we have to put the searcher in parent form
+            // since a form can not be in a form.
+            if (!this.$node.is('form')) {
+                this._bindSyntheticSubmit();
+            }
             this.on('keyup', '[name=q]', this._onKeyup);
             this.on('click', '[name=clear]', this._onClickClear);
             this.update();
+        },
+        _bindSyntheticSubmit: function() {
+            var self = this;
+            this.on('click', '[name=search]', self.submit)
+                .on('keyup', '[name=q],[name=search]', function(evt) {
+                    if (evt.which === 13) {
+                        self.submit(evt);
+                    }
+                });
         },
         _getPreviousParams: function() {
             return $.extend(true, {}, this.options.collection.query.params);
