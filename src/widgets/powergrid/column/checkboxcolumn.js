@@ -9,7 +9,7 @@ define([
             label: '',
             type: 'checkbox',
             name: 'checkbox_column',
-            prop: null
+            prop: null  // this will be the `checkedAttr` on the grid
         },
 
         init: function() {
@@ -20,8 +20,7 @@ define([
             var delegateSelector = 'tbody tr .'+this.columnClass()+' input';
 
             if (this.get('prop') == null) {
-                this.set({prop: '_' + this.el.id + '_checked'},
-                    {silent: true});
+                this.set({prop: '_' + this.el.id + '_checked'});
             }
             if (!this.checkbox) {
                 this._postRenderCheckbox();
@@ -165,6 +164,10 @@ define([
             if (updated.type) {
                 this.render();
                 this.get('grid').rerender();
+            }
+            if (updated.prop) {
+                this.get('grid').set(
+                    {checkedAttr: this.get('prop')}, {silent: true});
             }
         }
 
