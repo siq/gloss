@@ -175,7 +175,7 @@ define([
             window.f = myForm;
             window.b = myForm.bindingGroup;
             start();
-        }, function(c, e) {
+        }, function(e, c) {
             ok(false, 'initial set should have worked' +
                 JSON.stringify(e.serialize(), null, '  '));
             start();

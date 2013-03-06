@@ -29,7 +29,7 @@ define([
                 value = widget.getValue();
                 model.set(prop, value, {validate: true}).then(function() {
                     widget.setStatus();
-                }, function(changes, errors) {
+                }, function(errors, changes) {
                     var error = errors.forField(prop);
                     if (error) {
                         self._handleSetFailure(prop, error);
