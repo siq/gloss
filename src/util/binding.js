@@ -28,7 +28,7 @@ define([
             if ((widget = self.get('widget')) && (model = self.get('model'))) {
                 value = widget.getValue();
                 model.set(prop, value, {validate: true}).then(function() {
-                    widget.setStatus();
+                    widget.clearStatus();
                 }, function(errors, changes) {
                     var error = errors.forField(prop);
                     if (error) {
