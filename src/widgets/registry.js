@@ -40,7 +40,7 @@ define([
 
         //  - get an elements child widgets and views from the registery
         childWidgetsAndViews: function(el) {
-            if (!el || !!el.length) {
+            if (!el) {
                 throw Error('Registry::childWidgetsAndViews ' +
                     'requires a DOM element');
             }
