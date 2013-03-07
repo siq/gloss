@@ -172,7 +172,7 @@ define([
             gridOptions: {selectable: true},
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
-            g.select(g.get('collection').where({text_field: 'item 7'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 7'}));
             equal(g.$el.find('.selected').length, 1, 'only one is selected');
             equal(trim(g.$el.find('.selected td.col-text_field').text()),
                 'item 7', 'correct row selected');
@@ -195,7 +195,7 @@ define([
                 columnModelClass: sortable(BasicColumnModel)
             }
         }).then(function(g, options) {
-            g.select(g.get('collection').where({text_field: 'item 2'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 2'}));
             g.$el.find('th.col-integer_field').trigger('click');
             g.$el.find('th.col-integer_field').trigger('click');
             var $selected = g.$el.find('.selected');
@@ -212,7 +212,7 @@ define([
             gridOptions: {selectable: true},
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
-            g.select(g.get('collection').where({text_field: 'item 2'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 2'}));
 
             var $selected = g.$el.find('.selected');
             equal($selected.length, 1, 'only one is selected');
@@ -223,7 +223,7 @@ define([
 
             $selected = g.$el.find('.selected');
             equal($selected.length, 0, 'no rows selected');
-            ok(g.get('collection').where(g.get('selectedAttr'), true) == null,
+            ok(g.get('collection').findWhere(g.get('selectedAttr'), true) == null,
                 'no models have been selected');
 
             start();
@@ -236,7 +236,7 @@ define([
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
             ok(g.selected() == null);
-            g.select(g.get('collection').where({text_field: 'item 2'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 2'}));
             equal(g.selected().get('text_field'), 'item 2');
             start();
         });
@@ -247,13 +247,13 @@ define([
             gridOptions: {selectable: 'multi'},
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
-            g.select(g.get('collection').where({text_field: 'item 3'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 3'}));
             var $selected = g.$el.find('.selected');
             equal($selected.length, 1, 'only one is selected');
             equal(trim($selected.find('td.col-text_field').text()),
                 'item 3', 'correct row selected');
 
-            g.select(g.get('collection').where({text_field: 'item 6'}),
+            g.select(g.get('collection').findWhere({text_field: 'item 6'}),
                 {dontUnselectOthers: true});
             $selected = g.$el.find('.selected');
             equal($selected.length, 2, 'two are selected');
@@ -322,8 +322,8 @@ define([
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
             deepEqual(g.selected(), []);
-            g.select(g.get('collection').where({text_field: 'item 2'}));
-            g.select(g.get('collection').where({text_field: 'item 7'}), {
+            g.select(g.get('collection').findWhere({text_field: 'item 2'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 7'}), {
                 dontUnselectOthers: true
             });
             deepEqual(
@@ -353,7 +353,7 @@ define([
 
     //         g.on('select', onSelect);
 
-    //         selected = g.get('collection').where({text_field: 'item 3'});
+    //         selected = g.get('collection').findWhere({text_field: 'item 3'});
     //         g.select(selected);
     //         ok(last.data[0] === selected);
 
@@ -377,12 +377,12 @@ define([
             });
 
             equal(triggered.length, 0);
-            g.select(g.get('collection').where({text_field: 'item 3'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 3'}));
             equal(triggered.length, 1);
             g.$el.find('td:contains(item 2)').trigger(
                 $.Event(g.get('selectableEvent'), {ctrlKey: true, metaKey: true}));
             equal(triggered.length, 2);
-            g.select(g.get('collection').where({text_field: 'item 7'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 7'}));
             equal(triggered.length, 3);
             start();
         });
@@ -395,7 +395,7 @@ define([
         }).then(function(g, options) {
             var triggered = [];
 
-            g.select(g.get('collection').where({text_field: 'item 3'}));
+            g.select(g.get('collection').findWhere({text_field: 'item 3'}));
             g.$el.find('td:contains(item 2)').trigger(
                 $.Event(g.get('selectableEvent'), {ctrlKey: true, metaKey: true}));
 

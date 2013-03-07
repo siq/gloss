@@ -36,7 +36,7 @@ define([
             // grid row is selected. so if you want to know which model is
             // selected in a grid, you can do something like:
             //
-            //     grid.get('collection').where(grid.get('selectedAttr'), true);
+            //     grid.get('collection').findWhere(grid.get('selectedAttr'), true);
             //
             // if this is left as 'null', then selectedAttr will be set to
             // something unique to the grid instance at instantiation time.
