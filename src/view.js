@@ -179,15 +179,9 @@ define([
         },
 
         propagate: function(method) {
-            var rest = Array.prototype.slice.call(arguments, 1);
-            _.each(registry.childWidgetsAndViews(this.el), function(child) {
-                if (_.isFunction(child[method])) {
-                    child[method].apply(child, rest);
-                } else {
-                    child.propagate.apply(child, [method].concat(rest));
-                }
-            });
-            return this;
+            // Use "slice" to avoid mutating "arguments".
+            var args = Array.prototype.slice.call(arguments, 0);
+            return registry.propagate.apply(this, [this.el].concat(args));
         },
 
         render: function() {

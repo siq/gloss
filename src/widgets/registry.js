@@ -102,6 +102,18 @@ define([
             return !!(this.get(el));
         },
 
+        propagate: function(el, method) {
+            var rest = Array.prototype.slice.call(arguments, 2);
+            _.each(registry.childWidgetsAndViews(el), function(child) {
+                if (_.isFunction(child[method])) {
+                    child[method].apply(child, rest);
+                } else {
+                    child.propagate.apply(child, [method].concat(rest));
+                }
+            });
+            return this;
+        },
+
         toView: function(el) {
             return this.views[el.getAttribute('view-name')];
         },
