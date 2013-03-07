@@ -14,6 +14,15 @@ define([
             self.status = null;
             self.$node.addClass('formwidget');
         },
+        clearStatus: function(options) {
+            var messageList = this.options.messageList;
+            if (messageList) {
+                messageList.clear(options);
+            }
+            this.status = null;
+            this.removeState(['invalid', 'valid']);
+            return this;
+        },
         disable: function() {
             this.$node.prop('disabled', true);
             this._super();
