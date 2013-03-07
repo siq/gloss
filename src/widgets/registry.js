@@ -40,6 +40,10 @@ define([
 
         //  - get an elements child widgets and views from the registery
         childWidgetsAndViews: function(el) {
+            if (!el || !!el.length) {
+                throw Error('Registry::childWidgetsAndViews ' +
+                    'requires a DOM element');
+            }
             var self = this,
                 children = [],
                 traverse = function(el) {
