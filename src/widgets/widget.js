@@ -3,7 +3,7 @@ define([
     'vendor/jquery-ui',
     'vendor/underscore',
     'bedrock/class',
-    './registry',
+    './../core/registry',
     'css!./../style/base.css'
 ], function($, ui, _, Class, Registry) {
     var isPlainObject = $.isPlainObject, $extend = $.extend, slice = Array.prototype.slice;

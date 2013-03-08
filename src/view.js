@@ -3,7 +3,7 @@ define([
     'vendor/underscore',
     'bedrock/class',
     'bedrock/assettable',
-    './widgets/registry'
+    './core/registry'
 ], function($, _, Class, asSettable, Registry) {
     var viewCount = 0,
 

@@ -3,7 +3,7 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     './../view',
-    './../widgets/registry',
+    './../core/registry',
     './../widgets/togglegroup',
     './../widgets/datepicker',
     './../widgets/textbox',
