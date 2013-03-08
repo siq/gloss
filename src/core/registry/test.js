@@ -2,7 +2,7 @@
 define([
     'vendor/jquery',
     './../registry',
-    './../widget',
+    './../../widgets/widget',
     './../../view'
 ], function($, Registry, Widget, View) {
 
