@@ -12,7 +12,7 @@ define([
             return _.isNumber(which)? dbgview['v'+which] : dbgview[which];
         },
 
-        registry = Registry();
+        registry = Registry.getInstance();
         views = registry.views,
 
         isPageEvent = function(eventName) {

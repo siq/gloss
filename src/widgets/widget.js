@@ -29,7 +29,7 @@ define([
         return original;
     };
     
-    var registry = Registry();
+    var registry = Registry.getInstance();
 
     $.fn.__append__ = $.fn.append;
     $.each(['after', 'append', 'before', 'prepend'], function(i, name) {

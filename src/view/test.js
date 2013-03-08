@@ -183,7 +183,7 @@ define([
 
     test('getting child widgets and views works', function() {
         var $el = $(propagationTemplate()),
-            registry = Registry(),
+            registry = Registry.getInstance(),
             widgets = widgetize($el),
             v = View({$el: $el}),
             children = registry.childWidgetsAndViews($el[0]);

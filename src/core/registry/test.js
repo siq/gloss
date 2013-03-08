@@ -6,7 +6,7 @@ define([
     './../../view'
 ], function($, Registry, Widget, View) {
 
-    var registry = Registry();
+    var registry = Registry.getInstance();
 
     //  - Note that propagate only works on direct children not nested children
     //  - propagation should walk the DOM from the provided el and call `propagate`

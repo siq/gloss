@@ -254,11 +254,12 @@ define([
     });
 
     var instance;
-    return function () {
-        if ( !instance ) {
-            instance = Registry();
-            window.registry = instance;
+    return {
+        getInstance: function() {
+            return instance || (window.registry = instance = Registry());
+        },
+        resetInstance: function() {
+            instance = null;
         }
-        return instance;
     };
 });
