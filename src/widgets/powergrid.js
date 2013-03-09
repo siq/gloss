@@ -7,15 +7,15 @@ define([
     'vendor/underscore',
     'mesh/model',
     './../view',
-    './ascollectionviewable',
     './powergrid/columnmodel',
     './spinner',
+    './../mixins/ascollectionviewable',
     './../util/sort',
     'tmpl!./powergrid/powergrid.mtpl',
     'tmpl!./powergrid/spinnerTr.mtpl',
     'css!./powergrid/powergrid.css'
-], function($, _, model, View, asCollectionViewable,
-    ColumnModel, Spinner, sort, template, loadingRowTmpl) {
+], function($, _, model, View, ColumnModel, Spinner,
+    asCollectionViewable, sort, template, loadingRowTmpl) {
 
     var EmptyColumnModel, PowerGrid,
         mod = /mac/i.test(navigator.userAgent)? 'metaKey' : 'ctrlKey';

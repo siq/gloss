@@ -1,6 +1,6 @@
 define([
     'vendor/underscore',
-    './collectionviewable'
+    './../widgets/collectionviewable'
 ], function(_, CollectionViewable) {
     return function() {
         this._updateCollection = CollectionViewable._updateCollection;
