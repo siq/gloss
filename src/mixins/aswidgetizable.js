@@ -1,6 +1,6 @@
 define([
     'vendor/underscore',
-    './widgetize'
+    './../util/widgetize'
 ], function(_, widgetize) {
     return function() {
 
