@@ -2,7 +2,7 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     'bedrock/class',
-    'bedrock/assettable',
+    'bedrock/mixins/assettable',
     './core/registry'
 ], function($, _, Class, asSettable, Registry) {
     var viewCount = 0,

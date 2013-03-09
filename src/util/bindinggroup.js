@@ -3,7 +3,7 @@ define([
     'vendor/underscore',
     'vendor/t',
     'bedrock/class',
-    'bedrock/assettable',
+    'bedrock/mixins/assettable',
     './../widgets/widget',
     './widgetize',
     './binding'

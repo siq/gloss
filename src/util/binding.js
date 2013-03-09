@@ -1,7 +1,7 @@
 define([
     'vendor/underscore',
     'bedrock/class',
-    'bedrock/assettable'
+    'bedrock/mixins/assettable'
 ], function(_, Class, asSettable) {
     var Binding = Class.extend({
         init: function(options) {

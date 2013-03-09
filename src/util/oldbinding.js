@@ -2,7 +2,7 @@ define([
     'vendor/underscore',
     'vendor/t',
     'bedrock/class',
-    'bedrock/assettable',
+    'bedrock/mixins/assettable',
     './../widgets/widget',
     './../widgets/formwidget'
 ], function(_, t, Class, asSettable, Widget, FormWidget) {

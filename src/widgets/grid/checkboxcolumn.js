@@ -2,7 +2,7 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     'bedrock/class',
-    'bedrock/assettable'
+    'bedrock/mixins/assettable'
 ], function ($, _, Class, asSettable) {
 
     var tmpl = function(tmpl) {
