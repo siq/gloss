@@ -50,7 +50,7 @@ define([
     });
 
     asyncTest('correctly clears search params', function() {
-        var appendTo = '#qunit-fixture', cutoff1 = 500, cutoff2 = 200;
+        var appendTo = '#qunit-fixture', cutoff1 = 993, cutoff2 = 994;
         setup({appendTo: appendTo}).then(function(g) {
             var originalLength = g.get('models').length,
                 search = MySearch(null, {collection: g.get('collection')})
@@ -280,12 +280,12 @@ define([
                 q = search.getWidget('q');
 
             q.$node.focus();
-            q.setValue(700).trigger($.Event('keyup', {which: 13}));
+            q.setValue(993).trigger($.Event('keyup', {which: 13}));
 
             setTimeout(function() {
                 var models = g.get('models');
                 ok(models.length < originalLength);
-                _.each(models, function(m) {ok(m.get('integer_field') > 700);});
+                _.each(models, function(m) {ok(m.get('integer_field') > 993);});
                 start();
             }, 0);
         });
@@ -300,13 +300,13 @@ define([
                             .appendTo(appendTo),
                 s = search.getWidget('q');
 
-            search.getWidget('q').setValue(700);
+            search.getWidget('q').setValue(993);
             s.$node.focus().trigger($.Event('keyup', {which: 13}));
 
             setTimeout(function() {
                 var models = g.get('models');
                 ok(models.length < originalLength);
-                _.each(models, function(m) {ok(m.get('integer_field') > 700);});
+                _.each(models, function(m) {ok(m.get('integer_field') > 993);});
                 start();
             }, 0);
         });
