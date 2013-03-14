@@ -27,14 +27,14 @@ define([
             var model, value, widget, self = this, prop = self.get('prop');
             if ((widget = self.get('widget')) && (model = self.get('model'))) {
                 value = widget.getValue();
-                model.set(prop, value, {validate: true}).then(function() {
-                    widget.clearStatus();
-                }, function(errors, changes) {
-                    var error = errors.forField(prop);
-                    if (error) {
-                        self._handleSetFailure(prop, error);
-                    }
-                });
+                widget.clearStatus();
+                model.set(prop, value, {validate: true})
+                    .fail(function(errors, changes) {
+                        var error = errors.forField(prop);
+                        if (error) {
+                            self._handleSetFailure(prop, error);
+                        }
+                    });
             }
         },
         _setValueFromModel: function() {
