@@ -53,7 +53,7 @@ define([
                 if (this.previous('model')) {
                     this.previous('model').off('change', this._onPropChange);
                 }
-                bindPropChange = true;
+                bindPropChange = bindPropChange || !!this.get('model');
             }
             if (changed.widget) {
                 if (this.previous('widget')) {
