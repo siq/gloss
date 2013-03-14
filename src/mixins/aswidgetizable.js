@@ -24,8 +24,9 @@ define([
             this.set('widgets', widgetsDict(widgetize(this.$el)));
             return ret;
         });
+
         this.getWidget = function(name) {
-            return this.get('widgets')[name];
+            return this.get('widgets.' + name);
         };
     };
 });
