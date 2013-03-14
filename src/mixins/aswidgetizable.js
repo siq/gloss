@@ -11,8 +11,7 @@ define([
                     data = w.$node.attr('data-bind');
                 if (name) {
                     widgetDict[name] = w;
-                }
-                if (data && name !== data) {
+                } else if (data) {
                     widgetDict[data] = w;
                 }
             });
