@@ -20,7 +20,7 @@ define([
         },
         _autoInstantiateBindings: function() {
             var self = this, root = self.get('$el')[0],
-                widgets = self.get('widgets') || [],
+                widgets = asSettable.flattened(self.get('widgets') || {}),
                 name = self.get('name');
             t.dfs(root, function(el, parentEl, ctrl) {
                 var params, widget = _.find(widgets, function(w) {
