@@ -1076,6 +1076,18 @@ define([
         });
     });
 
+    asyncTest('unselects everything when setvalue called with undefined', function() {
+        setup({gridClass: PowerGridFormWidget}).then(function(g) {
+            var m = g.get('models')[2];
+            g.setValue(m.get('id'));
+            equal(g.selected().get('id'), m.get('id'));
+            g.setValue();
+            equal(g.getValue(), undefined);
+            start();
+        });
+
+    });
+
     module('all the marbles');
 
     var MarblesColumn = Column.extend({

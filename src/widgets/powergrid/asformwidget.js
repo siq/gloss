@@ -44,10 +44,15 @@ define([
 
         this.setValue = function(newValue) {
             var attr = this.get('selectedAttr');
-            newValue = _.isArray(newValue)? newValue : [newValue];
-            this.select(_.find(this.get('models'), function(m) {
-                return _.indexOf(newValue, m.get(prop)) >= 0;
-            }));
+            if ((_.isArray(newValue) && newValue.length === 0) ||
+                    newValue === void 0) {
+                this.unselect();
+            } else {
+                newValue = _.isArray(newValue)? newValue : [newValue];
+                this.select(_.find(this.get('models'), function(m) {
+                    return _.indexOf(newValue, m.get(prop)) >= 0;
+                }));
+            }
             return this;
         };
 
