@@ -31,12 +31,13 @@ define([
     './column/asdatetime',
     './column/asbytes',
     './column/asnumber',
+    './asformwidget',
     'mesh/tests/mockedexample',
     'mesh/tests/examplefixtures',
     './utils'
 ], function($, _, moment, scrollbar, PowerGrid, ColumnModel, Column,
-    CheckBoxColumn, asDateTime, asBytes, asNumber, Example, exampleFixtures,
-    utils) {
+    CheckBoxColumn, asDateTime, asBytes, asNumber, asFormWidget, Example,
+    exampleFixtures, utils) {
 
     var BasicColumnModel = utils.BasicColumnModel,
         setup = utils.setup,
@@ -1033,6 +1034,45 @@ define([
             ok(rowScrollWidth === rowWidth, 'horizontal scrollbar is not visible');
 
             start();
+        });
+    });
+
+    module('asFormWidget');
+
+    var PowerGridFormWidget = PowerGrid.extend();
+    asFormWidget.call(PowerGridFormWidget.prototype);
+
+    asyncTest('correctly emulates formwidget getvalue', function() {
+        setup({gridClass: PowerGridFormWidget}).then(function(g) {
+            var m = g.get('models')[2];
+            g.select(m);
+            equal(g.getValue(), m.get('id'));
+            start();
+        });
+    });
+
+    asyncTest('correctly emulates formwidget setValue', function() {
+        setup({gridClass: PowerGridFormWidget}).then(function(g) {
+            var m = g.get('models')[2];
+            g.setValue(m.get('id'));
+            equal(g.selected().get('id'), m.get('id'));
+            start();
+        });
+    });
+
+    asyncTest('correctly emulates formwidget change events', function() {
+        setup({gridClass: PowerGridFormWidget}).then(function(g) {
+            var m1 = g.get('models')[2], m2 = g.get('models')[4], events = [];
+            g.on('change', function() {events.push(_.rest(arguments, 0));});
+
+            g.setValue(m1.get('id'));
+            g.select(m2);
+            g.unselect();
+
+            setTimeout(function() {
+                equal(events.length, 3);
+                start();
+            });
         });
     });
 
