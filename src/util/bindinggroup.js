@@ -11,25 +11,30 @@ define([
     var registry = Widget().registry;
 
     var BindingGroup = Class.extend({
+        defaults: {
+            name: 'main'
+        },
         init: function(options) {
             this.bindings = [];
-            this.set(options);
+            this.set(_.extend({}, this.defaults, options));
         },
         _autoInstantiateBindings: function() {
-            var widgets = this.get('widgets') || [],
-                self = this, root = self.get('$el')[0];
+            var self = this, root = self.get('$el')[0],
+                widgets = self.get('widgets') || [],
+                name = self.get('name');
             t.dfs(root, function(el, parentEl, ctrl) {
                 var params, widget = _.find(widgets, function(w) {
-                    return w.node === el? w : null;
-                });
+                        return w.node === el? w : null;
+                    }),
+                    group = el.getAttribute('data-bind-group') || 'main';
 
-                if (widget && widget.$node.attr('data-bind')) {
+                if (group === name && widget && widget.$node.attr('data-bind')) {
                     params = {
                         prop: widget.$node.attr('data-bind'),
                         twoWay: true,
                         widget: widget
                     };
-                } else if (el.getAttribute('data-bind')) {
+                } else if (group === name && el.getAttribute('data-bind')) {
                     params = {prop: el.getAttribute('data-bind'), $el: $(el)};
                 }
 
