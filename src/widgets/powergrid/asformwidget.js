@@ -17,9 +17,29 @@ define([
             this.trigger('change');
         };
 
+        this.clearStatus = function(opts) {
+            var messageList = this.get('messageList');
+            if (messageList) {
+                messageList.clear(opts);
+            }
+            return this;
+        };
+
         this.getValue = function() {
             var m = this.selected();
             return m && m.get(prop);
+        };
+
+        this.setStatus = function(type, msg) {
+            var messageList = this.get('messageList');
+            if (!messageList) {
+                return;
+            }
+            messageList.clear();
+            if (type) {
+                messageList.append(type, msg);
+            }
+            return this;
         };
 
         this.setValue = function(newValue) {
