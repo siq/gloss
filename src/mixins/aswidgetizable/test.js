@@ -77,7 +77,10 @@ define([
 
         ok(view.getWidget('baz') === widgets.baz, 'baz button');
         ok(view.getWidget('biz') === widgets.biz, 'biz bing button');
-        ok(view.getWidget('biz') === view.getWidget('bing'), 'biz bing button');
+
+        // we no longer support this behavior -- widgetize preferences 'name'
+        // over 'data-bind' when making widgets
+        // ok(view.getWidget('biz') === view.getWidget('bing'), 'biz bing button');
     });
 
     start();
