@@ -51,21 +51,20 @@ define([
                     if (self.has('globalErrorStrings')) {
                         params.strings.push(self.get('globalErrorStrings'));
                     }
-                    self.bindings.push(Binding(params));
+                    self.addBinding(Binding(params));
                 }
             });
+        },
+        addBinding: function(binding) {
+            if (this.get('model')) {
+                binding.set('model', this.get('model'));
+            }
+            this.bindings.push(binding);
         },
         update: function(changed) {
             var model;
             if (changed.$el) {
                 this._autoInstantiateBindings();
-            }
-            if (changed.additionalBindings) {
-                _.each(this.get('additionalBindings'), function(b) {
-                    if (_.indexOf(this.bindings, b) < 0) {
-                        this.bindings.push(b);
-                    }
-                });
             }
             if (changed.model) {
                 model = this.get('model');
