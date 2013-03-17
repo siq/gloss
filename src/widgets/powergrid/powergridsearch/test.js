@@ -183,9 +183,10 @@ define([
     };
 
     asyncTest('search disables powergrid', function() {
-        setup().then(function(g) {
+        var appendTo = '#qunit-fixture';
+        setup({appendTo: appendTo}).then(function(g) {
             var delay, originalLength = g.get('models').length,
-                search = MySearch(null, {collection: g.get('collection')});
+                search = MySearch(null, {collection: g.get('collection')}).appendTo(appendTo);
             g.get('collection').load().then(function() {
                 Example.mockDelay(delay = 50);
                 // set timout to allow collection 'update' to fire

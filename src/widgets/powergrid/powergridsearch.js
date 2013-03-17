@@ -65,9 +65,7 @@ define([
             return result;
         },
         _onClickClear: function() {
-            var clear = this.getWidget('clear'),
-                q = this.getWidget('q').setValue('');
-
+            this.getWidget('q').setValue('');
             if (this._filtered) {
                 this.submit();
             }
@@ -96,10 +94,12 @@ define([
             return collection.load().always(function() {
                 self.propagate('enable');
                 self.trigger('searchCompleted'); // deprecated, use coll. event
-                collection.trigger('powerGridSearchCompleted');
 
-                if (!self.getWidget('q').getValue()) {
+                if (self.getWidget('q').getValue()) {
+                    collection.trigger('powerGridSearchCompleted');
+                } else {
                     self.getWidget('clear').disable();
+                    collection.trigger('powerGridSearchCleared');
                 }
             });
         }

@@ -65,9 +65,10 @@ define([
 
             this.$tbody = this.$el.find('table.rows tbody');
 
-            _.bindAll(this, '_onColumnChange', '_onColumnResize', '_onModelChange',
-                    '_onMultiselectableRowClick', '_onSelectableRowClick',
-                    'disable', 'enable');
+            _.bindAll(this, '_onColumnChange', '_onColumnResize',
+                    '_onModelChange', '_onMultiselectableRowClick',
+                    '_onSelectableRowClick', '_onSearchCompleted',
+                    '_onSearchCleared', 'disable', 'enable');
 
             this.on('columnchange', this._onColumnChange);
             this.on('columnresize', this._onColumnResize);
@@ -225,11 +226,6 @@ define([
             return this.get('models').length === total;
         },
 
-        _isFiltered: function() {
-            var collection = this.get('collection');
-            return collection && collection.query.params.query != null;
-        },
-
         _modelFromTr: function(tr) {
             var idx = this.$tbody.children('tr').index(tr);
             return idx >= 0? this.get('models')[idx] : null;
@@ -279,6 +275,16 @@ define([
                 return;
             }
             this.select(clickedModel);
+        },
+
+        _onSearchCompleted: function() {
+            this.enable();
+            this.set('gridIsFiltered', true);
+        },
+
+        _onSearchCleared: function() {
+            this.enable();
+            this.set('gridIsFiltered', false);
         },
 
         _rerender: function() {
@@ -581,8 +587,6 @@ define([
 
             if (updated.models) {
                 rerender = sort = true;
-                isFiltered = this._isFiltered();
-                this.$el[isFiltered? 'addClass' : 'removeClass']('filtered');
             }
             if (updated.data) {
                 if (!(DummyModel = this.get('DummyModel'))) {
@@ -598,13 +602,15 @@ define([
                     this.previous('collection')
                         .off('change', this._onModelChange)
                         .off('powerGridSearchStarted', this.disable)
-                        .off('powerGridSearchCompleted', this.enable);
+                        .off('powerGridSearchCompleted', this._onSearchCompleted)
+                        .off('powerGridSearchCleared', this._onSearchCleared);
                 }
                 if (this.get('collection')) {
                     this.get('collection')
                         .on('change', this._onModelChange)
                         .on('powerGridSearchStarted', this.disable)
-                        .on('powerGridSearchCompleted', this.enable);
+                        .on('powerGridSearchCompleted', this._onSearchCompleted)
+                        .on('powerGridSearchCleared', this._onSearchCleared);
                 }
                 if (this.previous('collection') && !this.get('collection')) {
                     this.set('models', []);
@@ -624,6 +630,10 @@ define([
             if (updated.columnModel) {
                 this.$el[c('sortable')? 'addClass':'removeClass']('sortable');
                 this.$el[c('resizable')? 'addClass':'removeClass']('resizable');
+            }
+            if (updated.gridIsFiltered) {
+                isFiltered = this.get('gridIsFiltered');
+                this.$el[isFiltered? 'addClass' : 'removeClass']('filtered');
             }
 
             if (sort) {
