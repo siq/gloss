@@ -1,17 +1,18 @@
 define([
     'vendor/underscore',
     'bedrock/class',
-    'bedrock/mixins/assettable'
-], function(_, Class, asSettable) {
+    'bedrock/mixins/assettable',
+    'mesh/fields'
+], function(_, Class, asSettable, fields) {
     var Binding = Class.extend({
         init: function(options) {
-            _.bindAll(this, '_onPropChange', '_onUIChange');
+            _.bindAll(this, '_onPropChange', '_onUIChange', 'processErrors');
             this.set(options);
         },
         _getValueFromModel: function() {
             return this.get('model').get(this.get('prop'));
         },
-        _handleSetFailure: function(prop, error) {
+        _handleSingleError: function(error) {
             var msg, widget = this.get('widget'), token = error && error.token;
             msg = _.compact(_.pluck(this.get('strings'), token))[0] ||
                   error.message || token;
@@ -24,17 +25,12 @@ define([
             this._setValueFromModel();
         },
         _onUIChange: function() {
-            var model, value, widget, self = this, prop = self.get('prop');
-            if ((widget = self.get('widget')) && (model = self.get('model'))) {
+            var model, value, widget, prop = this.get('prop');
+            if ((widget = this.get('widget')) && (model = this.get('model'))) {
                 value = widget.getValue();
                 widget.clearStatus();
                 model.set(prop, value, {validate: true})
-                    .fail(function(errors, changes) {
-                        var error = errors.forField(prop);
-                        if (error) {
-                            self._handleSetFailure(prop, error);
-                        }
-                    });
+                    .fail(this.processErrors);
             }
         },
         _setValueFromModel: function() {
@@ -46,6 +42,14 @@ define([
             } else if (($el = this.get('$el'))) {
                 $el.text(this._getValueFromModel());
             }
+        },
+        processErrors: function(errors) {
+            var error = errors instanceof fields.CompoundError?
+                    errors.forField(this.get('prop')) : errors;
+            if (error) {
+                this._handleSingleError(error);
+            }
+            return this;
         },
         update: function(changed) {
             var bindPropChange, bindUIChange;

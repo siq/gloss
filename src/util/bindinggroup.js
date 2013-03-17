@@ -61,6 +61,12 @@ define([
             }
             this.bindings.push(binding);
         },
+        processErrors: function(errors) {
+            _.each(this.bindings, function(binding) {
+                binding.processErrors(errors);
+            });
+            return this;
+        },
         update: function(changed) {
             var model;
             if (changed.$el) {
