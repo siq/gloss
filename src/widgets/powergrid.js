@@ -177,7 +177,7 @@ define([
                 return true;
             });
             this.$el.bind('keyup', 'tbody tr', function(evt) {
-                var selectModel, selectIndex,
+                var selectedModel, selectIndex,
                     selected = self.selected(),
                     models = self.get('models');
 
