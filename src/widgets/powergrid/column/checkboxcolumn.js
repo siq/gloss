@@ -134,6 +134,12 @@ define([
             }
         },
 
+        _setTdCellWidth: function(width) {
+        },
+
+        _setThCellWidth: function(width) {
+        },
+
         cssClasses: function() {
             return this._super.apply(this, arguments) + ' checkbox-column';
         },

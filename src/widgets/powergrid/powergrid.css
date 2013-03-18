@@ -73,7 +73,6 @@ tr.selected {
   /* this needs to be the height of the header row (wish we didn't have to
    * hard-code it). the look-and-feel styling must override this */
   padding-top: 30px;
-  `
   overflow: auto;
 }
 
@@ -102,4 +101,6 @@ tr.selected {
 */
 .col-checkbox_column {
   width: 19px;
+  min-width: 19px;
+  max-width: 19px;
 }

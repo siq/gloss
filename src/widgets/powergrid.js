@@ -572,6 +572,10 @@ define([
             this.spinner.instantiate();
             this._setScrollTop();
             // post render for columns
+            // th width is based on td width so make sure that is set first
+            _.each(this.get('columnModel').columns, function(c) {
+                c._setTdCellWidth(c.get('width'));
+            });
             _.each(this.get('columnModel').columns, function(c) {
                 c._setThCellWidth();
             });
