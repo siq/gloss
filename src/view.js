@@ -12,8 +12,7 @@ define([
             return _.isNumber(which)? dbgview['v'+which] : dbgview[which];
         },
 
-        registry = Registry.getInstance();
-        views = registry.views,
+        views = Registry.getInstance().views,
 
         isPageEvent = function(eventName) {
             return (eventName.split('.')[0] in
@@ -181,7 +180,7 @@ define([
         propagate: function(method) {
             // Use "slice" to avoid mutating "arguments".
             var args = Array.prototype.slice.call(arguments, 0);
-            return registry.propagate.apply(this, [this.el].concat(args));
+            return Registry.getInstance().propagate.apply(this, [this.el].concat(args));
         },
 
         render: function() {
@@ -262,6 +261,6 @@ define([
 
         return derivedClass;
     });
-    View.registry = registry;
+    View.registry = Registry.getInstance();
     return View;
 });
