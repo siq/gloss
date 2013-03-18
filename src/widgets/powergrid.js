@@ -178,7 +178,7 @@ define([
                 return true;
             });
             this.$el.bind('keyup', 'tbody tr', function(evt) {
-                var selectedModel, selectIndex,
+                var selectedModel, selectIndex, selectedTr,
                     selected = self.selected(),
                     models = self.get('models');
 
@@ -194,7 +194,10 @@ define([
                     return;
                 }
                 if (evt.which === enter || evt.which === space) {      //  - enter key
-                    self._trFromModel(selected).trigger('dblclick');
+                    selectedTr = self._trFromModel(selected);
+                    if (selectedTr) {
+                        selectedTr.trigger('dblclick');
+                    }
                     return;
                 } else if (evt.which === up) {             //  - up arrow
                     //  - if no row is selected select the bottom row
