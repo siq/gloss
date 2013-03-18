@@ -148,7 +148,7 @@ define([
             setTimeout(function() {
                 $(document)[one? 'one' : 'on'](name, function handler(evt) {
                     if (evt.target !== $el[0] && !$(evt.target).closest($el).length) {
-                        if (!callback(evt)) {
+                        if (callback(evt) === false) {
                             evt.preventDefault();
                         }
                     }
