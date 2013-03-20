@@ -68,7 +68,7 @@ define([
             _.bindAll(this, '_onColumnChange', '_onColumnResize',
                     '_onModelChange', '_onMultiselectableRowClick',
                     '_onSelectableRowClick', '_onSearchCompleted',
-                    '_onSearchCleared', 'disable', 'enable');
+                    '_onSearchCleared', 'disable', 'enable', 'rerender');
 
             this.on('columnchange', this._onColumnChange);
             this.on('columnresize', this._onColumnResize);
