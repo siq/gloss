@@ -1088,6 +1088,25 @@ define([
 
     });
 
+    asyncTest('only triggers change event when selection prop changes', function() {
+        setup({gridClass: PowerGridFormWidget}).then(function(g) {
+            var m1 = g.get('models')[2], m2 = g.get('models')[4], events = [];
+            g.on('change', function() {events.push(_.rest(arguments, 0));});
+
+            g.setValue(m1.get('id'));
+            g.select(m2);
+            g.unselect();
+
+            m1.set('foo', 'bar');
+
+            setTimeout(function() {
+                equal(events.length, 3);
+                start();
+            });
+        });
+
+    });
+
     module('all the marbles');
 
     var MarblesColumn = Column.extend({
