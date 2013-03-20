@@ -432,6 +432,31 @@ define([
         });
     });
 
+    asyncTest('calling select with an array of models', function() {
+        setup({
+            gridOptions: {selectable: 'multi'},
+            appendTo: '#qunit-fixture'
+        }).then(function(g, options) {
+            var models = g.get('models').slice(1, 4);
+
+            var $selected = g.$el.find('.selected');
+            equal($selected.length, 0, 'no models initiall selected');
+
+            g.select(models);
+
+            $selected = g.$el.find('.selected');
+            equal($selected.length, 3, 'two are selected');
+            equal(trim($selected.find('td.col-text_field').eq(0).text()),
+                'item 1', 'correct row selected');
+            equal(trim($selected.find('td.col-text_field').eq(1).text()),
+                'item 2', 'correct row selected');
+            equal(trim($selected.find('td.col-text_field').eq(2).text()),
+                'item 3', 'correct row selected');
+
+            start();
+        });
+    });
+
     module('resizing');
 
     var resizable = function(colModelClass) {
