@@ -464,34 +464,39 @@ define([
             var indices, self = this, changes = [],
                 a = self.get('selectedAttr'),
                 models = self.get('models'),
+                selectModels = _.isArray(model)? model : [model],
                 selected = function(m) { return m.get(a); };
 
             opts = opts || {};
 
             // first just get a list of all the changes that need to happen
-            if (!opts.dontUnselectOthers) {
+            if (!opts.dontUnselectOthers && !opts.selectTo) {
                 _.each(models, function(m) {
-                    if (m !== model && m.get(a)) {
+                    if (selectModels.indexOf(m) < 0 && m.get(a)) {
                         changes.push({model: m, action: 'del'});
                     }
                 });
             }
 
             if (opts.selectTo && _.any(models, selected)) {
-                indices = [
+                indices = _.filter([
                     _.indexOf(_.map(models, selected), true),
                     _.lastIndexOf(_.map(models, selected), true),
                     _.indexOf(models, model)
-                ];
+                ], function(idx) {
+                    return idx >= 0;
+                });
                 _.each(_.range(_.min(indices), _.max(indices)), function(i) {
-                    if (models[i] !== model && !models[i].get(a)) {
+                    if (!models[i].get(a)) {
                         changes.push({model: models[i], action: 'set'});
                     }
                 });
-            }
-
-            if (!model.get(a)) {
-                changes.push({model: model, action: 'set'});
+            } else {
+                _.each(selectModels, function(m) {
+                    if (!m.get(a)) {
+                        changes.push({model: m, action: 'set'});
+                    }
+                });
             }
 
             // now we actually make the changes, silently for everything but
