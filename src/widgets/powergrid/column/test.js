@@ -3,14 +3,16 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     'vendor/moment',
+    './../../powergrid',
     './checkboxcolumn',
     './asdatetime',
     './asbytes',
     './asenumeration',
     './asnumber',
+    './../asformwidget',
     './../utils'
-], function($, _, moment, CheckBoxColumn, asDateTime, asBytes, asEnumeration,
-    asNumber, utils) {
+], function($, _, moment, PowerGrid, CheckBoxColumn, asDateTime, asBytes,
+    asEnumeration, asNumber, asFormWidget, utils) {
 
     var setup = utils.setup,
         BasicColumnModel = utils.BasicColumnModel,
@@ -165,6 +167,79 @@ define([
             });
         });
     }
+
+    var FormWidgetPowerGrid = PowerGrid.extend();
+    asFormWidget.call(FormWidgetPowerGrid.prototype);
+
+    asyncTest('checkbox column with asformwidget', function() {
+        setup({
+            gridClass: FormWidgetPowerGrid,
+            gridOptions: {
+                columnModelClass: BasicColumnModel.extend({
+                    columnClasses: [CheckBoxColumn.extend()]
+                        .concat(BasicColumnModel.prototype.columnClasses)
+                })
+            }
+        }).then(function(g) {
+            var $checked, val, cb = g.get('columnModel').columns[0],
+                prop = cb.get('prop'),
+                models = g.get('models');
+
+            g.setValue(val = [2, 3, 4]);
+            deepEqual(_.mpluck(_.mwhere(models, prop, true), 'id'), val);
+            equal(($checked = g.$el.find('input:checked')).length, 3);
+            $checked.parent().siblings('.col-text_field').each(function(i, el) {
+                equal($.trim($(el).text()), 'item ' + (val[i]-1));
+            });
+            deepEqual(g.getValue(), val);
+
+            g.setValue(val = [7, 8]);
+            deepEqual(_.mpluck(_.mwhere(models, prop, true), 'id'), val);
+            equal(($checked = g.$el.find('input:checked')).length, 2);
+            $checked.parent().siblings('.col-text_field').each(function(i, el) {
+                equal($.trim($(el).text()), 'item ' + (val[i]-1));
+            });
+            deepEqual(g.getValue(), val);
+
+            start();
+        });
+    });
+
+    asyncTest('checkbox radio column with asformwidget', function() {
+        setup({
+            appendTo: 'body',
+            gridClass: FormWidgetPowerGrid,
+            gridOptions: {
+                columnModelClass: BasicColumnModel.extend({
+                    columnClasses: [CheckBoxColumn.extend({
+                        defaults: {type: 'radio'}
+                    })].concat(BasicColumnModel.prototype.columnClasses)
+                })
+            }
+        }).then(function(g) {
+            var $checked, val, cb = g.get('columnModel').columns[0],
+                prop = cb.get('prop'),
+                models = g.get('models');
+
+            g.setValue(val = 2);
+            deepEqual(_.mpluck(_.mwhere(models, prop, true), 'id'), [val]);
+            equal(($checked = g.$el.find('input:checked')).length, 1);
+            $checked.parent().siblings('.col-text_field').each(function(i, el) {
+                equal($.trim($(el).text()), 'item ' + (val-1));
+            });
+            deepEqual(g.getValue(), val);
+
+            g.setValue(val = 8);
+            deepEqual(_.mpluck(_.mwhere(models, prop, true), 'id'), [val]);
+            equal(($checked = g.$el.find('input:checked')).length, 1);
+            $checked.parent().siblings('.col-text_field').each(function(i, el) {
+                equal($.trim($(el).text()), 'item ' + (val-1));
+            });
+            deepEqual(g.getValue(), val);
+
+            start();
+        });
+    });
 
     module('date column');
 
