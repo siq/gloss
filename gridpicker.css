@@ -1,0 +1,16 @@
+.gridpicker .selected-data {
+  float: left;
+}
+.gridpicker .data {
+  float: right;
+}
+
+.gridpicker .grid {
+	width: 380px;
+	height: 340px;
+}
+
+.gridpicker .action {
+	text-align: center;
+	padding-top: 30px;
+}

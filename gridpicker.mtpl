@@ -1,0 +1,14 @@
+<div class=gridpicker>
+	<div class=selected-data>
+		<div class=grid></div>
+	</div>
+  <div class=data>
+    <div class=grid></div>
+    <div class=filter></div>
+  </div>
+
+  <div class=action>
+    <button type=button name=add><%=this.get('strings.button.add')%></button><br/>
+    <button type=button name=remove><%=this.get('strings.button.remove')%></button>
+  </div>
+</div>
