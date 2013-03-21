@@ -7,9 +7,6 @@ define([
         var selectable = this.defaults.selectable || true,
             prop = (opts && opts.prop) || 'id';
 
-        this.defaults = $.extend(true, this.defaults, {selectable: selectable});
-
-
         this.init = _.wrap(this.init, function(init) {
             _.bindAll(this, '_onChangeFormValue');
             return init.apply(this, _.rest(arguments, 1));
