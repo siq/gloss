@@ -1064,7 +1064,9 @@ define([
 
     module('asFormWidget');
 
-    var PowerGridFormWidget = PowerGrid.extend();
+    var PowerGridFormWidget = PowerGrid.extend({
+        defaults: {selectable: true}
+    });
     asFormWidget.call(PowerGridFormWidget.prototype);
 
     asyncTest('correctly emulates formwidget getvalue', function() {
