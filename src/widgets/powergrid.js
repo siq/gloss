@@ -472,7 +472,7 @@ define([
             // first just get a list of all the changes that need to happen
             if (!opts.dontUnselectOthers && !opts.selectTo) {
                 _.each(models, function(m) {
-                    if (selectModels.indexOf(m) < 0 && m.get(a)) {
+                    if (_.indexOf(selectModels, m) < 0 && m.get(a)) {
                         changes.push({model: m, action: 'del'});
                     }
                 });
