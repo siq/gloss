@@ -117,5 +117,43 @@ define([
         });
     });
 
+    asyncTest('select available workflow enables the add button', function() {
+        setup().then(function(gp) {
+            var g = gp.dataGrid, evt = g.get('selectableEvent');
+            equal(gp.addButton.getState('disabled'), true);
+            g.$el.find('tbody tr:first td:first').trigger(evt);
+            equal(gp.addButton.getState('disabled'), false);
+            start();
+        });
+    });
+
+    asyncTest('select selected workflow enables the remove button', function() {
+        setup().then(function(gp) {
+            var g1 = gp.dataGrid,
+                g2 = gp.selectedDataGrid,
+                evt = g1.get('selectableEvent');
+            g1.$el.find('tbody tr:first td:first').trigger(evt);
+            gp.$el.find('[name=add]').trigger('click');
+            equal(gp.removeButton.getState('disabled'), true);
+            g2.$el.find('tbody tr:first td:first').trigger(evt);
+            equal(gp.removeButton.getState('disabled'), false);
+            start();
+        });
+    });
+
+    asyncTest('select remove selected workflow empties the list', function() {
+        setup().then(function(gp) {
+            var g1 = gp.dataGrid,
+                g2 = gp.selectedDataGrid,
+                evt = g1.get('selectableEvent');
+            g1.$el.find('tbody tr:first td:first').trigger(evt);
+            gp.$el.find('[name=add]').trigger('click');
+            g2.$el.find('tbody tr:first td:first').trigger(evt);
+            gp.$el.find('[name=remove]').trigger('click');
+            equal(g2.$el.find('tbody tr').length, 0);
+            start();
+        });
+    });
+
     start();
 });
