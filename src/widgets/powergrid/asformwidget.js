@@ -87,7 +87,7 @@ define([
             if (cb) {
                 changes = _.compact(_.map(this.get('models'), function(m) {
                     if (!cb._isDisabled(m)) {
-                        if (values.indexOf(m.get(prop)) >= 0) {
+                        if (_.indexOf(values, m.get(prop)) >= 0) {
                             if (!m.get(selectedProp)) {
                                 return {model: m, value: true};
                             }
