@@ -14,6 +14,12 @@ define([
             return ret;
         });
 
+        this.show = _.wrap(this.show, function(func) {
+            var rest = Array.prototype.slice.call(arguments, 1);
+            CollectionViewable.viewableRefresh.apply(this, rest);
+            return func.apply(this, rest);
+        });
+
         this.defaults = _.extend({}, CollectionViewable.defaults, this.defaults);
     };
 });

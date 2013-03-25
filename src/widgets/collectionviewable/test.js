@@ -353,6 +353,67 @@ define([
         });
     });
 
+    asyncTest('changing a model property triggers _onCollectionViewableUpdate', function() {
+        TargetVolumeProfile.models.clear();
+        var g, c = TargetVolumeProfile.collection(), count = 0;
+
+        g = GridClass(null);
+        g._onCollectionViewableUpdate =
+            _.wrap(g._onCollectionViewableUpdate, function(func) {
+                var rest = Array.prototype.slice.call(arguments, 1);
+                count++;
+                func.apply(g, rest);
+        });
+        g.set({collection: c});
+
+        c.refresh().then(function() {
+            setTimeout(function() {
+                var m1 = g.options.models[0];
+                equal(m1.name, 'bar');
+                equal(count, 1, 'count increased from refresh call');
+                m1.set('name', 'changed name').then(function() {
+                    setTimeout(function() {
+                        var m1 = g.options.models[0];
+                        equal(m1.name, 'changed name');
+                        equal(count, 2, 'count increased from setting model property');
+                        start();
+                    }, 15);
+                });
+            }, 15);
+        });
+    });
+
+    asyncTest('calling `show` reloads the colleciton', function() {
+        TargetVolumeProfile.models.clear();
+        var g, c = TargetVolumeProfile.collection(), initLimit = 10;
+
+        g = GridClass(null, {collection: c});
+
+        c.load({limit: initLimit}).then(function() {
+            var newLimit = 5;
+            equal(g.options.models.length, initLimit);
+
+            g.options.collection.reset({limit: newLimit});
+            g.show();
+            setTimeout(function() {
+                equal(g.options.models.length, newLimit);
+                start();
+            }, 15);
+        });
+    });
+
+    asyncTest('collectionviewable only extends show method', function() {
+        TargetVolumeProfile.models.clear();
+        var g, c = TargetVolumeProfile.collection(), initLimit = 10;
+
+        g = GridClass(null, {collection: c});
+        g.hide();
+        ok(g.$node.hasClass('hidden'), 'grid is hidden');
+        g.show();
+        ok(!g.$node.hasClass('hidden'), 'grid is no longer hidden');
+        start();
+    });
+
     start();
 
 });

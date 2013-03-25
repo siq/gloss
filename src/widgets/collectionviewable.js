@@ -83,7 +83,7 @@ define([
 
                 // first the cleanup
                 if (self._collectionViewableLast) {
-                    self._collectionViewableLast.off('update',
+                    self._collectionViewableLast.off('change update',
                             self._onCollectionViewableUpdate);
                 }
                 self._collectionViewableLast = collection;
@@ -91,11 +91,21 @@ define([
                 self._updateCollection();
                 if(collection) {
                     // Add listener on the collection to handle further updates
-                    collection.on('update', self._onCollectionViewableUpdate, self);
+                    collection.on('change update', self._onCollectionViewableUpdate, self);
                 }
             } else if (updated.collectionLoadArgs && options.collectionLoadArgs) {
                 self._updateCollection();
             }
+        },
+
+        show: function() {
+            this.viewableRefresh();
+            return this._super.apply(this, arguments);
+        },
+
+        viewableRefresh: function() {
+            if (!this.options.collection) return;
+            this.options.collection.refresh();
         }
     };
 });
