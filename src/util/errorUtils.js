@@ -35,14 +35,16 @@ define([
         return flattenedErrors;
     };
 
-    var processGlobalErrors =  function(response, xhr, messageList, errorCls) {
+    var processGlobalErrors =  function(response, xhr, messageList, errorCls, extraStrings) {
         var globalErrors = response && response[0],
+            allStrings = _.extend.apply(_,
+                    _.compact(_.flatten([{}, extraStrings, strings.errors]))),
             tokensToStrings = function(errors) {
                 return _.map(errors, function(error) {
-                    return error.message ||
-                        (strings.errors && error.token in strings.errors?
-                            strings.errors[error.token] :
-                            error.token);
+                    return  allStrings[error.token] ||
+                            error.message ||
+                            error.token ||
+                            '';
                 });
             };
 
