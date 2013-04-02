@@ -19,7 +19,7 @@
       <%=label%>
       <% if (sortable) { %>
       <span class="sort-arrow <%=sort? '' : 'invisible'%>">
-          <%= /asc/i.test(sort)? '&#x25b2;' : '&#x25bc;' %>
+          <%== /asc/i.test(sort)? '&#x25b2;' : '&#x25bc;' %>
         </span>
       <% } %>
     </div>

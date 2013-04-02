@@ -31,6 +31,9 @@ define([
 
     return View.extend({
         template: thTemplate,
+        defualts: {
+            escapeOutput: true
+        },
 
         init: function() {
             var self = this, grid;
@@ -144,7 +147,7 @@ define([
         },
 
         formatValue: function(value, model) {
-            return value;
+            return this.get('escapeOutput')? _.escape(value) : value;
         },
 
         get: function(key) {

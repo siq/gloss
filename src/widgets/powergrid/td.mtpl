@@ -4,5 +4,5 @@
        value = (formatted == null)? '' : formatted.toString();
 %>
 <td class="<%=this.cssClasses(data)%>" title="<%=title%>">
-  <%= value %>
+  <%== value %>
 </td>

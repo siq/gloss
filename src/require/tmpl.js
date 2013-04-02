@@ -10,7 +10,9 @@
 //
 // modified to work as a require.js plugin for storediq's client-side and build
 // infrastructure
-define(function() {
+define([
+  'vendor/underscore'
+], function(_) {
     var pluginMap = {},
         compile = function(str) {
             var value = "return (function(data) {var out = ''; out+=" + "'" +
@@ -18,7 +20,8 @@ define(function() {
                    .replace(/'(?=[^%]*%>)/g,"\t")
                    .split("'").join("\\'")
                    .split("\t").join("'")
-                   .replace(/<%=(.+?)%>/g, "'; out += $1; out += '")
+                   .replace(/<%==(.+?)%>/g, "'; out += $1; out += '")
+                   .replace(/<%=(.+?);?%>/g, "'; out += _.escape($1); out += '")
                    .split("<%").join("';")
                    .split("%>").join("out+='") +
                    "'; return out;}).call(typeof ctx !== 'undefined'? ctx : this, data);";
