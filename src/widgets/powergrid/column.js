@@ -31,7 +31,7 @@ define([
 
     return View.extend({
         template: thTemplate,
-        defualts: {
+        defaults: {
             escapeOutput: true
         },
 
