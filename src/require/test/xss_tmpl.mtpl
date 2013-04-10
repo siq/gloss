@@ -1,0 +1,8 @@
+<div>
+  <% if(data.scripty) { %>
+    <span><%= data.scripty %></span>
+  <% } %>
+  <% if(data.noscripty) { %>
+    <span><%== data.noscripty %></span>
+  <% } %>
+</div>
