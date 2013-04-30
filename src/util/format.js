@@ -56,6 +56,8 @@ define([
         return (num * 100).toFixed(decimals || 0) + '%';
     };
 
+    // this was taken from http://phpjs.org/functions/number_format/
+    // the related github https://github.com/kvz/phpjs/blob/master/functions/strings/number_format.js
     var number = function(number, decimals, decimalPoint, thousandsSep) {
         // http://kevin.vanzonneveld.net
         // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
