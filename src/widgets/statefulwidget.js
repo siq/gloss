@@ -81,6 +81,7 @@ define([
             if(!silent) {
                 this.updateState();
             }
+            this.propagate('removeState', states, silent);
             return this;
         },
         updateState: function() {
