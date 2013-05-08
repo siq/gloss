@@ -8,12 +8,35 @@
 
 define([
     'vendor/jquery',
+    'vendor/underscore',
     './widget',
-    './../util/mouse'
-], function($, Widget, Mouse) {
+    './../util/mouse',
+    './../util/fadequeue'
+], function($, _, Widget, Mouse, FadeQueue) {
+    "use strict";
     return Widget.extend({
+        init: function() {
+            console.log('entered');
+            this._super.apply( this, arguments );
+            /* *** all options refer to 'more-document-hint'
+               fadeRate - rate at which hint fades in and out
+               displayHintThreshold - height above document bottom to hide hint
+               minOpacity - fadeDown to 0, does not apply to hover events
+               maxOpacity - fade up to some opacity, does not apply to hover events
+               fadeRate - determines how quickly the 'more-document-hint' fades in and out 
+             */
+            this.options = $.extend({},
+                          this.options,
+                          { fadeRate:200,
+                            displayHintThreshold : 50,
+                            minOpacity: 0,
+                            maxOpacity: 0.8,
+                            hintInitializationHeight: 700
+                          });
+        },
         create: function() {
             var self = this, $origNode;
+            var hintCheckRate = 500;
 
             if (this.node.tagName.toLowerCase() !== 'body') {
                 $origNode = this.$node.remove();
@@ -21,10 +44,6 @@ define([
                 this.node = this.$node[0];
                 this.$node.attr('id', $origNode.attr('id'));
             }
-
-	    var hintCheckRate = 500;
-	    this.mouse = new Mouse(); 
-	    setInterval( self.checkWhetherToHint, hintCheckRate );
 
             self.load = $.Deferred();
             $(function() {
@@ -43,6 +62,80 @@ define([
                 self._super.apply(arguments);
             }
         },
+        _initHinting: function() {
+            var self = this,
+                $moreDocumentHinting = $('div.more-document-hinting'),
+                hintHeight = $moreDocumentHinting.height();
+
+            var windowDistanceFromBottom = function() {
+                return $(document).height() - ($(window).scrollTop() + $(window).height());
+            };
+
+            var mouseDistanceFromBottom = function(e) {
+                var windowY = e.pageY - $(window).scrollTop();
+                var distanceFromWindowBottom = $(window).height() - windowY;
+                return distanceFromWindowBottom;
+            };
+
+            // Initialize the hinting
+            var fadeQueue = new FadeQueue( 400,
+                                          self.options.minOpacity,
+                                          self.options.maxOpacity,
+                                          "div.more-document-hinting");
+
+            if(  $(window).height() < self.options.hintInitializationHeight ) {
+                fadeQueue.fade('in');
+            }
+
+            fadeQueue.start();
+
+            $(document).live( 'mouseleave', function (e) {
+                fadeQueue.release(); 
+                fadeQueue.release();
+                if( windowDistanceFromBottom() > self.options.displayHintThreshold ) {
+                    fadeQueue.fade('in'); 
+                    console.log('here');
+                    fadeQueue.outerLock();
+                }
+            });
+            $(document).live( 'mouseenter', function (e) {
+                if( windowDistanceFromBottom() < self.options.displayHintThreshold ) {
+                    fadeQueue.release();
+                    fadeQueue.fade('out');
+                }
+            });
+
+            $(document).live( 'click', function (e) {
+                if( mouseDistanceFromBottom(e) < hintHeight ) {
+                    fadeQueue.release();
+                    fadeQueue.fade('in');
+                    fadeQueue.clockLock(self.options.fadeRate+100);
+                };
+            });
+
+            $(document).live( 'mousemove', _.debounce( function(e) {
+                var mouseHeight = mouseDistanceFromBottom(e);
+                if( mouseHeight < hintHeight && mouseHeight > 3 ) {
+                    fadeQueue.fade('out');
+                    fadeQueue.outerLock();
+                } else if ( windowDistanceFromBottom() > self.options.displayHintThreshold ) {
+                    fadeQueue.release();
+                    fadeQueue.fade('in');
+                } else {
+                    fadeQueue.release();
+                }
+            }, 20));
+
+            setInterval( function() {
+                var fadeOutP = (windowDistanceFromBottom() < self.options.displayHintThreshold);
+                if( fadeOutP ) {
+                    fadeQueue.fade('out');
+                } else {
+                    fadeQueue.fade('in');
+                }
+            }, 200);
+        },
+
         _prependTmpl: function() {
             var self = this,
                 template = self.options.template;
@@ -53,57 +146,9 @@ define([
 
             if(template !== null) {
                 $('body').prepend($(template));
-		$('body').append( "<div class='more-document-hinting'></div>" );
-
-		var windowAction = function() {
-		    if( self.mouse.getPos().bottom < Number( $('div.more-document-hinting').height() ) ) {
-			$('div.more-document-hinting').fadeOut(800);
-		    }
-		};
-		
-		self.mouse.updateCacheOnWindowEvents( {on: -1, off: 5}, 
-						      [windowAction], [windowAction] );
-		self.mouse.updateCacheOnHoverEvents( ['div.more-document-hinting'],
-						     [{on: 2, off: -5}] );
-
-		$(window).scroll( function() {
-		    self.mouse.trap();
-		    $('div.more-document-hinting').fadeOut(500);
-		});
-	    }
-	},
-
-	readViewPort: function() {
-	    return {pxTop: $(window).scrollTop(), pxBottom: $(window).scrollTop() + $(window).height()};
-	},
-	isWindowCroppingDisplay: function() {
-	    var hintShowHeight = 50;
-	    var windowCroppingThreshold = hintShowHeight;
-	    var vp = self.readViewPort();
-	    return ( vp.pxBottom < $(document).height() - windowCroppingThreshold );
-	},
-	calcDistanceToBottom: function() {
-	    var vp = this.readViewPort();
-	    return $(document).height() - vp.pxBottom;
-	},
-	checkWhetherToHint: function() { 
-	    var distanceToBottom = this.calcDistanceToBottom();
-	    var $moreDocumentHinting = $('div.more-document-hinting');
-	    var hintHeight = Number( $moreDocumentHinting.height() );
-	    var mouseBottom = this.mouse.getPos().bottom;
-	    var hintShowHeight = 50;
-	    var fadeRate = 800;
-
-	    if( distanceToBottom > hintShowHeight
-		&& (mouseBottom > hintHeight || mouseBottom <= 0) ) {
-		if( !this.mouse.isTrapped() ) {
-		    $moreDocumentHinting.fadeIn(500);
-		}
-	    } else {
-		if( !this.mouse.isTrapped() ) {
-		    $moreDocumentHinting.fadeOut(500);
-		}
-	    }
-	}
+                $('body').append( "<div class='more-document-hinting'></div>" );
+                this._initHinting();
+            }
+        }
     });
 });

@@ -2,6 +2,8 @@ define([
     'vendor/jquery',
     'vendor/underscore'
 ], function($, _) {
+
+    "use strict";
     // Two bugs when used in page.js
     // 1) Leaving the scroll bar after use only occasionally allows a fadeIn effect...
     //    Perhaps mouse is getting released through a window.enter event and a fadeIn is triggered...?
@@ -12,7 +14,7 @@ define([
 	var top;
 	var bottom;
 	var trapped = false;
-
+        
 	self.trap = function() {
 	    trapped = true;
 	};
@@ -36,14 +38,14 @@ define([
 	    bottom = $(window).height();
 	})();
 
-	self.updateCacheOnWindowEvents = function(allowances, entryActions, exitActions) {
+	self.updateCacheOnWindowEvents = function( entryActions, exitActions, allowances) {
 	    $(document).mouseenter( function(evt) {
 		cacheMousePos( evt, allowances.on );
 		_.each( entryActions,
 			function(action) {
-			    self.trap();
+//			    self.trap();
 			    action();
-			    self.release();
+//			    self.release();
 			});
 
 	    });
@@ -51,19 +53,22 @@ define([
 		cacheMousePos( evt, allowances.off );
 		_.each( exitActions,
 			function(action) {
-			    self.trap();
+//			    self.trap();
 			    action();
-			    self.release();
+//			    self.release();
 			});
 	    });
 	};
 	self.updateCacheOnHoverEvents = function(selectors, allowances) {
 	    _.each( selectors,
 		    function(selector, i) {
-			$(selector).hover(
-			    function(evt) {
+			$(selector).mouseover( function(evt) {
+//                                console.log( 'hover on' );
 				cacheMousePos( evt, allowances[i].on );
-			    }, function(evt) {
+			    });
+                        $(selector).mouseleave( function(evt) {
+//                                console.log( 'hover off' );
+                                console.log( self.getPos().bottom );
 				cacheMousePos( evt, allowances[i].off );
 			    });
 		    });
