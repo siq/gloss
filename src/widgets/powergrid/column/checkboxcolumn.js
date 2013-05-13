@@ -116,7 +116,7 @@ define([
             if (self.get('type') === 'radio') {
                 _.each(self.get('grid').get('models'), function(m) {
                     if (m !== model) {
-                        m.del(self.get('prop'));
+                        m.del(self.get('prop'), {silent: true});
                     }
                 });
             }
