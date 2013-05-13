@@ -53,10 +53,14 @@ define([
         };
 
         this.clearStatus = function(opts) {
-            var messageList = this.get('messageList');
+            var messageList = this.get('messageList'),
+                classes = this.$el.attr('class').split(' ');
+
             if (messageList) {
                 messageList.clear(opts);
             }
+            classes = _.without(classes, 'invalid', 'valid');
+            this.$el.attr('class', classes.join(' '));
             return this;
         };
 
@@ -67,14 +71,18 @@ define([
         };
 
         this.setStatus = function(type, msg) {
-            var messageList = this.get('messageList');
-            if (!messageList) {
-                return;
+            var messageList = this.get('messageList'),
+                classes = this.$el.attr('class').split(' ');
+
+            if (messageList) {
+                messageList.clear();
+                if (type) {
+                    messageList.append(type, msg);
+                }
             }
-            messageList.clear();
-            if (type) {
-                messageList.append(type, msg);
-            }
+            classes.push(type);
+            classes = _.uniq(classes);
+            this.$el.attr('class', classes.join(' '));
             return this;
         };
 
