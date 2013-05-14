@@ -8,7 +8,7 @@ define([
     return FormWidget.extend({
         defaults: {
             template: template,
-            translate: function(model) {
+            translate: function(model, checked) {
                 return {name: model.name, value: model.id};
             }
         },
@@ -45,9 +45,11 @@ define([
                 }
             }
             array = array.slice(0).sort();
+
             if (!_.isEqual(cur, array)) {
                 _.each(this.checkboxes, function(cb) {
-                    cb.setValue(_.indexOf(array, cb.options.value) >= 0, true);
+                    var value = _.indexOf( array, cb.options.value );
+                    cb.setValue(value >= 0, true);
                 });
                 if (!silent) {
                     this.trigger('change');
@@ -56,11 +58,34 @@ define([
             return this;
         },
 
+        _readCheckboxState: function() {
+            var checkboxes = [];
+          _.each(this.options.entries,
+                 function( entry, i ) {
+                     checkboxes.push( (entry!=undefined && entry.checked) ? true : false );
+                 });
+            return checkboxes;
+        },
+
+        _applySavedCheckboxState: function(checkedEntries) {
+           var entries = _.map( this.options.models, this.options.translate );
+          _.each(entries,
+                function( entry, i ) {
+                    if(entry != undefined) {
+                        entry.checked = checkedEntries[i];
+                    }
+                });
+            return entries;
+        },
+
         updateWidget: function(updated) {
             var options = this.options, checkboxes;
 
+          var checkedEntries = this._readCheckboxState();
+
             if (updated.models) {
-                this.set('entries', _.map(options.models, options.translate));
+                var entries = this._applySavedCheckboxState(checkedEntries);
+                this.set('entries', entries );
             }
 
             if (updated.entries) {
@@ -71,10 +96,12 @@ define([
                         checkboxes.push(CheckBox(el, {
                             value: options.entries[i].value,
                             name: options.entries[i].name,
-                            initialValue: options.entries[i].checked
+                            initialValue: checkedEntries[i]
                         }));
                     });
             }
+
+
         }
     }, {mixins: [CollectionViewable]});
 });
