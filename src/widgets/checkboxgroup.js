@@ -8,7 +8,7 @@ define([
     return FormWidget.extend({
         defaults: {
             template: template,
-            translate: function(model, checked) {
+            translate: function(model) {
                 return {name: model.name, value: model.id};
             }
         },
