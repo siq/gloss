@@ -40,8 +40,8 @@ define([
         var gp = GridPicker({
             dataCollection: Workflow.collection(),
             selectedDataCollection: Workflow.collection()
-        }).appendTo('body');
-        ok(true);
+        });
+        ok(gp);
         start();
     });
 
@@ -153,6 +153,18 @@ define([
             equal(g2.$el.find('tbody tr').length, 0);
             start();
         });
+    });
+
+    // binding in the test environment can be tricky for some reason - yet to be determined
+    // if you have 2 or more (selectable) grids appended to the body that have binding to the
+    // collection change event only the last grid in the body will be bound to the `this` value.
+    asyncTest('visual gridpicker to play with', function() {
+        var gp = GridPicker({
+            dataCollection: Workflow.collection(),
+            selectedDataCollection: Workflow.collection()
+        }).appendTo('body');
+        ok(gp);
+        start();
     });
 
     start();
