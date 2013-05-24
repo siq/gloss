@@ -1,6 +1,6 @@
 define([
     "vendor/jquery"
-],function( $ ) {
+],function($) {
     var FadeQueue = function(fadeSpeed, minOpacity, maxOpacity, element) {
         var self = this,
             fadeRate = fadeSpeed,
@@ -10,12 +10,12 @@ define([
             $toFade = $(element),
             locked = false,
             isOuterLocked = false;
-        
+
         var destroyIntermediateStates = function() {
-            if( queue.length > 1 ) {
-                queue = queue.slice( queue.length-1, queue.length );
+            if(queue.length > 1) {
+                queue = queue.slice(queue.length-1, queue.length);
             }
-            if( !isOuterLocked ) {
+            if(!isOuterLocked) {
                 self.release();
             }
         };
@@ -23,15 +23,15 @@ define([
         var processQueue = function() {
             destroyIntermediateStates();
             var direction = queue.shift();
-            if( direction === 'in' ) {
-                $toFade.css( "z-index", "130" );
+            if(direction === 'in') {
+                $toFade.css("z-index", "130");
                 $toFade.fadeTo(fadeRate, max, function() {
                     // Do nothing after
                 });
-            } else if ( direction === 'out' ) {
-                console.log(  'out triggered' );
+            } else if (direction === 'out') {
+                console.log('out triggered');
                 $toFade.fadeTo(fadeRate, min, function() {
-                    $toFade.css( "z-index", "-30" );
+                    $toFade.css("z-index", "-30");
                 });
             }
 
@@ -45,10 +45,10 @@ define([
         self.clockLock = function(duration) {
             locked = true;
             isOuterLocked = true;
-            setTimeout( function() {
+            setTimeout(function() {
                 locked = false;
                 isOuterLocked = false;
-            }, duration );
+            }, duration);
         };
 
         self.release = function() {
@@ -62,8 +62,8 @@ define([
         };
 
         /* Only accepts values of 'in' or 'out' */
-        self.fade = function( direction ) {
-            if( !locked ) {
+        self.fade = function(direction) {
+            if(!locked) {
                 queue.push(direction);
             }
         };

@@ -1,11 +1,3 @@
-/**
- * Author: Ralph Smith
- * Date: 4/24/12
- * Time: 11:43 AM
- * Description: Base page widget to handle prepending compiled micro
- *          templates on page load.
- */
-
 define([
     'vendor/jquery',
     'vendor/underscore',
@@ -17,7 +9,7 @@ define([
     return Widget.extend({
         init: function() {
             console.log('entered');
-            this._super.apply( this, arguments );
+            this._super.apply(this, arguments);
             /* *** all options refer to 'more-document-hint'
                fadeRate - rate at which hint fades in and out
                displayHintThreshold - height above document bottom to hide hint
@@ -78,47 +70,49 @@ define([
             };
 
             // Initialize the hinting
-            var fadeQueue = new FadeQueue( 400,
-                                          self.options.minOpacity,
-                                          self.options.maxOpacity,
-                                          "div.more-document-hinting");
+            var fadeQueue = new FadeQueue(
+                    400,
+                    self.options.minOpacity,
+                    self.options.maxOpacity,
+                    'div.more-document-hinting'
+                );
 
-            if(  $(window).height() < self.options.hintInitializationHeight ) {
+            if($(window).height() < self.options.hintInitializationHeight) {
                 fadeQueue.fade('in');
             }
 
             fadeQueue.start();
 
-            $(document).live( 'mouseleave', function (e) {
-                fadeQueue.release(); 
+            $(document).live('mouseleave', function (e) {
                 fadeQueue.release();
-                if( windowDistanceFromBottom() > self.options.displayHintThreshold ) {
-                    fadeQueue.fade('in'); 
+                fadeQueue.release();
+                if(windowDistanceFromBottom() > self.options.displayHintThreshold) {
+                    fadeQueue.fade('in');
                     console.log('here');
                     fadeQueue.outerLock();
                 }
             });
-            $(document).live( 'mouseenter', function (e) {
-                if( windowDistanceFromBottom() < self.options.displayHintThreshold ) {
+            $(document).live('mouseenter', function (e) {
+                if(windowDistanceFromBottom() < self.options.displayHintThreshold) {
                     fadeQueue.release();
                     fadeQueue.fade('out');
                 }
             });
 
-            $(document).live( 'click', function (e) {
-                if( mouseDistanceFromBottom(e) < hintHeight ) {
+            $(document).live('click', function (e) {
+                if(mouseDistanceFromBottom(e) < hintHeight) {
                     fadeQueue.release();
                     fadeQueue.fade('in');
                     fadeQueue.clockLock(self.options.fadeRate+100);
-                };
+                }
             });
 
-            $(document).live( 'mousemove', _.debounce( function(e) {
+            $(document).live('mousemove', _.debounce(function(e) {
                 var mouseHeight = mouseDistanceFromBottom(e);
-                if( mouseHeight < hintHeight && mouseHeight > 3 ) {
+                if(mouseHeight < hintHeight && mouseHeight > 3) {
                     fadeQueue.fade('out');
                     fadeQueue.outerLock();
-                } else if ( windowDistanceFromBottom() > self.options.displayHintThreshold ) {
+                } else if (windowDistanceFromBottom() > self.options.displayHintThreshold) {
                     fadeQueue.release();
                     fadeQueue.fade('in');
                 } else {
@@ -126,9 +120,9 @@ define([
                 }
             }, 20));
 
-            setInterval( function() {
+            setInterval(function() {
                 var fadeOutP = (windowDistanceFromBottom() < self.options.displayHintThreshold);
-                if( fadeOutP ) {
+                if(fadeOutP) {
                     fadeQueue.fade('out');
                 } else {
                     fadeQueue.fade('in');
@@ -146,7 +140,7 @@ define([
 
             if(template !== null) {
                 $('body').prepend($(template));
-                $('body').append( "<div class='more-document-hinting'></div>" );
+                $('body').append("<div class='more-document-hinting'></div>");
                 this._initHinting();
             }
         }

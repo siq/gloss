@@ -59,28 +59,28 @@ define([
     });
 
     test('Page height based element creation', function() {
-	var args = [{text: 'some text'}];
-	var page = Page( undefined, {template: ArgTmpl(args) });
-	ok( page );
+        var args = [{text: 'some text'}];
+        var page = Page(undefined, {template: ArgTmpl(args)});
+        ok(page);
 
-	var bigDocumentHeight = 1200;
-	page.load.done('loaded', function() {
-	    $('body').css( 'height', bigDocumentHeight );
-	    var display = $('div.more-document-hinting').css('display');
+        var bigDocumentHeight = 1200;
+        page.load.done('loaded', function() {
+            $('body').css('height', bigDocumentHeight);
+            var display = $('div.more-document-hinting').css('display');
 
-	    equal( display, 'block', 'Body height set to 1200, hinting should be visible');
+            equal(display, 'block', 'Body height set to 1200, hinting should be visible');
 
-	    stop(); // Wait for the fadeOut to complete before checking disappearance.
-	    $(document).ready(function() {
-		$(window).scrollTop(bigDocumentHeight); 
-		setTimeout( function() {
-		    display = $('div.more-document-hinting').css('display');
-		    equal( display, 'none', 
-			   'Programmatically scrolled to the bottom, hint should disappear');
-		    start();
-		},1000);
-	    });
-	});
+            stop(); // Wait for the fadeOut to complete before checking disappearance.
+            $(document).ready(function() {
+                $(window).scrollTop(bigDocumentHeight);
+                setTimeout(function() {
+                    display = $('div.more-document-hinting').css('display');
+                    equal(display, 'none',
+                        'Programmatically scrolled to the bottom, hint should disappear');
+                    start();
+                },1000);
+            });
+        });
     });
     start();
 });
