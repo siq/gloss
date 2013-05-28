@@ -1,3 +1,11 @@
+/**
+ * Author: Ralph Smith
+ * Date: 4/24/12
+ * Time: 11:43 AM
+ * Description: Base page widget to handle prepending compiled micro
+ *          templates on page load.
+ */
+
 define([
     'vendor/jquery',
     'vendor/underscore',
@@ -8,7 +16,6 @@ define([
     "use strict";
     return Widget.extend({
         init: function() {
-            console.log('entered');
             this._super.apply(this, arguments);
             /* *** all options refer to 'more-document-hint'
                fadeRate - rate at which hint fades in and out
@@ -19,16 +26,15 @@ define([
              */
             this.options = $.extend({},
                           this.options,
-                          { fadeRate:200,
+                          { fadeRate:300,
                             displayHintThreshold : 50,
                             minOpacity: 0,
-                            maxOpacity: 0.8,
+                            maxOpacity: 1.0,
                             hintInitializationHeight: 700
                           });
         },
         create: function() {
             var self = this, $origNode;
-            var hintCheckRate = 500;
 
             if (this.node.tagName.toLowerCase() !== 'body') {
                 $origNode = this.$node.remove();
@@ -45,8 +51,7 @@ define([
         },
         on: function(event, callback) {
             /* if the page is already loaded then just return
-             * otherwise return a deferred object
-             */
+             * otherwise return a deferred object */
             var self = this;
             if (event === 'load' || event === 'loaded') {
                 self.load.done(callback);
@@ -54,80 +59,92 @@ define([
                 self._super.apply(arguments);
             }
         },
-        _initHinting: function() {
+        _windowDistanceFromBottom: function() {
+            return $(document).height() - ($(window).scrollTop() + $(window).height());
+        },
+        _mouseDistanceFromBottom: function(e) {
+            var windowY = e.pageY - $(window).scrollTop();
+            var distanceFromWindowBottom = $(window).height() - windowY;
+            return distanceFromWindowBottom;
+        },
+        _initFade: function() {
+            if ($(window).height() < this.options.hintInitializationHeight) {
+                this.fadeQueue.fade('in');
+            }
+            this.fadeQueue.fade('out');
+        },
+        _mouseLeaveBehavior: function(e, hintHeight, winDistFromBottom) {
+            var self=this;
+            this.fadeQueue.release();
+            if (winDistFromBottom > this.options.displayHintThreshold) {
+                this.fadeQueue.fade('in');
+                this.fadeQueue.outerLock();
+            }
+        },
+        _mouseEnterBehavior: function(e, hintHeight, winDistFromBottom) {
+            this.fadeQueue.release();
+            if (winDistFromBottom > this.options.displayHintThreshold) {
+                if( this._mouseDistanceFromBottom(e) < hintHeight ) {
+                    this.fadeQueue.fade('out');
+                }
+            }
+        },
+        _mouseMoveBehavior: function(e, hintHeight, winDistFromBottom) {
+            var mouseHeight = this._mouseDistanceFromBottom(e);
+            if( mouseHeight < hintHeight && mouseHeight > 3) {
+                this.fadeQueue.fade('out');
+                this.fadeQueue.outerLock();
+            } else if (winDistFromBottom > this.options.displayHintThreshold) {
+                this.fadeQueue.release();
+                this.fadeQueue.fade('in');
+            } else {
+                this.fadeQueue.release();
+            }
+        },
+        _clickBehavior: function(e, hintHeight, winDistFromBottom) {
+            if (this._mouseDistanceFromBottom(e) < hintHeight) {
+                this.fadeQueue.release();
+                this.fadeQueue.fade('out');
+                this.fadeQueue.clockLock(this.options.fadeRate+100);
+            };
+        },
+        _pollViewPos: function(e, hintHeight, winDistFromBottom) {
+            var fadeOutP = (winDistFromBottom
+                            < this.options.displayHintThreshold);
+            if (fadeOutP) {
+                this.fadeQueue.fade('out');
+            } else {
+                this.fadeQueue.fade('in');
+            }
+        },
+        _initFooterShadow: function() {
             var self = this,
                 $moreDocumentHinting = $('div.more-document-hinting'),
                 hintHeight = $moreDocumentHinting.height();
 
-            var windowDistanceFromBottom = function() {
-                return $(document).height() - ($(window).scrollTop() + $(window).height());
-            };
+            this.fadeQueue = new FadeQueue(self.options.fadeRate,
+                                          self.options.minOpacity,
+                                          self.options.maxOpacity,
+                                          "div.more-document-hinting");
+            this._initFade(this.fadeQueue);
+            this.fadeQueue.start('in');
 
-            var mouseDistanceFromBottom = function(e) {
-                var windowY = e.pageY - $(window).scrollTop();
-                var distanceFromWindowBottom = $(window).height() - windowY;
-                return distanceFromWindowBottom;
-            };
-
-            // Initialize the hinting
-            var fadeQueue = new FadeQueue(
-                    400,
-                    self.options.minOpacity,
-                    self.options.maxOpacity,
-                    'div.more-document-hinting'
-                );
-
-            if($(window).height() < self.options.hintInitializationHeight) {
-                fadeQueue.fade('in');
+            if( !self.options.disableHintingEvents ) {
+                $(document).live('mouseleave', function(e) {
+                    self._mouseLeaveBehavior(e, hintHeight, self._windowDistanceFromBottom());
+                });
+                $(document).live('mouseenter',function(e) {
+                    self._mouseEnterBehavior(e, hintHeight, self._windowDistanceFromBottom());
+                });
+                $(document).live('click',function(e) {
+                    self._clickBehavior(e, hintHeight, self._windowDistanceFromBottom());
+                });
+                $(document).live('mousemove', _.debounce(function(e) {
+                    self._mouseMoveBehavior(e, hintHeight, self._windowDistanceFromBottom());
+                }, 20));
+                setInterval( function() {
+                    self._pollViewPos(undefined, hintHeight, self._windowDistanceFromBottom());}, 200);
             }
-
-            fadeQueue.start();
-
-            $(document).live('mouseleave', function (e) {
-                fadeQueue.release();
-                fadeQueue.release();
-                if(windowDistanceFromBottom() > self.options.displayHintThreshold) {
-                    fadeQueue.fade('in');
-                    console.log('here');
-                    fadeQueue.outerLock();
-                }
-            });
-            $(document).live('mouseenter', function (e) {
-                if(windowDistanceFromBottom() < self.options.displayHintThreshold) {
-                    fadeQueue.release();
-                    fadeQueue.fade('out');
-                }
-            });
-
-            $(document).live('click', function (e) {
-                if(mouseDistanceFromBottom(e) < hintHeight) {
-                    fadeQueue.release();
-                    fadeQueue.fade('in');
-                    fadeQueue.clockLock(self.options.fadeRate+100);
-                }
-            });
-
-            $(document).live('mousemove', _.debounce(function(e) {
-                var mouseHeight = mouseDistanceFromBottom(e);
-                if(mouseHeight < hintHeight && mouseHeight > 3) {
-                    fadeQueue.fade('out');
-                    fadeQueue.outerLock();
-                } else if (windowDistanceFromBottom() > self.options.displayHintThreshold) {
-                    fadeQueue.release();
-                    fadeQueue.fade('in');
-                } else {
-                    fadeQueue.release();
-                }
-            }, 20));
-
-            setInterval(function() {
-                var fadeOutP = (windowDistanceFromBottom() < self.options.displayHintThreshold);
-                if(fadeOutP) {
-                    fadeQueue.fade('out');
-                } else {
-                    fadeQueue.fade('in');
-                }
-            }, 200);
         },
 
         _prependTmpl: function() {
@@ -137,11 +154,10 @@ define([
             if ($.isFunction(template)) {
                 template = template();
             }
-
             if(template !== null) {
                 $('body').prepend($(template));
-                $('body').append("<div class='more-document-hinting'></div>");
-                this._initHinting();
+                $('body').append( "<div class='more-document-hinting'></div>" );
+                this._initFooterShadow();
             }
         }
     });
