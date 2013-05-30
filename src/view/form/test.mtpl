@@ -1,0 +1,15 @@
+<fieldset>
+
+  <label data-for=name>Name:</label>
+  <input type=text data-bind=name />
+  <div class=messagelist data-for=name></div>
+
+  <label data-for=required_field>Some required field:</label>
+  <input type=text data-bind=required_field />
+  <div class=messagelist data-for=required_field></div>
+
+  <label data-for=optional_field>Some optional text field:</label>
+  <input type=text data-bind=text_field />
+  <div class=messagelist data-for=text_field></div>
+
+</fieldset>

@@ -1,0 +1,11 @@
+<fieldset class=footer>
+  <% var strings = this.strings; %>
+  <%/* i'd like to name this 'cancel' but that causes a TypeError because of a
+     * bug in jquery 1.8ish that's fixed in 1.9ish. oh f*in well */%>
+  <button type=button name=cancel_btn tabindex=100>
+    <%=this.get('strings.footer.cancel')%>
+  </button>
+  <button name=submit>
+    <%=this.get('strings.footer.submit')%>
+  </button>
+</fieldset>

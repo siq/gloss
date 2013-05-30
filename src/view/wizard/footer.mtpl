@@ -1,0 +1,15 @@
+<fieldset class=footer>
+  <% var strings = this.strings; %>
+  <button type=button name=cancel_btn tabindex=100>
+    <%=this.get('strings.footer.cancel')%>
+  </button>
+  <button type=button name=back tabindex=99>
+    <%=this.get('strings.footer.back')%>
+  </button>
+  <button type=button name=next>
+    <%=this.get('strings.footer.next')%>
+  </button>
+  <button class=hidden name=submit>
+    <%=this.get('strings.footer.submit')%>
+  </button>
+</fieldset>

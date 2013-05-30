@@ -1,0 +1,5 @@
+<form>
+  <div class=messagelist></div>
+  <%==this.include('fieldsets')%>
+  <%==this.include('footer')%>
+</form>
