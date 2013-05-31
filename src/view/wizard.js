@@ -141,7 +141,7 @@ define([
         update: function(changed) {
             var method, self = this;
             self._super.apply(self, arguments);
-            if (changed.currentPane  && this.header) {
+            if (changed.currentPane) {
                 self.waitForInitialRender.then(function() {
                     self.header.set('currentPane', self.get('currentPane'));
                     self._showPane(self.get('currentPane'));
