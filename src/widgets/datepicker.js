@@ -56,7 +56,7 @@ define([
 
             self.monthView = DatePicker.MonthView(
                 self.menu.$node.find('.monthview').empty(),
-                {date: self.options.date});
+                {date: moment(self.options.date)});
 
             self.onPageClick(self.menu.hide, {once: false});
 
@@ -100,8 +100,23 @@ define([
                 this.monthView.set('date', date);
             }
             if (updated._selected) {
-                this.monthView.set('_selected', selected);
+                this.monthView.set('_selected', moment(selected));
                 if (selected) {
+                    /*
+                        A mind boggling issue:
+                        - Adding an extra `date.isvalid` no-op check before '_selected' is set in the
+                            `setValue` method makes the `$.isPlainObject` call in Widget::recursivemerge
+                            work as expected and thus fixes a merging error with Moment objects in IE8
+                        - without the odd `isValid` no-op check `$.isPlainObject` will in-correctly
+                            responed with `true`. There are some typeing issues going on here. This
+                            results in the `isMoment` test failing for the merged Moment object which
+                            in trun breaks a moment clone so moment tries to return `new Date([moment Object])`
+                        - the 'sane' work-around is to test those constraints and recreate the
+                            moment object from the date ie. `moment._d`
+                    */
+                    if (!moment.isMoment(selected) && selected.isValid()) {
+                        this.options._selected = selected = moment(selected._d);
+                    }
                     this.set('date', moment(selected));
                 }
             }
