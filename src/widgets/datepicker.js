@@ -113,6 +113,10 @@ define([
                             in trun breaks a moment clone so moment tries to return `new Date([moment Object])`
                         - the 'sane' work-around is to test those constraints and recreate the
                             moment object from the date ie. `moment._d`
+                        - Note*: the fact that `$.isPlainObject` responds differently when the no-op
+                            is in place is not the problem it just points to an issue with the
+                            javascript parse.
+                            How far do you want to travel down the rabbit hole mister Anderson?
                     */
                     if (!moment.isMoment(selected) && selected.isValid()) {
                         this.options._selected = selected = moment(selected._d);
