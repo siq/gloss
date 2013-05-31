@@ -90,7 +90,12 @@ define([
                 }
             }).on('focus', function(evt) {
                 if (self.$node.hasClass('placeholder')) {
+                    self.$node.val('');
                     setTimeout(function(){setCursorPosition(self.node, 0);}, 0);
+                }
+            }).on('blur', function(evt) {
+                if ( self.getValue() === '') {
+                    self.$node.val(self._placeholder);
                 }
             });
             if (!self.$node.val()) {
