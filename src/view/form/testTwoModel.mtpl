@@ -1,0 +1,20 @@
+<fieldset>
+
+  <label data-for=name>Name:</label>
+  <input type=text data-bind=name />
+  <div class=messagelist data-for=name></div>
+
+  <label data-for=required_field>Some required field:</label>
+  <input type=text data-bind=required_field />
+  <div class=messagelist data-for=required_field></div>
+
+  <label data-for=text_field>Some optional text field:</label>
+  <input type=text data-bind=text_field />
+  <div class=messagelist data-for=text_field></div>
+
+  <label data-for=association_name >Name for other model:</label>
+  <input type=text name=association_name data-bind=name data-bind-group=association />
+  <div class=messagelist data-for=association_name ></div>
+
+</fieldset>
+

@@ -1,0 +1,13 @@
+<form class=wizard>
+
+  <h2></h2>
+
+  <div class="messagelist"></div>
+
+  <div class=panes>
+    <%==this.include('fieldsets')%>
+  </div>
+
+  <%==this.include('footer')%>
+
+</form>
