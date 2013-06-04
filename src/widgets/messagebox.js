@@ -1,11 +1,10 @@
 define([
     'vendor/jquery',
-    'vendor/underscore',
     './modal',
     './button',
     'tmpl!./messagebox/messagebox.mtpl',
     'css!./messagebox/messagebox.css'
-], function($, _, Modal, Button, template) {
+], function($, Modal, Button, template) {
 
      return Modal.extend({
         nodeTemplate: template,
@@ -76,7 +75,7 @@ define([
         updateWidget: function(updated) {
             if (updated.body) {
                 // Append message body
-                this.$node.find('.message-text').html(_.escape(this.options.body));
+                this.$node.find('.message-text').html(this.options.body);
             }
         }
     });
