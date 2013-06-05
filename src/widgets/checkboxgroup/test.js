@@ -77,5 +77,31 @@ define([
         ok(form.getWidget('my-cbg'));
     });
 
+    // we only want to run the 'checkbox column' module if we're in a browser
+    // where triggering a 'click' event on a checkbox subsequently triggers a
+    // 'change' event. since we're lazy and busy, we're just checking for
+    // webkit
+    if ($.browser.webkit) {
+        module('checkall checkbox');
+
+        asyncTest('checkall checks all checkboxes', function() {
+            var $checkAll,
+                cbg = window.cbg = CheckBoxGroup(undefined, {
+                checkall: true,
+                entries: [
+                    {name: 'foo bar baz', value: 0},
+                    {name: 'foo bar biggity iggity bazzle', value: 1}
+                ]
+            }).appendTo('body');
+
+            $checkAll = cbg.$node.find('.checkall');
+            $checkAll.trigger('click');
+            setTimeout(function() {
+                deepEqual(cbg.getValue(), [0, 1]);
+                start();
+            }, 15);
+        });
+    }
+
     start();
 });

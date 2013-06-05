@@ -8,6 +8,8 @@ define([
     return FormWidget.extend({
         defaults: {
             template: template,
+            checkall: false,
+            checkallLabel: 'Check All',
             translate: function(model) {
                 return {name: model.name, value: model.id};
             }
@@ -20,6 +22,17 @@ define([
                 if (!self.registry.isWidget(el)) {
                     (self.checkboxes = self.checkboxes || []).push(CheckBox(el));
                 }
+            });
+            this.on('change', '.checkall', function(evt) {
+                var checked = $(evt.target).is(':checked');
+                if (checked) {
+                    self.setValue('all');
+                }
+            });
+            this.on('click', 'input[type=checkbox]:not(.checkall)', function(evt) {
+                // normally we would cache this but since the template can be
+                // rerendered at run-time the cached value might be invalid
+                self.$node.find('.checkall').attr('checked', false);
             });
             this.update();
         },
@@ -89,7 +102,7 @@ define([
                 _.each(this.checkboxes || [], function(cb) { cb.destroy(); });
                 this.checkboxes = checkboxes = [];
                 this.$node.html(options.template(this))
-                    .find('input[type=checkbox]').each(function(i, el) {
+                    .find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
                         checkboxes.push(CheckBox(el, {
                             value: options.entries[i].value,
                             name: options.entries[i].name,
