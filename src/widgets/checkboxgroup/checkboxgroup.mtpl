@@ -1,3 +1,9 @@
+<% if(data.options.checkall) { %>
+  <label>
+    <input class=checkall type=checkbox data-value=all />
+    <%=data.options.checkallLabel%>
+  </label>
+<% } %>
 <% _.each(data.options.entries, function(entry) { %>
   <label>
     <input type=checkbox data-value="<%=entry.value%>" />

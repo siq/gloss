@@ -8,6 +8,8 @@ define([
     return FormWidget.extend({
         defaults: {
             template: template,
+            checkall: false,
+            checkallLabel: 'Check All',
             translate: function(model) {
                 return {name: model.name, value: model.id};
             }
@@ -20,6 +22,17 @@ define([
                 if (!self.registry.isWidget(el)) {
                     (self.checkboxes = self.checkboxes || []).push(CheckBox(el));
                 }
+            });
+            this.on('change', '.checkall', function(evt) {
+                var checked = $(evt.target).is(':checked');
+                if (checked) {
+                    self.setValue('all');
+                }
+            });
+            this.on('click', 'input[type=checkbox]:not(.checkall)', function(evt) {
+                // normally we would cache this but since the template can be
+                // rerendered at run-time the cached value might be invalid
+                self.$node.find('.checkall').attr('checked', false);
             });
             this.update();
         },
@@ -48,7 +61,7 @@ define([
 
             if (!_.isEqual(cur, array)) {
                 _.each(this.checkboxes, function(cb) {
-                    var value = _.indexOf( array, cb.options.value );
+                    var value = _.indexOf(array, cb.options.value);
                     cb.setValue(value >= 0, true);
                 });
                 if (!silent) {
@@ -60,28 +73,25 @@ define([
 
         _readCheckboxState: function() {
             var checkboxes = [];
-          _.each(this.options.entries,
-                 function( entry, i ) {
-                     checkboxes.push( (entry!=undefined && entry.checked) ? true : false );
-                 });
+            _.each(this.options.entries, function(entry, i) {
+                checkboxes.push((entry!=undefined && entry.checked) ? true : false);
+            });
             return checkboxes;
         },
 
         _applySavedCheckboxState: function(checkedEntries) {
-           var entries = _.map( this.options.models, this.options.translate );
-          _.each(entries,
-                function( entry, i ) {
-                    if(entry != undefined) {
-                        entry.checked = checkedEntries[i];
-                    }
-                });
+            var entries = _.map(this.options.models, this.options.translate);
+            _.each(entries, function( entry, i ) {
+                if(entry != undefined) {
+                    entry.checked = checkedEntries[i];
+                }
+            });
             return entries;
         },
 
         updateWidget: function(updated) {
-            var options = this.options, checkboxes;
-
-          var checkedEntries = this._readCheckboxState();
+            var options = this.options, checkboxes,
+                checkedEntries = this._readCheckboxState();
 
             if (updated.models) {
                 var entries = this._applySavedCheckboxState(checkedEntries);
@@ -92,7 +102,7 @@ define([
                 _.each(this.checkboxes || [], function(cb) { cb.destroy(); });
                 this.checkboxes = checkboxes = [];
                 this.$node.html(options.template(this))
-                    .find('input[type=checkbox]').each(function(i, el) {
+                    .find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
                         checkboxes.push(CheckBox(el, {
                             value: options.entries[i].value,
                             name: options.entries[i].name,
