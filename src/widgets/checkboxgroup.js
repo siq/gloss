@@ -48,7 +48,7 @@ define([
 
             if (!_.isEqual(cur, array)) {
                 _.each(this.checkboxes, function(cb) {
-                    var value = _.indexOf( array, cb.options.value );
+                    var value = _.indexOf(array, cb.options.value);
                     cb.setValue(value >= 0, true);
                 });
                 if (!silent) {
@@ -60,28 +60,25 @@ define([
 
         _readCheckboxState: function() {
             var checkboxes = [];
-          _.each(this.options.entries,
-                 function( entry, i ) {
-                     checkboxes.push( (entry!=undefined && entry.checked) ? true : false );
-                 });
+            _.each(this.options.entries, function(entry, i) {
+                checkboxes.push((entry!=undefined && entry.checked) ? true : false);
+            });
             return checkboxes;
         },
 
         _applySavedCheckboxState: function(checkedEntries) {
-           var entries = _.map( this.options.models, this.options.translate );
-          _.each(entries,
-                function( entry, i ) {
-                    if(entry != undefined) {
-                        entry.checked = checkedEntries[i];
-                    }
-                });
+            var entries = _.map(this.options.models, this.options.translate);
+            _.each(entries, function( entry, i ) {
+                if(entry != undefined) {
+                    entry.checked = checkedEntries[i];
+                }
+            });
             return entries;
         },
 
         updateWidget: function(updated) {
-            var options = this.options, checkboxes;
-
-          var checkedEntries = this._readCheckboxState();
+            var options = this.options, checkboxes,
+                checkedEntries = this._readCheckboxState();
 
             if (updated.models) {
                 var entries = this._applySavedCheckboxState(checkedEntries);
