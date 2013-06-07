@@ -91,11 +91,11 @@ define([
                     });
                 });
             } 
-            if (!fieldErrors && !globalErrors) {
-                this.set('currentPane', this.get('currentPane')+1);
-            } else {
+            // if (!fieldErrors && !globalErrors) {
+            //     this.set('currentPane', this.get('currentPane')+1);
+            // } else {
                 this.set('currentPane', earliest);
-            }
+            // }
             return this._super.apply(this, arguments);
         },
         _showPane: function(pane) {

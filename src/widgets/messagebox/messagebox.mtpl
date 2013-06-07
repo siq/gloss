@@ -1,6 +1,8 @@
 <div class=message-box>
   <div class=message-body>
-    <div class=message-icon></div>
+    <% if(data.options.style !== '') { %>
+      <div class=message-icon></div>
+    <% } %>
     <div class=message-text></div>
     <div style='clear: both;' />
   </div>
