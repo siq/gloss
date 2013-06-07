@@ -1,25 +1,8 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    './../../core/registry',
-    './../messagelist',
     './column/checkboxcolumn'
-], function($, _, Registry, Messagelist, CheckBoxColumn) {
-
-    var registry = Registry.getInstance();
-
-    function makeMessageLists($el, view) {
-        if (view.get('messageList') == null) {
-            var name =  view.$el.attr('name') ||
-                        view.$el.attr('data-bind'),
-                $candidate = $el.find('.messagelist[data-for="'+name+'"]');
-            if ($candidate.length === 1 && !registry.isWidget($candidate)) {
-                view.set('messageList', MessageList($candidate));
-            }
-        }
-        return views;
-    }
-
+], function($, _, CheckBoxColumn) {
     function asFormWidget(opts) {
         var selectable = this.defaults.selectable || true,
             prop = (opts && opts.prop) || 'id';
