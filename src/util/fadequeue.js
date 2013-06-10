@@ -10,19 +10,20 @@ define([
             $toFade = $(element),
             locked = false,
             isOuterLocked = false,
-            currentDirection;
+            currentDirection,
+            userInFade=false;
         var destroyIntermediateStates = function() {
             if( queue.length > 1 ) {
                 queue = queue.slice( queue.length-1, queue.length );
             }
-            if( !isOuterLocked ) {
+            if( !isOuterLocked && !userInFade ) {
                 self.release();
             }
         };
         var processQueue = function() {
             destroyIntermediateStates();
             var direction = queue.shift();
-            if (direction === 'in') {
+            if (direction === 'in' && !userInFade) {
                 $toFade.css("z-index", "130");
                 $toFade.fadeTo(fadeRate, max, function() {
                     // Do nothing after
@@ -35,7 +36,6 @@ define([
                 currentDirection = direction;
             }
             queue = [];
-            direction = null;
         };
         self.outerLock = function() {
             locked = true;
@@ -71,6 +71,12 @@ define([
         };
         self.getCurrentDirection = function() {
             return currentDirection;
+        };
+        self.userIsInFade = function() {
+            userInFade = true;
+        };
+        self.userIsOffFade = function() {
+            userInFade = false;
         };
     };
     return FadeQueue;
