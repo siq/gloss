@@ -1,16 +1,16 @@
-.gridpicker .selected-data {
+.listbuilder .selected-data {
   float: left;
 }
-.gridpicker .data {
+.listbuilder .data {
   float: right;
 }
 
-.gridpicker .grid {
+.listbuilder .grid {
 	width: 380px;
 	height: 340px;
 }
 
-.gridpicker .action {
+.listbuilder .action {
 	text-align: center;
 	padding-top: 30px;
 }

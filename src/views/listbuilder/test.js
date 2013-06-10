@@ -4,7 +4,7 @@ define([
     'gloss/widgets/powergrid',
     'gloss/widgets/powergrid/columnmodel',
     'gloss/widgets/powergrid/column',
-    './../gridpicker',
+    './../listbuilder',
     'auxl/test/mock/workflow',
     '../../styles'
 ], function($, PowerGrid, ColumnModel, Column, ListBuilder, Workflow) {
