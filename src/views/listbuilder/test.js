@@ -5,8 +5,7 @@ define([
     'gloss/widgets/powergrid/columnmodel',
     'gloss/widgets/powergrid/column',
     './../listbuilder',
-    'auxl/test/mock/workflow',
-    '../../styles'
+    'auxl/test/mock/workflow'
 ], function($, PowerGrid, ColumnModel, Column, ListBuilder, Workflow) {
 
     var DefaultColumn = Column.extend({
