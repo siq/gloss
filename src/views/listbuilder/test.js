@@ -5,16 +5,16 @@ define([
     'gloss/widgets/powergrid/columnmodel',
     'gloss/widgets/powergrid/column',
     './../listbuilder',
-    'auxl/test/mock/workflow'
-], function($, PowerGrid, ColumnModel, Column, ListBuilder, Workflow) {
+    'mesh/tests/mockedexample'
+], function($, PowerGrid, ColumnModel, Column, ListBuilder, Mock) {
 
     var DefaultColumn = Column.extend({
         defaults: {sortable: true, resizable: true}
     });
 
     var columns = {
-        name: DefaultColumn.extend(),
-        description: DefaultColumn.extend()
+        text_field: DefaultColumn.extend({defaults: {name: 'text_field'}}),
+        default_field: DefaultColumn.extend({defaults: {name: 'default_field'}})
     };
 
     _.each(columns, function(col, name) {
@@ -25,12 +25,13 @@ define([
     var Grid = PowerGrid.extend({
         defaults: {
             columnModelClass: ColumnModel.extend({
-                columnClasses: [columns.name, columns.description]
+                columnClasses: [columns.text_field, columns.default_field]
             }),
             selectable: true
         }
     });
 
+    var limitParam = {limit: 15};
     var setup = function(options) {
             var gp, dfd = $.Deferred();
 
@@ -38,12 +39,12 @@ define([
                 appendTo: '#qunit-fixture'
                 }, options);
 
-            Workflow.mockReset();
+            Mock.mockReset();
 
             gp = window.gp = ListBuilder({
                 gridClass: Grid,
-                dataCollection: Workflow.collection(),
-                selectedDataCollection: Workflow.collection()
+                dataCollection: Mock.collection(),
+                selectedDataCollection: Mock.collection()
             });
 
             if (options.appendTo) {
@@ -51,8 +52,8 @@ define([
             }
 
             $.when(
-                gp.get('dataCollection').load(),
-                gp.get('selectedDataCollection').load()
+                gp.get('dataCollection').load(limitParam),
+                gp.get('selectedDataCollection').load(limitParam)
             ).then(function() {
                 $(function() {
                     dfd.resolve(gp, options);
@@ -65,8 +66,8 @@ define([
     asyncTest('create listbuilder', function() {
         var gp = ListBuilder({
             gridClass: Grid,
-            dataCollection: Workflow.collection(),
-            selectedDataCollection: Workflow.collection()
+            dataCollection: Mock.collection(limitParam),
+            selectedDataCollection: Mock.collection(limitParam)
         });
         ok(gp);
         start();
@@ -188,8 +189,8 @@ define([
     asyncTest('visual listbuilder to play with', function() {
         var gp = ListBuilder({
             gridClass: Grid,
-            dataCollection: Workflow.collection(),
-            selectedDataCollection: Workflow.collection()
+            dataCollection: Mock.collection(limitParam),
+            selectedDataCollection: Mock.collection(limitParam)
         }).appendTo('body');
         ok(gp);
         start();
