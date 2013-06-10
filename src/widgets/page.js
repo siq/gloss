@@ -70,15 +70,16 @@ define([
         _initFade: function() {
             if ($(window).height() < this.options.hintInitializationHeight) {
                 this.fadeQueue.fade('in');
+            } else {
+                this.fadeQueue.fade('out');
             }
-            this.fadeQueue.fade('out');
         },
         _mouseLeaveBehavior: function(e, hintHeight, winDistFromBottom) {
             var self=this;
             this.fadeQueue.release();
             if (winDistFromBottom > this.options.displayHintThreshold) {
                 this.fadeQueue.fade('in');
-                this.fadeQueue.outerLock();
+                this.fadeQueue.outerLock(1);
             }
         },
         _mouseEnterBehavior: function(e, hintHeight, winDistFromBottom) {
@@ -117,6 +118,38 @@ define([
                 this.fadeQueue.fade('in');
             }
         },
+        _textFocusBehavior: function($input, e, hintHeight) {
+            var m=this,
+                fadePos = $(window).height() - hintHeight,
+                inputWindowTop = $input.offset().top - $(window).scrollTop(),
+                // cheater val cause the top is clear
+                inputIsInFade = inputWindowTop > fadePos+10,
+                inputIsBelowWindow = inputWindowTop > $(window).height();
+            if (inputIsInFade && !inputIsBelowWindow) {
+                m.fadeQueue.release();
+                m.fadeQueue.fade('out');
+                m.fadeQueue.userIsInFade();
+                $input.bind('blur', function() {
+                    m.fadeQueue.release();
+                    m.fadeQueue.userIsOffFade();
+                });
+            } else {
+                m.fadeQueue.release();
+                m.fadeQueue.userIsOffFade();
+            }
+        },
+        _bindFaderToInputs: _.once(function(e, hintHeight) {
+            var m=this;
+            _.each($('input, textarea'), function(input) {
+                $(input).focus(function(e) {
+                    m._textFocusBehavior($(input), e, hintHeight);
+                });
+                // IE8 doesn't seem to kick off an on-focus event when clicking into an element
+                $(input).click(function(e) {
+                    m._textFocusBehavior($(input), e, hintHeight);
+                });
+            });
+        }),
         _initFooterShadow: function() {
             var self = this,
                 $moreDocumentHinting = $('div.more-document-hinting'),
@@ -128,25 +161,32 @@ define([
                                           "div.more-document-hinting");
             this._initFade(this.fadeQueue);
             this.fadeQueue.start('in');
-
             if( !self.options.disableHintingEvents ) {
-                $(document).live('mouseleave', function(e) {
+                $('body').live('mouseleave', function(e) {
                     self._mouseLeaveBehavior(e, hintHeight, self._windowDistanceFromBottom());
                 });
-                $(document).live('mouseenter',function(e) {
+                $('body').live('mouseenter',function(e) {
                     self._mouseEnterBehavior(e, hintHeight, self._windowDistanceFromBottom());
                 });
-                $(document).live('click',function(e) {
-                    self._clickBehavior(e, hintHeight, self._windowDistanceFromBottom());
+                $('body').live('click',function(e) {
+                    var winDistFromBottom = self._windowDistanceFromBottom();
+                    self._bindFaderToInputs(e, hintHeight);
+                    self._clickBehavior(e, hintHeight, winDistFromBottom);
                 });
-                $(document).live('mousemove', _.debounce(function(e) {
+                $('body').live('mousemove', _.debounce(function(e) {
                     self._mouseMoveBehavior(e, hintHeight, self._windowDistanceFromBottom());
-                }, 20));
+                }, 40));
+                $(window).scroll(function(e) {
+                    // Make sure that scrolling doesn't occlude an input element with the hint
+                    var focusedInput = $.find('input:focus, textarea:focus');
+                    if (focusedInput && focusedInput[0]) {
+                        self._textFocusBehavior($(focusedInput[0]), e, hintHeight);
+                    }
+                });
                 setInterval( function() {
                     self._pollViewPos(undefined, hintHeight, self._windowDistanceFromBottom());}, 200);
             }
         },
-
         _prependTmpl: function() {
             var self = this,
                 template = self.options.template;
