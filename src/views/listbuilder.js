@@ -9,12 +9,11 @@ define([
     'gloss/widgets/powergrid/powergridsearch',
     'gloss/widgets/powergrid/asformwidget',
     'gloss/widgets/simpleview',
-    'tmpl!./gridpicker/gridpicker.mtpl',
-    './../strings',
-    'css!./gridpicker/gridpicker.css'
+    'tmpl!./listbuilder/listbuilder.mtpl',
+    'css!./listbuilder/listbuilder.css'
 ], function(_, asSettable, asListenable, Button, PowerGrid, ColumnModel,
     Column, GridFilter, asFormWidget, SimpleView,
-    template, strings) {
+    template) {
     'use strict';
 
     function MakeGridClass(Grid) {
@@ -67,7 +66,6 @@ define([
     var ListBuilder = SimpleView.extend({
         template: template,
         defaults: {
-            strings: strings.views.gridpicker,
             gridClass: null     // *required: set the default Grid class on instantiation
             // dataCollection:
             // selectedDataCollection:
