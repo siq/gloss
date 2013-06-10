@@ -1,10 +1,36 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 define([
     'vendor/jquery',
+    'gloss/widgets/powergrid',
+    'gloss/widgets/powergrid/columnmodel',
+    'gloss/widgets/powergrid/column',
     './../gridpicker',
     'auxl/test/mock/workflow',
     '../../styles'
-], function($, GridPicker, Workflow) {
+], function($, PowerGrid, ColumnModel, Column, ListBuilder, Workflow) {
+
+    var DefaultColumn = Column.extend({
+        defaults: {sortable: true, resizable: true}
+    });
+
+    var columns = {
+        name: DefaultColumn.extend(),
+        description: DefaultColumn.extend()
+    };
+
+    _.each(columns, function(col, name) {
+        col.prototype.defaults.name = name;
+        col.prototype.defaults.label = name;
+    });
+
+    var Grid = PowerGrid.extend({
+        defaults: {
+            columnModelClass: ColumnModel.extend({
+                columnClasses: [columns.name, columns.description]
+            }),
+            selectable: true
+        }
+    });
 
     var setup = function(options) {
             var gp, dfd = $.Deferred();
@@ -15,7 +41,8 @@ define([
 
             Workflow.mockReset();
 
-            gp = window.gp = GridPicker({
+            gp = window.gp = ListBuilder({
+                gridClass: Grid,
                 dataCollection: Workflow.collection(),
                 selectedDataCollection: Workflow.collection()
             });
@@ -36,8 +63,9 @@ define([
             return dfd;
         };
 
-    asyncTest('create gridpicker', function() {
-        var gp = GridPicker({
+    asyncTest('create listbuilder', function() {
+        var gp = ListBuilder({
+            gridClass: Grid,
             dataCollection: Workflow.collection(),
             selectedDataCollection: Workflow.collection()
         });
@@ -158,8 +186,9 @@ define([
     // binding in the test environment can be tricky for some reason - yet to be determined
     // if you have 2 or more (selectable) grids appended to the body that have binding to the
     // collection change event only the last grid in the body will be bound to the `this` value.
-    asyncTest('visual gridpicker to play with', function() {
-        var gp = GridPicker({
+    asyncTest('visual listbuilder to play with', function() {
+        var gp = ListBuilder({
+            gridClass: Grid,
             dataCollection: Workflow.collection(),
             selectedDataCollection: Workflow.collection()
         }).appendTo('body');
