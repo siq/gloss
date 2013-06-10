@@ -73,7 +73,7 @@ define([
         _initWidgets: function() {
             var ret = this._super.apply(this, arguments),
                 attr = '_'+this.el.id+'_selectedForDoc',
-                SelectedGridClass, GridClass;
+                SelectedGridClass, GridClass, placeholder, searchBtnTxt;
 
             this.set('selectedDocAttr', attr);
 
@@ -87,10 +87,12 @@ define([
                 selectedDocAttr: attr,
                 $el: this.$el.find('.data .grid')
             });
+            searchBtnTxt = GridFilter.prototype.defaults.searchButtonText;
+            placeholder = GridFilter.prototype.defaults.placeholder;
             this.dataFilter =
                 GridFilter(this.$el.find('.data .filter'), {
-                    searchButtonText: this.get('strings.search.button'),
-                    placeholder: this.get('strings.search.placeholder')
+                    searchButtonText: this.get('strings.search.button') || searchBtnTxt,
+                    placeholder: this.get('strings.search.placeholder') || placeholder
                 });
             this.addButton = Button(this.$el.find('button[name=add]'));
             this.removeButton = Button(this.$el.find('button[name=remove]'));
