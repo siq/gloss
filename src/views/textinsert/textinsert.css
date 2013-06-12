@@ -1,0 +1,15 @@
+.textinsert .selected-data {
+  float: left;
+}
+.textinsert .data {
+  float: right;
+}
+
+.textinsert textarea {
+  height: 100px;
+}
+
+.textinsert .action {
+  text-align: center;
+  padding-top: 30px;
+}

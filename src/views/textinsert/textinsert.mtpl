@@ -1,0 +1,14 @@
+<div class=textinsert>
+  <div class=selected-data>
+    <textarea name=terms readonly=true wrap=off></textarea>
+  </div>
+  <div class=data>
+    <input type=text name=term-input placeholder='<%=this.get('placeholder')%>'>
+  </div>
+
+  <div class=action>
+    <button type=button name=add><%=this.get('strings.button.add') || 'add'%></button><br/>
+    <button type=button name=remove><%=this.get('strings.button.remove') || 'remove' %></button><br/>
+    <button type=button name=remove-all><%=this.get('strings.button.remove_all') || 'remove all' %></button>
+  </div>
+</div>
