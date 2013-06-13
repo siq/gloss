@@ -1,0 +1,21 @@
+<% var strings = this.get('strings.options'); %>
+<div class=date-range>
+  <!-- we put this in a container so we can float everything
+      to get the bottom -> top type of animation -->
+  <div class=date-range-container>
+    <div class=from>
+      <select name=date-range-type>
+        <% _.each(this.get('options'), function(option) { %>
+          <option value='<%=option%>'>
+            <%= strings ? strings[option] : option %>
+          </option>
+        <% }); %>
+      </select>
+      <div class=datepicker name=from-date></div>
+    </div>
+    <div class=to>
+      <span class=and-span>and</span>
+      <div class=datepicker name=to-date></div>
+    </div>
+  </div>
+</div>

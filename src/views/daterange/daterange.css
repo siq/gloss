@@ -1,0 +1,8 @@
+.date-range .datepicker {
+  display: inline-block;
+}
+
+.date-range .to,
+.date-range .from {
+  float: left;
+}
