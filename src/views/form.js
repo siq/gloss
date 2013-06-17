@@ -95,7 +95,7 @@ define([
                         widgets: self.get('widgets'),
                         strings: self.get('strings'),
                         globalErrorStrings: errorStrings/*strings.errors*/});
-                    return groups;
+                    return groups; //this.get('strings.errors'); if not present fall back
                 }, {});
         },
         _initWidgets: function() {
