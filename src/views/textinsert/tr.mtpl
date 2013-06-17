@@ -1,0 +1,7 @@
+<% var self = data.self, value = data.value; %>
+<tr class="<%=data[self.get('selectedAttr')]? 'selected' : ''%>">
+  <td title="<%==value || ''%>">
+    <!-- <span contenteditable=true><%== value || '' %></span> -->
+    <%== value || '' %>
+  </td>
+</tr>

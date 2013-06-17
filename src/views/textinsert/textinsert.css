@@ -1,12 +1,18 @@
 .textinsert .selected-data {
   float: left;
+  height: 100px;
+  width: 100px;
 }
 .textinsert .data {
   float: right;
 }
 
-.textinsert textarea {
+/*.textinsert textarea {
   height: 100px;
+}*/
+
+.textinsert table {
+  width: 100%;
 }
 
 .textinsert .action {
