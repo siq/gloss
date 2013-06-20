@@ -6,7 +6,7 @@ define([
 
     function assertFieldHasError(form, prop, token) {
         var w = form.getWidget(prop),
-            nonnullString = 'blank text error',
+            nonnullString = 'Cannot be blank.',
             messageListMsg = $.trim(w.options.messageList.$node.text()),
             message = (token === 'blanktexterror' || token === 'nonnull') ?
                 nonnullString : '';

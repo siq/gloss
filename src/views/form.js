@@ -18,25 +18,13 @@ define([
     template, footerTemplate) {
     'use strict';
 
-    var errorStrings =
-             {"duplicate-infoset-name": "duplicate infoset name",
-              "duplicate-filter-name": "duplicate filter name",
-              "duplicate-targetset-name": "duplicate targetset name",
-              "cannot-delete-action-with-executions": "cannot delete action with execution",
-              "cannot-delete-targetset-with-action": "cannot delete targetset with action",
-              "cannot-delete": "cannot delete",
-              "invalid": "invalid",
-              // nonnull has to have the same message as blanktexterror ( tstutils.js )
-              "nonnull": "blank text error", 
-              "blanktexterror": "blank text error",
-              "ds-invalid": "dataserver invalid"};
-
     var SnapShot = Class.extend();
     asSettable.call(SnapShot.prototype, {prop: null});
 
     var Form = SimpleView.extend({
         template: template,
         defaults: {
+            globalErrorStrings: null,
             strings: {footer: {submit: 'submit', cancel: 'cancel'}}, 
             templates: {footer: footerTemplate, fieldsets: ''}
         },
@@ -94,7 +82,7 @@ define([
                         $el: self.$el,
                         widgets: self.get('widgets'),
                         strings: self.get('strings'),
-                        globalErrorStrings: errorStrings/*strings.errors*/});
+                        globalErrorStrings: self.get('globalErrorStrings')});
                     return groups; //this.get('strings.errors'); if not present fall back
                 }, {});
         },
@@ -117,8 +105,8 @@ define([
         _processErrors: function(globalErrors, fieldErrors, xhr) {
             var stringErrors;
             if (globalErrors) {
-                if (this.get('strings.errors')) {
-                    stringErrors = [this.get('strings.errors')];
+                if (this.get('globalErrorStrings')) {
+                    stringErrors = [this.get('globalErrorStrings')];
                 }
                 errorUtils.processGlobalErrors([globalErrors], xhr,
                     this.get('messageList'), null, stringErrors);
