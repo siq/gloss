@@ -296,7 +296,9 @@ define([
             gridOptions: {
                 columnModelClass: withBytesColumn(BasicColumnModel),
                 collectionMap: function(models) {
-                    models[0].set('float_field', null);
+                    if (models.length > 0) {
+                        models[0].set('float_field', null);
+                    }
                     return models;
                 }
             }
@@ -338,7 +340,9 @@ define([
             gridOptions: {
                 columnModelClass: withNumberColumn(BasicColumnModel),
                 collectionMap: function(models) {
-                    models[0].set('default_field', null);
+                    if (models.length > 0) {
+                        models[0].set('default_field', null);
+                    }
                     return models;
                 }
             }

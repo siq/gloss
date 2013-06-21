@@ -96,6 +96,11 @@ define([
             } else if (updated.collectionLoadArgs && options.collectionLoadArgs) {
                 self._updateCollection();
             }
+            if (updated.collectionMap && collection) {
+                if (self.defaults.collectionMap !== self.options.collectionMap) {
+                    self._onCollectionViewableUpdate();
+                }
+            }
         },
 
         show: function() {

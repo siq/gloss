@@ -78,6 +78,28 @@ define([
         });
     });
 
+    asyncTest('setting collectionMap rerenders the grid', function() {
+        TargetVolumeProfile.models.clear();
+        var collectionMap = function(models) {
+                // return just one model
+                return models.slice(0, 1);
+            },
+            grid = GridClass(undefined, {
+                collection: TargetVolumeProfile.collection()
+            });
+
+        setTimeout(function() {
+            equal(grid.options.rows.length, 10);
+            grid.set('collectionMap', collectionMap);
+            // powergrid is cooler than this old grid so we won't need to reset the colleciton there
+            grid.set('collection', TargetVolumeProfile.collection());
+            setTimeout(function() {
+                equal(grid.options.rows.length, 1);
+                start();
+            }, 10);
+        }, 10);
+    });
+
     var dummyAjax = function(params) {
             var num = params.data.limit? params.data.limit : 10;
 
