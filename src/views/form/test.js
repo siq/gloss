@@ -6,8 +6,9 @@ define([
     './../form',
     'tmpl!./test.mtpl',
     'tmpl!./testTwoModel.mtpl',
-    './tstutil'
-], function($, _, Resource, Form, testTemplate, testTwoModelTemplate, util) {
+    './tstutil',
+    'strings'
+], function($, _, Resource, Form, testTemplate, testTwoModelTemplate, util, strings) {
     var assertFieldHasError = util.assertFieldHasError,
         assertFieldHasNoError = util.assertFieldHasNoError,
         assertNoErrors = util.assertNoErrors,
@@ -15,12 +16,14 @@ define([
 
     var MyForm = Form.extend({
         defaults: {
+            globalErrorStrings: strings.errors,
             templates: {fieldsets: testTemplate}
         }
     });
 
     var TwoModelForm = Form.extend({
         defaults: {
+            globalErrorStrings: strings.errors,
             templates: {fieldsets: testTwoModelTemplate},
             strings: {footer: {submit: 'foo', cancel: 'bar'}}} // Test overwrite
     });

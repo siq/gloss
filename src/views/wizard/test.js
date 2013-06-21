@@ -3,10 +3,12 @@ define([
     'vendor/jquery',
     'mesh/tests/nestedpolymorphicexample',
     './../wizard',
-    'tmpl!./test.mtpl'
-], function($, Resource, Wizard, testTemplate) {
+    'tmpl!./test.mtpl',
+    'strings'
+], function($, Resource, Wizard, testTemplate, strings) {
     var TestWizard = Wizard.extend({
             defaults: {
+                globalErrorStrings: strings.errors,
                 strings: {
                     panes: [
                         {title: 'step one', instruction: 'take a deep breath'},
@@ -16,7 +18,7 @@ define([
             }
         }),
         TestWizardWithOverriddenButton = TestWizard.extend({
-            defaults: {strings: {footer: {cancel: 'geeeeeee'}}}
+            defaults: { globalErrorStrings: strings.errors, strings: {footer: {cancel: 'geeeeeee'}}}
         }),
         // copy of hardcoded defaults for form and wizard footers
         allStrings = $.extend(true, {},
@@ -61,7 +63,8 @@ define([
         tw.getWidget('submit').trigger('click');
         equal(tw.get('currentPane', 0), 0);
         ml = tw.getWidget('composition.expression').options.messageList;
-        equal(ml.$node.text(), 'blank text error');
+
+        equal(ml.$node.text(), 'Cannot be blank.');
         ok(ml.$node.is(':visible'));
 
         start();
