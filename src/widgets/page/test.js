@@ -1,10 +1,12 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 define([
     'vendor/jquery',
+    'vendor/underscore',
     './../page',
+    './../../mixins/aspagefadable',
     'tmpl!./noArgTest.mtpl',
     'tmpl!./argTest.mtpl'
-], function ($, Page, NoArgTmpl, ArgTmpl) {
+], function ($, _, Page, asPageFadable,  NoArgTmpl, ArgTmpl) {
     QUnit.config.autostart = false;
 
     module( "page", {
@@ -47,7 +49,7 @@ define([
         start();
     });
     asyncTest('Page loaded event test', function() {
-        var page = Page(undefined, {disableHintingEvents: true}); 
+        var page = Page(undefined, {disableHintingEvents: true});  
 
         ok(page);
         page.on('loaded', function() {
@@ -66,68 +68,67 @@ define([
     /***** ADD OPTIONS EVENT BASED ENABLEMENT OF FADE QUEUE ******/
     /* Testing utils */
     var ensureHintThreshold = 3000;
-    var showHintTemplate = "<div style='display:block; position:absolute; top:0; height:" + ensureHintThreshold + "'/></div>"; // This is not working
+    var showHintTemplate = "<div style='display:block; position:absolute; top:0; height:" + ensureHintThreshold + "'/></div>"; 
     var fadeSelector = 'div.more-document-hinting';
 
     var fadeDelayTest = function(tests) {
         /*Tests will take the form {behavior: b, eventSimulation: e, method: m)}*/
+        asPageFadable.call(Page.prototype);
         var hintPage = Page(undefined, {template: showHintTemplate, 
-                                        disableHintingEvents: true});
+                                        disableHintingEvents: false});
+
         hintPage.load.done( function() {
             _.each(tests, function(test, index) {
                 var testHintHeight = 60;
-                // Trigger event handler as if user viewport is far from bottom
-                hintPage[test.behavior](test.eventSimulation, 
-                                        testHintHeight,
-                                        hintPage.options.displayHintThreshold+30);
-                setTimeout(function() {
-                    test.method(hintPage);
-                    start();
-                }, (hintPage.options.fadeRate - hintPage.options.fadeRate/2));
+                var result = hintPage[test.behavior](test.eventSimulation, 
+                                                     testHintHeight,
+                                                     hintPage.options.displayHintThreshold+30);
+                test.method(result);
+                start();
             });
         });
     };
     var genTest = function(behavior, eventSimulation, method) {
         return {behavior: behavior, eventSimulation: eventSimulation, method: method};
     };
+
     asyncTest('fade initially shown', function() {
-        expect(1);
-        var testOne = genTest('_initFooterShadow', undefined, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'in',
+        var e = {pageY: $(window).scrollTop()+$(window).height()-5};
+        var testOne = genTest('_initFooterShadow', e, function(result) {
+            equal(result, 'in',
                   'page initialized with height greater than hint threshold');
         });
         fadeDelayTest([testOne]);
     });
-
     /* shadow hinting tests */
     asyncTest('_mouseLeaveBehavior', function() {
-        var testOne = genTest('_mouseLeaveBehavior', undefined, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'in',
+        expect(1);
+        var testOne = genTest('_mouseLeaveBehavior', undefined, function(result) {
+            equal(result, 'in',
                   "on mouse leave the fader should be present");
         });
         fadeDelayTest([testOne]);
     });
     asyncTest('_mouseEnterBehavior', function() {
         var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_mouseEnterBehavior', e, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'out',
+        var testOne = genTest('_mouseEnterBehavior', e, function(result) {
+            equal(result, 'out',
                   "on mouse enter the fader should not be present on hover");
         });
         fadeDelayTest([testOne]);
     });
-
     asyncTest('_mouseMoveBehavior', function() {
         var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_mouseMoveBehavior', e, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'out',
+        var testOne = genTest('_mouseMoveBehavior', e, function(result) {
+            equal(result, 'out',
                   'mouse move triggers minimum opacity only if mouse is over the fade');
         });
         fadeDelayTest([testOne]);
     });
     asyncTest('_clickBehavior', function() {
         var eOnHint = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_clickBehavior', eOnHint, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'out',
+        var testOne = genTest('_clickBehavior', eOnHint, function(result) {
+            equal(result, 'out',
                   'mouse move triggers minimum opacity if mouse is on the fade');
         });
         var eOffHint = {pageY: 0};
@@ -139,16 +140,16 @@ define([
     });
     asyncTest('_pollViewPos', function() {
         var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_pollViewPos', e, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'in',
+        var testOne = genTest('_pollViewPos', e, function(result) {
+            equal(result, 'in',
                   '_pollViewPos triggers does nothing if mouse is not over fade');
         });
         fadeDelayTest([testOne]);
     });
     asyncTest('_initFooterShadow', function() {
         var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_initFooterShadow', e, function(hintPage) {
-            equal(hintPage.fadeQueue.getCurrentDirection(), 'in',
+        var testOne = genTest('_initFooterShadow', e, function(result) {
+            equal(result, 'in',
                   'init footer shadow should defaut to "in"');
         });
         fadeDelayTest([testOne]);
