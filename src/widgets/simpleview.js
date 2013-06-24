@@ -25,13 +25,13 @@ define([
             rendered = this.pauseRender().updateAll().unpauseRender();
             if (!rendered) {
                 this.render();
+                this._initWidgets();
+                this._bindEvents();
             }
             if (id) {
                 this.$el.attr('view-name', viewName);
                 this.el.id = id;
             }
-            this._initWidgets();
-            this._bindEvents();
             this.waitForInitialRender.resolve();
         },
         _bindEvents: function() {
