@@ -6,9 +6,15 @@ define([
     './../form',
     'tmpl!./test.mtpl',
     'tmpl!./testTwoModel.mtpl',
-    './tstutil',
-    'strings'
-], function($, _, Resource, Form, testTemplate, testTwoModelTemplate, util, strings) {
+    './tstutil'
+], function($, _, Resource, Form, testTemplate, testTwoModelTemplate, util) {
+
+    var globalErrorStrings = {
+        invalid: "There was an error",
+        nonnull: "Cannot be blank.",
+        blanktexterror: "Cannot be blank."
+    };
+
     var assertFieldHasError = util.assertFieldHasError,
         assertFieldHasNoError = util.assertFieldHasNoError,
         assertNoErrors = util.assertNoErrors,
@@ -16,16 +22,22 @@ define([
 
     var MyForm = Form.extend({
         defaults: {
-            globalErrorStrings: strings.errors,
-            templates: {fieldsets: testTemplate}
+            templates: {fieldsets: testTemplate},
+            globalErrorStrings:  {
+                invalid: "There was an error",
+                nonnull: "Cannot be blank.",
+                blanktexterror: "Cannot be blank."}
         }
     });
 
     var TwoModelForm = Form.extend({
         defaults: {
-            globalErrorStrings: strings.errors,
             templates: {fieldsets: testTwoModelTemplate},
-            strings: {footer: {submit: 'foo', cancel: 'bar'}}} // Test overwrite
+            strings: {footer: {submit: 'foo', cancel: 'bar'}},// Test overwrite
+            globalErrorStrings: globalErrorStrings
+        },
+        options: {
+            globalErrorStrings: globalErrorStrings}
     });
 
     asyncTest('initialization', function() {
