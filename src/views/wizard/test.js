@@ -3,12 +3,17 @@ define([
     'vendor/jquery',
     'mesh/tests/nestedpolymorphicexample',
     './../wizard',
-    'tmpl!./test.mtpl',
-    'strings'
-], function($, Resource, Wizard, testTemplate, strings) {
+    'tmpl!./test.mtpl'
+], function($, Resource, Wizard, testTemplate) {
+    var globalErrorStrings = {
+        invalid: "There was an error",
+        nonnull: "Cannot be blank.",
+        blanktexterror: "Cannot be blank."
+    };
+
     var TestWizard = Wizard.extend({
             defaults: {
-                globalErrorStrings: strings.errors,
+                globalErrorStrings: globalErrorStrings,
                 strings: {
                     panes: [
                         {title: 'step one', instruction: 'take a deep breath'},
@@ -18,7 +23,7 @@ define([
             }
         }),
         TestWizardWithOverriddenButton = TestWizard.extend({
-            defaults: { globalErrorStrings: strings.errors, strings: {footer: {cancel: 'geeeeeee'}}}
+            defaults: { globalErrorStrings: globalErrorStrings, strings: {footer: {cancel: 'geeeeeee'}}}
         }),
         // copy of hardcoded defaults for form and wizard footers
         allStrings = $.extend(true, {},
