@@ -25,7 +25,7 @@ define([
         template: template,
         defaults: {
             globalErrorStrings: {error: 'generic error'},
-            strings: {footer: {submit: 'submit', cancel: 'cancel'}}, 
+            strings: {footer: {submit: 'submit', cancel: 'cancel'}},
             templates: {footer: footerTemplate, fieldsets: ''}
         },
         _bindEvents: function() {
