@@ -1,0 +1,15 @@
+<% var strs = data.options.strings; %>
+<div class='fileupload'>
+  <form class=fileupload-form action='/upload' method='POST' target='submissionFrame' enctype='multipart/file-data'>
+    <label class=fileupload-label>
+      <%= (strs && strs.fileupload.label) ? strs.fileupload.label : '' %>
+    </label>
+    <div class=fileupload-buttons>
+      <input class=fileupload-input type='file'></input>
+      <button class=fileupload-submit type='submit'>
+	<%= (strs && strs.fileupload.submit) ? strs.fileupload.submit : '' %>
+      </button>
+    </div>
+  </form>
+  <iframe id='submissionFrame' class=fileupload-iframe src='/'></iframe>
+</div>

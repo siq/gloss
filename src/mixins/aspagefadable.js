@@ -133,7 +133,6 @@ define([
             var init = this._initFade();
 
             if (!this.options.disableHintingEvents) {
-                console.log( 'entered' );
                 $('body').live('mouseleave', function(e) {
                     self._mouseLeaveBehavior(e, hintHeight, self._windowDistanceFromBottom());
                 });
