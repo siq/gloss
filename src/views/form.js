@@ -24,7 +24,7 @@ define([
     var Form = SimpleView.extend({
         template: template,
         defaults: {
-            globalErrorStrings: null,
+            globalErrorStrings: {error: 'generic error'},
             strings: {footer: {submit: 'submit', cancel: 'cancel'}}, 
             templates: {footer: footerTemplate, fieldsets: ''}
         },
