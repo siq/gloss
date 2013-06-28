@@ -13,13 +13,13 @@
 %>
 <h2>
   <% _.each(initialCrumbs, function(crumb) { %>
-    <% var crumbValue = displayValue(crumb); %>
-    <a class=breadcrumb title='<%=crumbValue%>' value='<%=crumb.value || ''%>' href='<%=crumb.url%>'>
-      <%=crumbValue%> >
+    <% var display = displayValue(crumb); %>
+    <a class=breadcrumb title='<%=display%>' value='<%=crumb.value || ''%>' href='<%=crumb.url%>'>
+      <%=display%> >
     </a>
   <% }); %>
-  <% var crumbValue = (lastCrumb || {}).value; %>
-  <span title='<%=displayValue(lastCrumb)%>' value='<%=crumbValue%>'>
-    <%=displayValue(lastCrumb)%>
-  </span>
+  <%  var display = displayValue(lastCrumb);
+          crumbValue = (lastCrumb || {}).value;
+  %>
+  <span title='<%=display%>' value='<%=crumbValue%>'><%=display%></span>
 </h2>
