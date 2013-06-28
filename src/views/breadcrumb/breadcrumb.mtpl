@@ -11,7 +11,7 @@
       return _.compact(_.pluck(strings, token))[0] || content || value;
     }
 %>
-<h2>
+<div>
   <% _.each(initialCrumbs, function(crumb) { %>
     <% var display = displayValue(crumb); %>
     <a class=breadcrumb title='<%=display%>' value='<%=crumb.value || ''%>' href='<%=crumb.url%>'>
@@ -22,4 +22,4 @@
           crumbValue = (lastCrumb || {}).value;
   %>
   <span title='<%=display%>' value='<%=crumbValue%>'><%=display%></span>
-</h2>
+</div>
