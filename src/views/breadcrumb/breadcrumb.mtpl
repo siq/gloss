@@ -1,0 +1,25 @@
+<%  var crumbs = this.get('crumbs'),
+        initialCrumbs = _.initial(crumbs),
+        lastCrumb = _.last(crumbs),
+        strings = this.get('strings');
+    
+    function displayValue(crumb) {
+      var token = (crumb || {}).value,
+          content = (crumb || {}).content,
+          value = (crumb || {}).value;
+
+      return _.compact(_.pluck(strings, token))[0] || content || value;
+    }
+%>
+<h2>
+  <% _.each(initialCrumbs, function(crumb) { %>
+    <% var crumbValue = displayValue(crumb); %>
+    <a class=breadcrumb title='<%=crumbValue%>' value='<%=crumb.value || ''%>' href='<%=crumb.url%>'>
+      <%=crumbValue%> >
+    </a>
+  <% }); %>
+  <% var crumbValue = (lastCrumb || {}).value; %>
+  <span title='<%=displayValue(lastCrumb)%>' value='<%=crumbValue%>'>
+    <%=displayValue(lastCrumb)%>
+  </span>
+</h2>
