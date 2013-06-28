@@ -25,13 +25,15 @@ define([
             rendered = this.pauseRender().updateAll().unpauseRender();
             if (!rendered) {
                 this.render();
-                this._initWidgets();
-                this._bindEvents();
             }
             if (id) {
                 this.$el.attr('view-name', viewName);
                 this.el.id = id;
             }
+            // this is the right place for this
+            // the render has already happened up above in the check for rendered.
+            this._initWidgets();
+            this._bindEvents();
             this.waitForInitialRender.resolve();
         },
         _bindEvents: function() {
