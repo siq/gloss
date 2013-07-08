@@ -52,7 +52,7 @@ define([
                     clicks++;
                 }
             });
-            bc = BC().appendTo('body');
+            bc = BC();//.appendTo('body');
 
         equal(clicks, 0, 'no clicks');
         bc.$el.find('[value=foo]').click();
@@ -66,6 +66,32 @@ define([
                     equal(clicks, 2, 'tao is the last breadcrumb and cannot be clicked');
                     start();
                 }, 10);
+            }, 10);
+        }, 10);
+    });
+
+    asyncTest ('breadcrumb click handler override returns crumb object', function(){
+        var BC = BreadCrumb.extend({
+                defaults: {
+                    crumbs: [
+                        {value: 'foo', content: 'Foo'},
+                        {value: 'bar', content: 'Bar'},
+                        {value: 'tao', content: 'Tao'}
+                    ]
+                },
+                onBreadCrumbClick: function(evt, crumb) {
+                    var $target = $(evt.currentTarget),
+                        value = $target.attr('value');
+                    equal(value, crumb.value, 'target value and crumb value match');
+                }
+            });
+            bc = BC().appendTo('body');
+
+        bc.$el.find('[value=foo]').click();
+        setTimeout(function() {
+            bc.$el.find('[value=bar]').click();
+            setTimeout(function() {
+                start();
             }, 10);
         }, 10);
     });
