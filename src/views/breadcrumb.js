@@ -16,7 +16,7 @@ define([
         _bindEvents: function() {
             _.bindAll(this, '_onBreadCrumbClick');
             this.on('click', '.breadcrumb', this._onBreadCrumbClick);
-            return this;
+            return this._super.apply(this, arguments);
         },
         _initWidgets: function() {
             this.$el.addClass('breadcrumbs');
@@ -35,14 +35,17 @@ define([
                 model = this._modelFromCrumb(evt.currentTarget);
                 this.onBreadCrumbClick(evt, model);
             }
+            return this;
         },
         onBreadCrumbClick: function(evt) {
             return this;
         },
         update: function(changed) {
+            this._super.apply(this, arguments);
             if (changed.crumbs) {
                 this.render();
             }
+            return this;
         }
     });
 });
