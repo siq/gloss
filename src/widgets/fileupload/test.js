@@ -10,23 +10,15 @@ define([
             fileupload: {label: 'fileupload label',
                          submit: 'submit'}
         };
-
         var fileUpload = FileUpload({
             strings: {
                 fileupload: {label: 'fileupload label',
                              submit: 'submit'}
         }
-
         });
-                                          
         ok(fileUpload, 'not null');
+        fileUpload.appendTo('body');
     });
 
-    var fileUpload = FileUpload( { strings: {
-                fileupload: {label: 'Classification Model File',
-                             submit: 'Browse...'}
-        }});
-    fileUpload.appendTo('body');
-    
     start();
 });

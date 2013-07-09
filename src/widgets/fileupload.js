@@ -1,11 +1,24 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    './../widgets/simpleview',
-    'tmpl!./fileupload/fileupload.mtpl'
-], function($, _, SimpleView, template) {
-    return SimpleView.extend({
-        template: template
+    './../views/form',
+    'tmpl!./fileupload/fileupload.mtpl',
+    'css!./fileupload/fileupload.css'
+], function($, _, Form, template) {
+    return Form.extend({
+        defaults: {action: '/upload', src: '/upload',
+                   display: {label: 'label',
+                             databind: 'databind',
+                             button: 'Browse...'}},
+        template: template,
+        _bindEvents: function() {
+            this._super.apply(this,arguments);
+            $(this.$el.find('input[type=file]')).change(function() {
+                $('.fileinput-display').val($(this).val());
+            });
+        },
+        submit: function() {
+            // do nothing for now
+        }
     });
-    
 });

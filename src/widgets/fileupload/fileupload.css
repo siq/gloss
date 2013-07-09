@@ -1,0 +1,33 @@
+.fileupload {
+    position:relative;
+}
+.fileupload .label {
+    height:1em;
+}
+.fileupload .inputs {
+    height:auto;
+    padding:0px;
+}
+.fileupload .fileupload-actual {
+    z-index: 1;
+    position:abosolute;
+    top:0px;
+    left:0px;
+    height:auto;
+    opacity: 0;
+}
+.fileupload-actual .fileupload-input {
+    width:100%; // ensure underlying button is 'clickable'
+    margin:0px;
+    padding:0px;
+}
+.fileupload .fileupload-display {
+    z-index: -1;
+    height:auto;
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+#submissionFrame {
+    display:none;
+}
