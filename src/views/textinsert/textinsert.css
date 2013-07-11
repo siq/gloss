@@ -1,21 +1,25 @@
 .textinsert .selected-data {
   float: left;
-  height: 100px;
   width: 100px;
 }
 .textinsert .data {
   float: right;
+}
+.textinsert .sidebar {
+  height: 100px;
 }
 
 /*.textinsert textarea {
   height: 100px;
 }*/
 
-.textinsert table {
-  width: 100%;
+/*override some power gridstyle that will be included
+  because this is not actually a powergrid*/
+.textinsert table,
+.textinsert input {
+  width: 100% !important;
 }
 
 .textinsert .action {
   text-align: center;
-  padding-top: 30px;
 }

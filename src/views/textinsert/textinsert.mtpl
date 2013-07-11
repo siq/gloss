@@ -1,15 +1,14 @@
 <div class=textinsert>
-  <!-- the powergrid and selectable class are just lookand feel styling this is not a powergrid -->
-  <div class='selected-data powergrid selectable'>
+  <!-- the powergrid and selectable class are just for lookand feel styling this is not a powergrid -->
+  <div class='selected-data powergrid selectable sidebar'>
     <!-- <textarea name=terms readonly=true wrap=off></textarea> -->
     <table>
       <tbody class=rows name=terms></tbody>
     </table>
   </div>
-  <div class=data>
+  <div class='data sidebar'>
     <input type=text name=term-input placeholder='<%=this.get('placeholder')%>'>
   </div>
-
   <div class=action>
     <button type=button name=add><%=this.get('strings.button.add') || 'add'%></button><br/>
     <button type=button name=remove><%=this.get('strings.button.remove') || 'remove' %></button><br/>
