@@ -77,6 +77,20 @@ define([
         ok(form.getWidget('my-cbg'));
     });
 
+    test('default checked option checks all on initialization', function() {
+        var cbg = window.cbg = CheckBoxGroup(undefined, {
+            checked: true,
+            checkall: true,
+            entries: [
+                {name: 'foo bar baz', value: 0},
+                {name: 'foo bar biggity iggity bazzle', value: 1}
+            ]
+        });
+
+        deepEqual(cbg.getValue(), [0, 1]);
+        equal(cbg.$node.find('.checkall').attr('checked'), 'checked', 'checkall checkbox is checked');
+    });
+
     // we only want to run the 'checkbox column' module if we're in a browser
     // where triggering a 'click' event on a checkbox subsequently triggers a
     // 'change' event. since we're lazy and busy, we're just checking for

@@ -8,6 +8,7 @@ define([
     return FormWidget.extend({
         defaults: {
             template: template,
+            checked: false,
             checkall: false,
             checkallLabel: 'Check All',
             translate: function(model) {
@@ -109,6 +110,10 @@ define([
                             initialValue: checkedEntries[i]
                         }));
                     });
+            }
+            if (updated.checked && this.options.checked) {
+                this.$node.find('.checkall').attr('checked', true);
+                this.setValue('all');
             }
 
 
