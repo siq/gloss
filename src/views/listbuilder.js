@@ -20,7 +20,7 @@ define([
         var GridClass = Grid.extend({
             defaults: {
                 collectionMap: function(models) {
-                    var attr = this.get('selectedDocAttr');
+                    var attr = this.get('selectedListAttr');
                     return _.mwhere(models, attr, undefined);
                 }
             }
@@ -31,7 +31,7 @@ define([
         var SelectedGridClass = Grid.extend({
             defaults: {
                 collectionMap: function(models) {
-                    var attr = this.get('selectedDocAttr');
+                    var attr = this.get('selectedListAttr');
                     return _.mwhere(models, attr, true);
                 }
             }
@@ -42,7 +42,7 @@ define([
                 this.trigger('change');
             },
             getValue: function() {
-                var attr = this.get('selectedDocAttr');
+                var attr = this.get('selectedListAttr');
                 return _.mpluck(_.mwhere(this.get('models'), attr, true), 'id');
             },
             setValue: function(newValue) {
@@ -72,19 +72,19 @@ define([
         },
         _initWidgets: function() {
             var ret = this._super.apply(this, arguments),
-                attr = '_'+this.el.id+'_selectedForDoc',
+                attr = '_'+this.el.id+'_selectedForList',
                 SelectedGridClass, GridClass, placeholder, searchBtnTxt;
 
-            this.set('selectedDocAttr', attr);
+            this.set('selectedListAttr', attr);
 
             SelectedGridClass = MakeSelectedGridClass(this.get('gridClass'));
             GridClass = MakeGridClass(this.get('gridClass'));
             this.selectedDataGrid = SelectedGridClass({
-                selectedDocAttr: attr,
+                selectedListAttr: attr,
                 $el: this.$el.find('.selected-data .grid')
             });
             this.dataGrid = GridClass({
-                selectedDocAttr: attr,
+                selectedListAttr: attr,
                 $el: this.$el.find('.data .grid')
             });
             searchBtnTxt = GridFilter.prototype.defaults.searchButtonText;
@@ -147,7 +147,7 @@ define([
         _select: function(ids) {
             var data = this.dataGrid.get('models'),
                 selectedData = this.selectedDataGrid.get('models'),
-                attr = this.get('selectedDocAttr');
+                attr = this.get('selectedListAttr');
 
             _.each(ids, function(id, i) {
                 var silent = i !== ids.length-1,
@@ -164,7 +164,7 @@ define([
         _unselect: function(ids) {
             var data = this.dataGrid.get('models'),
                 selectedData = this.selectedDataGrid.get('models'),
-                attr = this.get('selectedDocAttr');
+                attr = this.get('selectedListAttr');
 
             _.each(ids, function(id, i) {
                 var silent = i !== ids.length-1,
