@@ -74,6 +74,11 @@ define([
                     height: 'toggle'
                 }, this.get('animationDuration'));
             }
+        },
+        resetFields: function() {
+            this.getWidget('from-date').setValue();
+            this.getWidget('to-date').setValue();
+            return this;
         }
     });
 
