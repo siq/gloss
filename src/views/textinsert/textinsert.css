@@ -1,11 +1,11 @@
 .textinsert .selected-data {
   float: left;
-  width: 100px;
 }
 .textinsert .data {
   float: right;
 }
 .textinsert .sidebar {
+  width: 200px;
   height: 100px;
 }
 
@@ -20,6 +20,10 @@
   width: 100%;
 }
 
+/*.textinsert .selected-data .table-wrapper {
+  height: 100%;
+  width: 100%;
+}*/
 .textinsert .action {
   text-align: center;
 }
