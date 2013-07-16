@@ -266,6 +266,9 @@ define([
             return this;
         },
         setValue: function(values) {
+            if (values === undefined) {
+                values = [];
+            }
             this.set('terms', _.isArray(values) ? values : [values]);
             return this;
         },
