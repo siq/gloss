@@ -1,8 +1,8 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    'gloss/core/registry',
-    'gloss/widgets/simpleview',
+    './../core/registry',
+    './../widgets/simpleview',
     './form',
     'tmpl!./wizard/header.mtpl',
     'tmpl!./wizard/wizard.mtpl',

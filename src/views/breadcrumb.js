@@ -1,6 +1,6 @@
 define([
     'vendor/underscore',
-    'gloss/widgets/simpleview',
+    './../widgets/simpleview',
     'tmpl!./breadcrumb/breadcrumb.mtpl'
 ], function(_, SimpleView, template) {
 
