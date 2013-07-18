@@ -210,7 +210,9 @@ define([
         },
         unselect: function(ids) {
             // if !ids then unselect all
-            ids = !ids? this.get('dataCollection').mpluck('id') :
+            var dataCollection = this.get('dataCollection');
+            if (!dataCollection) return;
+            ids = !ids? dataCollection.mpluck('id') :
                     _.isArray(ids)? ids : [ids];
             this._unselect(ids);
         },
