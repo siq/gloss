@@ -49,6 +49,7 @@ define([
 
         setValue: function(array, silent) {
             var cur = this.getValue().sort();
+            if (array === undefined) return;
             if (_.isString(array)) {
                 if (array === 'all') {
                     array = _.map(this.checkboxes, function(cb) {
