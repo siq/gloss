@@ -75,7 +75,7 @@ define([
                 }, this.get('animationDuration'));
             }
         },
-        resetFields: function() {
+        clearValue: function() {
             this.getWidget('from-date').setValue();
             this.getWidget('to-date').setValue();
             return this;
