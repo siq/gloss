@@ -22,6 +22,19 @@ define([
             // optionally set fixed width
             width: null
         },
+        _buildMenu: function(self) {
+            return Menu(self.$menu, {
+                position: {my: 'left top', at: 'left bottom', of: self.$node},
+                width: self,
+                updateDisplay: false,
+                onselect: function(event, entry) {
+                    self.toggle(false);
+                    if (self.entry == null || entry.value !== self.entry.value) {
+                        self.setValue(entry.value);
+                    }
+                }
+            });
+        },
         create: function() {
             var self = this, options = self.options, $replacement, disabled, num;
             this._super();
@@ -72,17 +85,7 @@ define([
                 .appendTo(self.$node);
 
             self.$menu = $('<div>').hide().appendTo(self.$node);
-            self.menu = Menu(self.$menu, {
-                position: {my: 'left top', at: 'left bottom', of: self.$node},
-                width: self,
-                updateDisplay: false,
-                onselect: function(event, entry) {
-                    self.toggle(false);
-                    if (self.entry == null || entry.value !== self.entry.value) {
-                        self.setValue(entry.value);
-                    }
-                }
-            });
+            self.menu = self._buildMenu(self);
 
             self.update();
             self.on('click', function(evt) {
