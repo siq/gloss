@@ -1,13 +1,17 @@
 <% var strs = data.options.strings; %>
 <div class='fileupload'>
   <div class=fileupload-actual>
-  <form id=fileupload-form action='<%= data.options.action %>'
-        method='POST' target='submissionFrame' enctype='multipart/file-data'>
+  <form id=fileupload-form
+        action='<%= data.options.action %>'
+        method='POST'
+        target='submissionFrame'
+        enctype='multipart/form-data'
+        encoding='multipart/form-data''>
       <label class=fileupload-label>
         ...
       </label>
       <div class=inputs>
-        <input class=fileupload-input type='file'></input>
+        <input class=fileupload-input type='file' name='file' size='20'></input>
       </div>
   </form>
   </div>
@@ -16,9 +20,9 @@
       <%= (strs && strs.fileupload.label) ? strs.fileupload.label : '' %>
     </label>
     <div class=inputs>
-      <input class='fileinput-display' type=text name=filename data-bind='<%= data.options.databind%>'></input>
+      <input class='fileinput-display' type=text name=filename></input>
       <button class=button><%= data.options.display.button %></button>
     </div>
   </div>
-  <iframe id='submissionFrame' class=fileupload-iframe src='<%= data.options.src %>' ></iframe>
+  <iframe id='submissionFrame' name='submissionFrame' class=fileupload-iframe src='<%= data.options.src %>' ></iframe>
 </div>
