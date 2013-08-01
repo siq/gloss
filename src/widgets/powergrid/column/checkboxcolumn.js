@@ -103,7 +103,7 @@ define([
             self._updateFromHeader = (changes.length > 0);
             _.each(changes, function(model, i) {
                 model.set(prop, v, silentTilLast?
-                        {silent: i !== changes.length-1} : undefined);
+                        {silent: i !== changes.length-1} : {silent: false});
             });
 
             grid.rerender();
