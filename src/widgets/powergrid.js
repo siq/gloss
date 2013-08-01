@@ -584,6 +584,7 @@ define([
             _.each(this.get('columnModel').columns, function(c) {
                 c._setThCellWidth();
             });
+            return this;
         },
 
         update: function(updated) {
