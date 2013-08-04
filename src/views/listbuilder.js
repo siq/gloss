@@ -197,7 +197,6 @@ define([
                 .apply(this.selectedDataGrid, arguments);
         },
         setValue: function(newValue) {
-            this.unselect();
             if ((_.isArray(newValue) && newValue.length === 0) ||
                     newValue === void 0) {
                 return;
