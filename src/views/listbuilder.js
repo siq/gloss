@@ -73,7 +73,7 @@ define([
         _initWidgets: function() {
             var ret = this._super.apply(this, arguments),
                 attr = '_'+this.el.id+'_selectedForList',
-                SelectedGridClass, GridClass, placeholder, searchBtnTxt;
+                SelectedGridClass, GridClass, placeholder, searchBtnTxt, searchParam;
 
             this.set('selectedListAttr', attr);
 
@@ -89,8 +89,10 @@ define([
             });
             searchBtnTxt = GridFilter.prototype.defaults.searchButtonText;
             placeholder = GridFilter.prototype.defaults.placeholder;
+            searchParam = GridFilter.prototype.defaults.searchParam;
             this.dataFilter =
                 GridFilter(this.$el.find('.data .filter'), {
+                    searchParam: this.get('searchParam') || searchParam,
                     searchButtonText: this.get('strings.search.button') || searchBtnTxt,
                     placeholder: this.get('strings.search.placeholder') || placeholder
                 });
@@ -237,9 +239,6 @@ define([
             }
             if (changed.messageList) {
                 this.selectedDataGrid.set('messageList', this.get('messageList'));
-            }
-            if (changed.grid) {
-
             }
         }
     });
