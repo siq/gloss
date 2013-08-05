@@ -120,7 +120,7 @@ define([
             this._createSnapshot.apply(this, arguments);
             // resourepoller maybe attached to Window. If it is we turned it off on `show`
             // to prevent overwritting changes while editing a model so turn it back on
-            if (resourcepoller) {
+            if (window.resourcepoller) {
                 resourcepoller.enable();
             }
         },
@@ -226,7 +226,7 @@ define([
             this._focusOnFirstVisibleBinding();
             // resourepoller maybe attached to Window. If it is turn it off to prevent
             // overwritting changes while editing a model
-            if (resourcepoller) {
+            if (window.resourcepoller) {
                 resourcepoller.disable();
             }
             return ret;
