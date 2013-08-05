@@ -161,7 +161,7 @@ define([
                 }
             });
         },
-        _unselect: function(ids) {
+        _unselect: function(ids, opts) {
             var data = this.dataGrid.get('models'),
                 selectedData = this.selectedDataGrid.get('models'),
                 attr = this.get('selectedListAttr');
@@ -171,10 +171,10 @@ define([
                     m1 = _.mfindWhere(selectedData, 'id', id),
                     m2 = _.mfindWhere(data, 'id', id);
                 if (m1) {
-                    m1.del(attr, {silent: silent});
+                    m1.del(attr, {silent: (opts || {}).silent || silent});
                 }
                 if (m2) {
-                    m2.del(attr, {silent: silent});
+                    m2.del(attr, {silent: (opts || {}).silent || silent});
                 }
             });
         },
@@ -197,12 +197,16 @@ define([
                 .apply(this.selectedDataGrid, arguments);
         },
         setValue: function(newValue) {
+            var ids;
             if ((_.isArray(newValue) && newValue.length === 0) ||
                     newValue === void 0) {
-                return;
+                this.unselect();
             } else {
+                ids = _.pluck(this.get('dataCollection.models') || [], 'id');
+                this._unselect(ids, {silent: true});
                 this.select(newValue);
             }
+            return this;
         },
         show: function() {
             this.propagate('show');
@@ -214,6 +218,7 @@ define([
             ids = !ids? dataCollection.mpluck('id') :
                     _.isArray(ids)? ids : [ids];
             this._unselect(ids);
+            return this;
         },
         update: function(changed) {
             var self = this;

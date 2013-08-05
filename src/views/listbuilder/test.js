@@ -107,68 +107,40 @@ define([
         setup().then(function(gp) {
             var ids = gp.get('dataCollection').mpluck('id');
 
-            // calling setValue w/ anything invalid is a no-op
+            // calling setValue w/ anything invalid clears selections
+            // i.e. null/undefined, [], id not present in the collection
             gp.setValue(ids);
             equal(gp.getValue().length,
                 gp.get('dataCollection').models.length, 'all data is selected');
             gp.setValue();
-            equal(gp.getValue().length,
-                gp.get('dataCollection').models.length, 'all data still selected');
-
-            gp.setValue([]);
-            equal(gp.getValue().length,
-                gp.get('dataCollection').models.length, 'all data is selected');
-            gp.unselect();
             equal(gp.getValue().length, 0, 'no data selected');
 
+            gp.setValue(ids);
+            equal(gp.getValue().length,
+                gp.get('dataCollection').models.length, 'all data is selected');
+            gp.setValue([]);
+            equal(gp.getValue().length, 0, 'no data selected');
 
             gp.setValue(ids[0]);
             equal(gp.getValue().length, 1, 'one value is selected');
-            gp.unselect();
+            gp.setValue();
             equal(gp.getValue().length, 0, 'no data selected');
 
             gp.setValue(ids.slice(0,2));
             equal(gp.getValue().length, 2, '2 values is selected');
-            gp.unselect();
+            gp.setValue();
             equal(gp.getValue().length, 0, 'no data selected');
 
-            /*
-                setValue no longer supports unselecting values
-            */
-            // // calling setValue w/ anything invalid clears selections
-            // // i.e. null/undefined, [], id not present in the collection
-            // gp.setValue(ids);
-            // equal(gp.getValue().length,
-            //     gp.get('dataCollection').models.length, 'all data is selected');
-            // gp.setValue();
-            // equal(gp.getValue().length, 0, 'no data selected');
+            gp.setValue(ids.slice(0,2));
+            equal(gp.getValue().length, 2, '2 values is selected');
+            gp.setValue(1234);
+            equal(gp.getValue().length, 0, 'no data selected');
 
-            // gp.setValue(ids);
-            // equal(gp.getValue().length,
-            //     gp.get('dataCollection').models.length, 'all data is selected');
-            // gp.setValue([]);
-            // equal(gp.getValue().length, 0, 'no data selected');
-
-            // gp.setValue(ids[0]);
-            // equal(gp.getValue().length, 1, 'one value is selected');
-            // gp.setValue();
-            // equal(gp.getValue().length, 0, 'no data selected');
-
-            // gp.setValue(ids.slice(0,2));
-            // equal(gp.getValue().length, 2, '2 values is selected');
-            // gp.setValue();
-            // equal(gp.getValue().length, 0, 'no data selected');
-
-            // gp.setValue(ids.slice(0,2));
-            // equal(gp.getValue().length, 2, '2 values is selected');
-            // gp.setValue(1234);
-            // equal(gp.getValue().length, 0, 'no data selected');
-
-            // // calling setvalue clears any previous selection
-            // gp.setValue(ids.slice(0,2));
-            // equal(gp.getValue().length, 2, '2 values is selected');
-            // gp.setValue(ids[0]);
-            // equal(gp.getValue().length, 1, '1 value selected');
+            // calling setvalue clears any previous selection
+            gp.setValue(ids.slice(0,2));
+            equal(gp.getValue().length, 2, '2 values is selected');
+            gp.setValue(ids[0]);
+            equal(gp.getValue().length, 1, '1 value selected');
             start();
         });
     });
