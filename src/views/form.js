@@ -118,6 +118,11 @@ define([
         _resetSnapshot: function() {
             this._restoreFromSnapShot.apply(this, arguments);
             this._createSnapshot.apply(this, arguments);
+            // resourepoller maybe attached to Window. If it is we turned it off on `show`
+            // to prevent overwritting changes while editing a model so turn it back on
+            if (resourcepoller) {
+                resourcepoller.enable();
+            }
         },
         _restoreFromSnapShot: function(model) {
             var prop, snapshot = this._snapshot;
@@ -219,6 +224,11 @@ define([
             var bindings, ret = this._super.apply(this, arguments);
             this.resetFields({animate: false});
             this._focusOnFirstVisibleBinding();
+            // resourepoller maybe attached to Window. If it is turn it off to prevent
+            // overwritting changes while editing a model
+            if (resourcepoller) {
+                resourcepoller.disable();
+            }
             return ret;
         },
         submit: function(evt) {
