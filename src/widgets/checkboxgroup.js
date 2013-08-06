@@ -25,10 +25,9 @@ define([
                 }
             });
             this.on('change', '.checkall', function(evt) {
-                var checked = $(evt.target).is(':checked');
-                if (checked) {
-                    self.setValue('all');
-                }
+                var checked = $(evt.target).is(':checked'),
+                    value = checked ? 'all' : 'none';
+                self.setValue(value);
             });
             this.on('click', 'input[type=checkbox]:not(.checkall)', function(evt) {
                 // normally we would cache this but since the template can be
