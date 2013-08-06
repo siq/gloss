@@ -3,7 +3,7 @@
 	<td style='height: 26px; text-align: center' colspan=<%=columns.length;%>>
 		<span class=loading-text style='margin-right: 25px;'>
 			<% if (status === 'partial') { %>
-				<%='<a class=reload>click to reload</a>'%>
+				<%=='<a class=reload>click to reload</a>'%>
 			<% } else { %>
 				<%=text%>
 			<% } %>
