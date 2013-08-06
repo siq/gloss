@@ -15,11 +15,12 @@
   <% _.each(initialCrumbs, function(crumb) { %>
     <% var display = displayValue(crumb); %>
     <a class=breadcrumb title='<%=display%>' value='<%=crumb.value || ''%>' href='<%=crumb.url%>'>
-      <%=display%> >
+      <%==crumb.icon || ''%><%=display%> >
     </a>
   <% }); %>
   <%  var display = displayValue(lastCrumb);
           crumbValue = (lastCrumb || {}).value;
+          icon = (lastCrumb || {}).icon;
   %>
-  <span title='<%=display%>' value='<%=crumbValue%>'><%=display%></span>
+  <span title='<%=display%>' value='<%=crumbValue%>'><%==icon || ''%><%=display%></span>
 </div>
