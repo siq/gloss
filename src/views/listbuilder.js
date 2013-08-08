@@ -48,7 +48,6 @@ define([
             setValue: function(newValue) {
             },
             update: function(changed) {
-                Grid.prototype.update.apply(this, arguments);
                 if(changed.models) {
                     // only trigger change if the models changed
                     // this is necessary for validation to occur
@@ -57,6 +56,10 @@ define([
                         this._onChangeFormValue();
                     }
                 }
+                // to the super update after we check for changes other wise
+                // the grid will invalidate our check my `_sort`ing the new models
+                // which causes previous('model') === get('models') just a different order
+                Grid.prototype.update.apply(this, arguments);
             }
         });
         asSettable.call(SelectedGridClass.prototype, {areEqual: _.isEqual});
