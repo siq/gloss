@@ -48,6 +48,31 @@ define([
                     }
                 });
             self._initBindingGroups();
+
+            // resourepoller maybe attached to Window. If it is turn it off on `show`
+            // to prevent overwritting changes while editing a model
+            /*
+                Heres's why: from test_model_consistency.js
+                TODO: test making a change to a model w/o saving it, then calling
+                collection.refresh() -- unlike a model.refresn() it calls .set() w/o setting
+                the 'noclobber' flag, so it overrides the un-persisted changes
+            */
+            self.on('submit cancel close', function() {
+                    if (window.resourcepoller) {
+                        window.resourcepoller.enable();
+                    }
+                }).on('keyup', function(evt) {
+                    if (window.resourcepoller && evt.keyCode === 27) {
+                        window.resourcepoller.enable();
+                    }
+                }).on('show', function(evt) {
+                    // we are triggering ths method in `show` stickly for disabling the resource
+                    // poller so we stop propagation if this goes so should the trigger below.
+                    evt.stopPropagation();
+                    if (window.resourcepoller) {
+                        window.resourcepoller.disable();
+                    }
+                });
         },
         _createSnapshot: function(model) {
             model = model instanceof Model.Model? model : this.get('model');
@@ -118,11 +143,6 @@ define([
         _resetSnapshot: function() {
             this._restoreFromSnapShot.apply(this, arguments);
             this._createSnapshot.apply(this, arguments);
-            // resourepoller maybe attached to Window. If it is we turned it off on `show`
-            // to prevent overwritting changes while editing a model so turn it back on
-            if (window.resourcepoller) {
-                resourcepoller.enable();
-            }
         },
         _restoreFromSnapShot: function(model) {
             var prop, snapshot = this._snapshot;
@@ -190,6 +210,15 @@ define([
             });
             return dfd;
         },
+        // This is to address the case when you're form is in a modal and the escape button
+        // is pressed but the modal has focus and not the form. In this case we still want to
+        // preform the same `_onEscape` actions but the so we need to catch the propagated event.
+        close: function() {
+            this._onEscape();
+            // doing this for the resource poller up top delete this if that gets fixed
+            this.trigger('close');
+            return this;
+        },
         // this is used as the callback to either a failed xhr request or just
         // a failed client-side validation. you probably want to override
         // _processErrors instead of this method
@@ -224,11 +253,9 @@ define([
             var bindings, ret = this._super.apply(this, arguments);
             this.resetFields({animate: false});
             this._focusOnFirstVisibleBinding();
-            // resourepoller maybe attached to Window. If it is turn it off to prevent
-            // overwritting changes while editing a model
-            if (window.resourcepoller) {
-                resourcepoller.disable();
-            }
+
+            // doing this for the resource poller up top delete this if that gets fixed
+            this.trigger('show');
             return ret;
         },
         submit: function(evt) {

@@ -135,6 +135,7 @@ define([
             this.$backdrop.addClass('hidden');
             this.$node.hide();
             $(document).off('keyup.modal');
+            this.propagate('close');
             this.trigger('hide');
             return this;
         },
@@ -143,7 +144,7 @@ define([
             if (evt.keyCode === 27) {
                 this.close();
             }
-        }, 
+        },
         updateWidget: function(updated) {
             if (updated.title) {
                 this.$header.text(this.options.title);
