@@ -135,7 +135,6 @@ define([
             this.$backdrop.addClass('hidden');
             this.$node.hide();
             $(document).off('keyup.modal');
-            this.propagate('close');
             this.trigger('hide');
             return this;
         },
