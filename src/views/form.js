@@ -18,6 +18,25 @@ define([
     template, footerTemplate) {
     'use strict';
 
+    // resourepoller maybe attached to Window. If it is turn it off on `show`
+    // to prevent overwritting changes while editing a model
+    /*
+        Heres's why: from test_model_consistency.js
+        TODO: test making a change to a model w/o saving it, then calling
+        collection.refresh() -- unlike a model.refresn() it calls .set() w/o setting
+        the 'noclobber' flag, so it overrides the un-persisted changes
+    */
+    var stopPolling = function() {
+            if (window.resourcepoller) {
+                window.resourcepoller.disable();
+            }
+        },
+        startPolling = function() {
+            if (window.resourcepoller) {
+                window.resourcepoller.enable();
+            }
+        };
+
     var SnapShot = Class.extend();
     asSettable.call(SnapShot.prototype, {prop: null});
 
@@ -48,29 +67,11 @@ define([
                     }
                 });
             self._initBindingGroups();
-
-            // resourepoller maybe attached to Window. If it is turn it off on `show`
-            // to prevent overwritting changes while editing a model
-            /*
-                Heres's why: from test_model_consistency.js
-                TODO: test making a change to a model w/o saving it, then calling
-                collection.refresh() -- unlike a model.refresn() it calls .set() w/o setting
-                the 'noclobber' flag, so it overrides the un-persisted changes
-            */
-            self.on('submit cancel close', function() {
-                    if (window.resourcepoller) {
-                        window.resourcepoller.enable();
-                    }
-                }).on('keyup', function(evt) {
-                    if (window.resourcepoller && evt.keyCode === 27) {
-                        window.resourcepoller.enable();
-                    }
-                }).on('show', function(evt) {
-                    // we are triggering ths method in `show` stickly for disabling the resource
-                    // poller so we stop propagation if this goes so should the trigger below.
-                    evt.stopPropagation();
-                    if (window.resourcepoller) {
-                        window.resourcepoller.disable();
+            
+            self.on('submit cancel', startPolling)
+                .on('keyup', function(evt) {
+                    if (evt.keyCode === 27) {
+                        startPolling();
                     }
                 });
         },
@@ -210,13 +211,13 @@ define([
             });
             return dfd;
         },
-        // This is to address the case when you're form is in a modal and the escape button
+        // Overriding this to address the case when you're form is in a modal and the escape button
         // is pressed but the modal has focus and not the form. In this case we still want to
-        // preform the same `_onEscape` actions but the so we need to catch the propagated event.
-        close: function() {
-            this._onEscape();
-            // doing this for the resource poller up top delete this if that gets fixed
-            this.trigger('close');
+        // preform the same `_onEscape` actions so we need to catch the propagated event.
+        hide: function() {
+            this._super.apply(this, arguments);
+            this._resetSnapshot();
+            startPolling();
             return this;
         },
         // this is used as the callback to either a failed xhr request or just
@@ -253,9 +254,7 @@ define([
             var bindings, ret = this._super.apply(this, arguments);
             this.resetFields({animate: false});
             this._focusOnFirstVisibleBinding();
-
-            // doing this for the resource poller up top delete this if that gets fixed
-            this.trigger('show');
+            stopPolling();
             return ret;
         },
         submit: function(evt) {
