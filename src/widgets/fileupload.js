@@ -14,7 +14,7 @@ define([
         _bindEvents: function() {
             this._super.apply(this,arguments);
             $(this.$el.find('input[type=file]')).change(function() {
-                $('.fileinput-display').val($(this).val());
+                // Do nothing for now $('.fileinput-display').val($(this).val());
             });
         },
         submit: function() {
