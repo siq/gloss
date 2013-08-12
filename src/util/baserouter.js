@@ -41,7 +41,7 @@ define([
         },
 
         _setStateFromInitialUrl: function() {
-            Path.dispatch(withoutBase(location.pathname));
+            Path.dispatch(location.pathname);
         },
 
         // override this function to add a bunch of these:
