@@ -1,4 +1,5 @@
 <form>
+  <div class=spinner-overlay></div>
   <div class=messagelist></div>
   <%==this.include('fieldsets')%>
   <%==this.include('footer')%>

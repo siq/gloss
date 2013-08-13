@@ -1,8 +1,10 @@
 <form class=wizard>
 
+  <div class=spinner-overlay></div>
+  
   <h2></h2>
 
-  <div class="messagelist"></div>
+  <div class=messagelist></div>
 
   <div class=panes>
     <%==this.include('fieldsets')%>

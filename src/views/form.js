@@ -12,7 +12,8 @@ define([
     './../util/bindinggroup',
     './../util/errorUtils',
     'tmpl!./form/form.mtpl',
-    'tmpl!./form/footer.mtpl'
+    'tmpl!./form/footer.mtpl',
+    'css!./form/form.css'
 ], function($, _, Class, asListenable, asSettable, fields, Model,
     asWidgetizable, SimpleView, MessageList, BindingGroup, errorUtils,
     template, footerTemplate) {
