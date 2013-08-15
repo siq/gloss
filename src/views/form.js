@@ -214,10 +214,9 @@ define([
         },
         // Overriding this to address the case when you're form is in a modal and the escape button
         // is pressed but the modal has focus and not the form. In this case we still want to
-        // preform the same `_onEscape` actions so we need to catch the propagated event.
+        // startPolling. This typically only happens when a form has not actual input elements.
         hide: function() {
             this._super.apply(this, arguments);
-            this._resetSnapshot();
             startPolling();
             return this;
         },
