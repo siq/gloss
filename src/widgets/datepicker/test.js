@@ -192,6 +192,38 @@ define([
         dateIsSelected(dp, moment('2012-07-12'));
     });
 
+    module('datepicker tracking');
+
+    test('from date tracks start date when start date > end date', function() {
+        var start = DatePicker(), end = DatePicker(), date;
+        start.track(end);
+
+        end.setValue('2011-01-01');
+        start.setValue('2011-01-20');
+        ok(moment(end.getValue()).diff(moment(start.getValue())) === 0,
+            'end date tracks start date');
+
+        date = moment(end.getValue());
+        equal(date.year(), '2011', 'year is equal');
+        equal(date.month(), '0', 'month is equal'); // zero indexed
+        equal(date.date(), '20', 'day is equal'); // date is the day, day is the day of the week
+    });
+
+    test('start date tracks end date when end date < start date', function() {
+        var start = DatePicker(), end = DatePicker(), date;
+        start.track(end);
+
+        start.setValue('2011-01-20');
+        end.setValue('2011-01-01');
+        ok(moment(end.getValue()).diff(moment(start.getValue())) === 0,
+            'start date tracks end date');
+
+        date = moment(start.getValue());
+        equal(date.year(), '2011', 'year is equal');
+        equal(date.month(), '0', 'month is equal'); // zero indexed
+        equal(date.date(), '01', 'day is equal'); // date is the day, day is the day of the week
+    });
+
     module('random @$$ corner cases');
 
     asyncTest('open and click a date, click outside, reopen and click another date', function() {

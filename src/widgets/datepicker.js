@@ -93,6 +93,31 @@ define([
             }
             return this;
         },
+        // binding for two datepickers for apps with start <= end date requirements
+        // the start date widiget is assumed to be `this` widget
+        track: function(end) {
+            var start = this;
+            start.on('change', 'input[type=text]', function() {
+                var startDate = moment(start.getValue()),
+                    endDate = moment(end.getValue()),
+                    diff = (startDate && endDate) ? startDate.diff(endDate) : null;
+
+                // diff > 0 - startDate > endDate
+                if (startDate && endDate && diff > 0) {
+                    end.setValue(startDate);
+                }
+            });
+            end.on('change', 'input[type=text]', function() {
+                var fromDate = moment(start.getValue()),
+                    toDate = moment(end.getValue()),
+                    diff = (fromDate && toDate) ? toDate.diff(fromDate) : null;
+
+                // diff < 0 - toDate < fromDate
+                if (fromDate && toDate && diff < 0) {
+                    start.setValue(toDate);
+                }
+            });
+        },
         updateWidget: function(updated) {
             var date = this.options.date, selected = this.options._selected;
             if (updated.date) {
