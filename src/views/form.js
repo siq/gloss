@@ -131,7 +131,12 @@ define([
         //  xhr: either null or the jqXHR obj that was returned from an xhr call
         _processErrors: function(globalErrors, fieldErrors, xhr) {
             var stringErrors;
-            if (globalErrors) {
+            // we only want to show the relevant errors but we don't want to hide errors either
+            // this means only showing the field specific errors when they're present
+            // but sometimes the api doesn't tells us what the global or field errors are :(
+            // shame on you api! 
+            // in this case we still want to process the xhr for error info
+            if (globalErrors || (!globalErrors && !fieldErrors)) {
                 if (this.get('globalErrorStrings')) {
                     stringErrors = [this.get('globalErrorStrings')];
                 }
