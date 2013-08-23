@@ -92,14 +92,6 @@ define([
         return {behavior: behavior, eventSimulation: eventSimulation, method: method};
     };
 
-    asyncTest('fade initially shown', function() {
-        var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_initFooterShadow', e, function(result) {
-            equal(result, 'in',
-                  'page initialized with height greater than hint threshold');
-        });
-        fadeDelayTest([testOne]);
-    });
     /* shadow hinting tests */
     asyncTest('_mouseLeaveBehavior', function() {
         expect(1);
@@ -143,14 +135,6 @@ define([
         var testOne = genTest('_pollViewPos', e, function(result) {
             equal(result, 'in',
                   '_pollViewPos triggers does nothing if mouse is not over fade');
-        });
-        fadeDelayTest([testOne]);
-    });
-    asyncTest('_initFooterShadow', function() {
-        var e = {pageY: $(window).scrollTop()+$(window).height()-5};
-        var testOne = genTest('_initFooterShadow', e, function(result) {
-            equal(result, 'in',
-                  'init footer shadow should defaut to "in"');
         });
         fadeDelayTest([testOne]);
     });
