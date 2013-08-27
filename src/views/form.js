@@ -91,7 +91,7 @@ define([
             var i, l, $el, widgets = _.mpluck(this._visibleBindings(), 'widget');
             for (i = 0, l = widgets.length; i < l; i++) {
                 $el = widgets[i].$node || widgets[i].$el;
-                if ($el.is(':visible')) {
+                if ($el.is(':visible') && !$el.is(':disabled')) {
                     $el.focus();
                     break;
                 }
