@@ -40,6 +40,25 @@ define([
                     }
                 });
         },
+        _escapeQuery: function(string) {
+            // The back-end has a problem with some characters so we're giving them
+            // a hand by adding explicit esacpes.
+            // http://jira.storediq.com/browse/DAQ-717
+            var entityMap = {
+                    '[': '\\[',
+                    ']': '\\]',
+                    '{': '\\{',
+                    '}': '\\}',
+                    '\\': '\\\\'
+                },
+                // regex to match the keys of entityMap
+                entityRegex = (/[\[\]{}\\]/g);
+
+            if (string == null) return '';
+            return ('' + string).replace(entityRegex, function(match) {
+                return entityMap[match];
+            });
+        },
         _getPreviousParams: function() {
             return $.extend(true, {}, this.options.collection.query.params);
         },
@@ -50,6 +69,7 @@ define([
                 result = {};
 
             if (value) {
+                value = this._escapeQuery(value);
                 p.query[this.options.searchParam] = value;
             }
 
