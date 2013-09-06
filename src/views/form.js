@@ -138,7 +138,8 @@ define([
             // in this case we still want to process the xhr for error info
             if (globalErrors || (!globalErrors && !fieldErrors)) {
                 if (this.get('globalErrorStrings')) {
-                    stringErrors = [this.get('globalErrorStrings')];
+                    stringErrors = 
+                        [$.extend({}, this.get('globalErrorStrings'), this.get('strings.errors'))];
                 }
                 errorUtils.processGlobalErrors([globalErrors], xhr,
                     this.get('messageList'), null, stringErrors);

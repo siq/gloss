@@ -38,7 +38,7 @@ define([
     var processGlobalErrors =  function(response, xhr, messageList, errorCls, extraStrings) {
         var globalErrors = response && response[0],
             allStrings = _.extend.apply(_,
-                    _.compact(_.flatten([{}, extraStrings, strings.errors]))),
+                    _.compact(_.flatten([{}, strings.errors, extraStrings]))),
             tokensToStrings = function(errors) {
                 return _.map(errors, function(error) {
                     return  allStrings[error.token] ||

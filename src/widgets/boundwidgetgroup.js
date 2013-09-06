@@ -147,9 +147,12 @@ define([
             var self = this,
                 messageList = this.options.messageList,
                 structuralErrors = response && response[1],
-                errorStrings = this.options.errorStrings;
+                errorStrings = this.options.errorStrings,
+                // we also want to be able to override the global errors so we pass those 
+                // in as extra strings when processing global errors but not the field error strings
+                extraErrorStrings = (errorStrings || {})[0];
 
-            ErrorUtils.processGlobalErrors(response, xhr, messageList, 'invalid');
+            ErrorUtils.processGlobalErrors(response, xhr, messageList, 'invalid', extraErrorStrings);
             if (structuralErrors) {
                 if (self.options.structuralErrorHandler) {
                     self.options.structuralErrorHandler(self, structuralErrors);
