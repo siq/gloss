@@ -1,25 +1,19 @@
 .toolbar {
   border-bottom: 1px solid black;
+  height: 40px;
 }
-
-.toolbar .controls {
-  float: right;
-}
-
 .toolbar .tabs {
   display: inline-block;
 }
-
+.toolbar .controls {
+  float: right;
+  height: 40px;
+}
 .toolbar .tabs .tab {
   display: inline-block;
-  border: 1px solid black;
 }
-
+.toolbar .logo,
 .toolbar .app-logo {
-  display: inline-block;
-}
-
-.toolbar .logo {
   width: 150px;
   height: 40px;
   display: inline-block;
