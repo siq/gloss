@@ -15,35 +15,7 @@ define([
             format: 'hh:mm A'
         },
         nodeTemplate:template,
-/*
-        set_selection: function(start, end) {
-            var $input = this.input.$node;
-            if ($input[0].setSelectionRange) {
-                $input[0].setSelectionRange(start, end);
-            } else {
-                var range = $input[0].createTextRange();
-                range.moveStart("character", start);
-                range.moveEnd("character", end);
-                range.select();
-            }
-        },
-        coerce_selection: function(pos) {
-            var $node=this.input.$node,
-                width = "nn".length,
-                i = {
-                    hoursStart: 0,
-                    minutesStart: "nn:".length,
-                    meridianStart: "nn:nn ".length
-                },
-                bump = function(n) {
-                    var start = 0;
-                    start = ($node.on(pos) === "minutes") ? i.minutesStart : start;
-                    return ($node.on(pos) === "meridian") ? i.meridianStart : start;
-                },
-                bumpStart = bump(pos);
-            this.set_selection(bumpStart, bumpStart+2); 
-        },
-*/
+
         tab_handler: function(evt, shiftIsPressed) {
             var $node = this.input.$node,
                 pos = $node.cursor();
@@ -113,10 +85,6 @@ define([
         digit_entry: function(self, pos, c) {
             var $node = self.input.$node;
             $node.set_selection(pos, pos).write(c).set_selection($node.cursor(), $node.cursor()+1);
-/*            self.input.$node.set_selection(pos, pos);
-            self.input.$node.write(c);
-            self.input.$node.set_selection(self.input.$node.cursor(), self.input.$node.cursor()+1);
-*/
             return self;
         },
         key_handler: function(evt, shiftIsPressed) {
