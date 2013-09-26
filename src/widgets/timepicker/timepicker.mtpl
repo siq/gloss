@@ -1,0 +1,3 @@
+<div class=timepicker>
+  <input type=text placeholder="<%=this.options.format%>" />
+</div>
