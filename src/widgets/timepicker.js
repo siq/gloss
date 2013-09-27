@@ -131,7 +131,7 @@ define([
 
             self._super.apply(this, arguments);
             
-            self.input = TextBox(self.$node.children('input[type=text')).on('focus click', function(evt) {
+            self.input = TextBox(self.$node.children('input[type=text]')).on('focus click', function(evt) {
                 self.focus_handler(evt);
             }).on('select', function(evt) {
                 evt.preventDefault();
