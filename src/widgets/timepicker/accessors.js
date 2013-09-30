@@ -9,26 +9,34 @@ define([
             minuteIndex = format.indexOf(":"),
             meridianIndex = format.indexOf(" ");
 
+        var ie_cursor = function(input, pos) {
+            if(pos !== undefined) {
+                console.log('ie cursor activated');
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                return null;
+            }
+            return input.text.length;
+        };
+        var normal_cursor = function(input, pos) {
+            if(pos !== undefined) {
+                input.focus();
+                input.setSelectionRange(pos, pos);
+                return null;
+            }
+            return input.selectionStart;
+        };
         var inc_cursor = function(i) {
             return (i===minuteIndex-1 || i===meridianIndex-1) ? i+=2 : ++i;
         };
+
         this.cursor = function() {
-            if(arguments[0]!==undefined) {
-                var pos = arguments[0];
-                if (this[0].setSelectionRange) {
-                    this[0].focus();
-                    this[0].setSelectionRange(pos,pos);
-                } else if (this.createTextRange) {
-                    var range = this[0].createTextRange();
-                    range.collapse(true);
-                    range.moveEnd('character', pos);
-                    range.moveStart('character', pos);
-                    range.select();
-                }
-                return this;
-            }
-            // ADD SUPPORT OF IE ON GETTER
-            return this[0].selectionStart;
+            var ret = (this[0].setSelectionRange) ?
+                    normal_cursor(this[0], arguments[0]) :
+                    ie_cursor(this[0], arguments[0]);
+            return (ret===null) ? this : ret;
         };
         this.set_selection = function(start, end) {
             if (this[0].setSelectionRange) {
@@ -55,7 +63,7 @@ define([
                     return (self.on(pos) === "meridian") ? i.meridianStart : start;
                 },
                 bumpStart = bump(pos);
-            return self.set_selection(bumpStart, bumpStart+2); 
+            return self.set_selection(bumpStart, bumpStart+2);
         };
         this.hour = function() {
             if(arguments[0]!==undefined) {

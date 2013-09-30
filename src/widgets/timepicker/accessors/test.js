@@ -67,37 +67,34 @@ define([
     test('write', function() {
         var str = '12:00 AM',
             len = str.length,
-            pos = 0;
+            pos = 0,
+            testfn = function(writeVal, expectedVal, expectedPos, accessMethod) {
+                $input.write(writeVal);
+                equal($input[accessMethod](), expectedVal, $input.val());
+                equal($input.cursor(), expectedPos, $input.val());
+            };
         $input.val(str);
         $input.cursor(0);
 
-        $input.write(0);
-        equal(2, $input.hour(), $input.val());
-        equal(pos+1, $input.cursor(), $input.val());
-
-        $input.write(1);
-        equal(1, $input.hour(), $input.val());
-        equal(pos+3, $input.cursor(), $input.val());
-        
-        $input.write(1);
-        equal(10, $input.minutes(), $input.val());
-        equal(pos+4, $input.cursor(), $input.val());
-
-        $input.write(2);
-        equal(12, $input.minutes(), $input.val());
-        equal(pos+6, $input.cursor(), $input.val());
-
-        $input.write("P");
-        equal("PM", $input.meridian(), $input.val());
-        equal(pos+7, $input.cursor(), $input.val());
-
-        $input.write("N");
-        equal("PN", $input.meridian(), $input.val());
-        equal(pos+8, $input.cursor(), $input.val());
+        testfn(0, 2, pos+1, 'hour');
+        testfn(1, 1, pos+3, 'hour');
+        testfn(1, 10, pos+4, 'minutes');
+        testfn(2, 12, pos+6, 'minutes');
+        testfn('P', 'PM', pos+7, 'meridian');
+        testfn('N', 'PN', pos+8, 'meridian');
     });
 
     module('booleans');
-    // to implement
+    test('is_on', function() {
+        $input.set_selection(0, 2);
+        ok($input.is_on('hours'));
+        ok(!$input.is_on('minutes'));
+        ok(!$input.is_on('meridian'));
 
+        $input.set_selection(4, 5);
+        ok($input.is_on('minutes'));
+        $input.set_selection(7, 8);
+        ok($input.is_on('meridian'));
+    });
     start();
 });
