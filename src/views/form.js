@@ -19,25 +19,6 @@ define([
     template, footerTemplate) {
     'use strict';
 
-    // resourepoller maybe attached to Window. If it is turn it off on `show`
-    // to prevent overwritting changes while editing a model
-    /*
-        Heres's why: from test_model_consistency.js
-        TODO: test making a change to a model w/o saving it, then calling
-        collection.refresh() -- unlike a model.refresn() it calls .set() w/o setting
-        the 'noclobber' flag, so it overrides the un-persisted changes
-    */
-    var stopPolling = function() {
-            if (window.resourcepoller) {
-                window.resourcepoller.disable();
-            }
-        },
-        startPolling = function() {
-            if (window.resourcepoller) {
-                window.resourcepoller.enable();
-            }
-        };
-
     var SnapShot = Class.extend();
     asSettable.call(SnapShot.prototype, {prop: null});
 
@@ -68,13 +49,6 @@ define([
                     }
                 });
             self._initBindingGroups();
-            
-            self.on('submit cancel', startPolling)
-                .on('keyup', function(evt) {
-                    if (evt.keyCode === 27) {
-                        startPolling();
-                    }
-                });
         },
         _createSnapshot: function(model) {
             model = model instanceof Model.Model? model : this.get('model');
@@ -218,14 +192,6 @@ define([
             });
             return dfd;
         },
-        // Overriding this to address the case when you're form is in a modal and the escape button
-        // is pressed but the modal has focus and not the form. In this case we still want to
-        // startPolling. This typically only happens when a form has not actual input elements.
-        hide: function() {
-            this._super.apply(this, arguments);
-            startPolling();
-            return this;
-        },
         // this is used as the callback to either a failed xhr request or just
         // a failed client-side validation. you probably want to override
         // _processErrors instead of this method
@@ -260,7 +226,6 @@ define([
             var bindings, ret = this._super.apply(this, arguments);
             this.resetFields({animate: false});
             this._focusOnFirstVisibleBinding();
-            stopPolling();
             return ret;
         },
         submit: function(evt) {
