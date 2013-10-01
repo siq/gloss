@@ -17,12 +17,35 @@ define([
             this.options.wrapTarget.wrap($('<div style="display:inline-block;position:relative;" />'));
             this.options.wrapTarget.after($overlay);
             this.set('target', $overlay);
+            $overlay.on( "hover", function() {
+                if (self.isWrapTargetDisabled())
+                {
+                    $overlay.css( "cursor","default");
+                }
+                else
+                {
+                    $overlay.css( "cursor","pointer");
+                }
+            });
+            $overlay.on( "click", function() {
+                self.options.wrapTarget.trigger( "click" );
+            });
             this.update();
         },
         _initiateShow: function(event) {
-            if (this.options.wrapTarget.is(":disabled") || this.options.wrapTarget.hasClass("disable"))
+            if (this.isWrapTargetDisabled())
             {
                 this._super(event);
+            }
+        },
+        isWrapTargetDisabled: function() {
+            if (this.options.wrapTarget.is(":disabled") || this.options.wrapTarget.hasClass("disable"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     });
