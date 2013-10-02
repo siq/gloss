@@ -133,6 +133,7 @@ define([
             
             self.input = TextBox(self.$node.children('input[type=text]')).on('focus click', function(evt) {
                 self.focus_handler(evt);
+                $(this).trigger('change');
             }).on('select', function(evt) {
                 evt.preventDefault();
                 // do nothing
@@ -141,6 +142,7 @@ define([
                     shiftIsPressed = true;
                 }
                 self.key_handler(evt, shiftIsPressed);
+                $(this).trigger('change');
             }).on('keyup', function(evt) {
                 if(evt.keyCode===16) {
                     shiftIsPressed = false;
