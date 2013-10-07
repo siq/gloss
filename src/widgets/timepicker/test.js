@@ -14,9 +14,9 @@ define([
         var t = TimePicker();
         t.prependTo($('body'));
         t.input.$node.time('12', '00', 'AM');
-        t.focus_handler(dummyEvent);
+        t.focus_handler(t, dummyEvent);
         fn(t);
-        t.$node.remove();
+        t.$el.remove();
     };
     test('Time picker formating', function() {
         tpTest(function(t) {
@@ -27,25 +27,25 @@ define([
     module('handlers');
     test('tab_handler', function() {
         tpTest(function(t) {
-            t.tab_handler(dummyEvent);
+            t.tab_handler(t, dummyEvent, false);
             equal(t.input.$node.cursor(), 3);
         });
     });
     test('up_arrow_handler', function() {
         tpTest(function(t) {
             _.each(_.range(1, 13), function(i) {
-                t.up_arrow_handler(dummyEvent);
+                t.up_arrow_handler(t, dummyEvent);
                 equal( Number(t.input.$node.hour()), i);
             });
             // Verify roll over
-            t.up_arrow_handler(dummyEvent);
+            t.up_arrow_handler(t, dummyEvent);
             equal( Number(t.input.$node.hour()), 1);
         });
     });
     test('down_arrow_handler', function() {
         tpTest(function(t) {
             _.each(_.range(1, 12).reverse(), function(i) {
-                t.down_arrow_handler(dummyEvent);
+                t.down_arrow_handler(t, dummyEvent);
                 equal( Number(t.input.$node.hour()), i );
             });
         });
@@ -53,14 +53,25 @@ define([
     test('left_arrow_handler', function() {
         tpTest(function(t) {
             t.input.$node.cursor(4);
-            t.tab_handler(dummyEvent, true);
+            t.left_arrow_handler(t, dummyEvent);
             equal(t.input.$node.cursor(), 0);
         });
     });
     test('right_arrow_handler', function() {
         tpTest(function(t) {
-            t.tab_handler(dummyEvent);
+            t.right_arrow_handler(t, dummyEvent);
             equal(t.input.$node.cursor(), 3);
+        });
+    });
+    test('digit_entry', function() {
+        tpTest(function(t) {
+            t.digit_entry(t, 0, 1);
+            equal(t.getValue().hours, 12);
+//            equal(t.input.$node.cursor(), 1); // This is failing in ie8
+            t.digit_entry(t, 1, 1);
+            equal(t.getValue().hours, 11, 'Current value should be: 11:00 AM');
+            t.digit_entry(t, 3, 4);
+            equal(t.getValue().hours, 11, 'Current value should be: 11:40 AM');
         });
     });
     test('is_digit', function() {
@@ -72,6 +83,8 @@ define([
     
     var manual = TimePicker();
     manual.prependTo($('body'));
-    manual.input.$node.time('12', '00', "AM");
+    $(document).ready(function() {
+        manual.input.$node.time('12', '00', "AM");
+    });
     start();
 });

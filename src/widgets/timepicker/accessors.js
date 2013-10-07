@@ -5,20 +5,43 @@ define([
     'vendor/underscore'
 ], function(_) {
     return function() {
-        var format = "hh:mm MM",
-            minuteIndex = format.indexOf(":"),
-            meridianIndex = format.indexOf(" ");
 
+        var format = "hh:mm MM",
+            minuteIndex = _.indexOf(format, ":"),
+            meridianIndex = _.indexOf(format, " ");
+
+        var ie_set_selection = function(input, start, end) {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        };
+        var read_range_width = function(input, range) {
+            var width = 0;
+            var rangeTotal = input.createTextRange();
+            while(range.compareEndPoints("EndToStart", rangeTotal) > 0 ) {
+                width++;
+                range.moveEnd("character", -1);
+            }
+            return width;
+        };
+        var ie_get_selection = function(input) {
+            var selection = document.selection.createRange();
+            if (selection.parentElement() === input) {
+                var range = input.createTextRange();
+                range.moveToBookmark(selection.getBookmark());
+                var width = read_range_width(input, range);
+                return width;
+            }
+            return -1;
+        };
         var ie_cursor = function(input, pos) {
             if(pos !== undefined) {
-                console.log('ie cursor activated');
-                var range = input.createTextRange();
-                range.collapse(true);
-                range.moveEnd('character', pos);
-                range.moveStart('character', pos);
+                ie_set_selection(input, pos, pos);
                 return null;
             }
-            return input.text.length;
+            return ie_get_selection(input);
         };
         var normal_cursor = function(input, pos) {
             if(pos !== undefined) {
@@ -40,12 +63,12 @@ define([
         };
         this.set_selection = function(start, end) {
             if (this[0].setSelectionRange) {
-               this[0].setSelectionRange(start, end);
+                this[0].focus();
+                this[0].setSelectionRange(start, end);
             } else {
-                var range = this[0].createTextRange();
-                range.moveStart("character", start);
-                range.moveEnd("character", end);
-                range.select();
+                ie_set_selection(this[0], start, end);
+                this[0].selectionStart=start;
+                this[0].selectionEnd=end;
             }
             return this;
         };
@@ -59,11 +82,11 @@ define([
                 },
                 bump = function(n) {
                     var start = 0;
-                    start = (self.on(pos) === "minutes") ? i.minutesStart : start;
-                    return (self.on(pos) === "meridian") ? i.meridianStart : start;
+                    start = (self.on_component(pos) === "minutes") ? i.minutesStart : start;
+                    return (self.on_component(pos) === "meridian") ? i.meridianStart : start;
                 },
                 bumpStart = bump(pos);
-            return self.set_selection(bumpStart, bumpStart+2);
+            return this.set_selection(bumpStart, bumpStart+2);
         };
         this.hour = function() {
             if(arguments[0]!==undefined) {
@@ -117,7 +140,7 @@ define([
                 };
             return keys[key](pos);
         };
-        this.on = function(position) {
+        this.on_component = function(position) {
             return (position<3) ? "hours" :
                 (position >=3 && position<6) ? "minutes" : "meridian";
         };

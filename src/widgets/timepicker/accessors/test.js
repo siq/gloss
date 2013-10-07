@@ -11,22 +11,35 @@ define([
     })();
 
     module('positioning');
+
     test('cursor', function() {
         var str = '12:00 AM',
             len = str.length;
         $input.val(str);
         for(var i=0; i<len; i++) {
             $input.cursor(i);
-            equal(i, $input.cursor());
+            equal($input.cursor(), i);
+        }
+        for(i=len-1; i>-1; i--) {
+            $input.cursor(i);
+            equal($input.cursor(), i);
         }
     });
 
     module('highlighting');
     test('set_selection', function() {
-        $input.set_selection(0, 2);
-        equal($input[0].selectionStart, 0);
-        equal($input[0].selectionEnd, 2);
+        var testSelection = function(pos) {
+            $input.set_selection(pos.start, pos.end);
+            equal($input[0].selectionStart, pos.start);
+            equal($input[0].selectionEnd, pos.end);
+        };
+        testSelection({start:0, end:2});
+        testSelection({start:1, end:3});
+        testSelection({start:2, end:4});
+        testSelection({start:5, end:7});
+        testSelection({start:3, end:8});
     });
+
     test('coerce_selection', function() {
         $input = $input.coerce_selection(1);
         equal($input[0].selectionStart, 0);
@@ -75,7 +88,6 @@ define([
             };
         $input.val(str);
         $input.cursor(0);
-
         testfn(0, 2, pos+1, 'hour');
         testfn(1, 1, pos+3, 'hour');
         testfn(1, 10, pos+4, 'minutes');
@@ -90,11 +102,10 @@ define([
         ok($input.is_on('hours'));
         ok(!$input.is_on('minutes'));
         ok(!$input.is_on('meridian'));
-
         $input.set_selection(4, 5);
-        ok($input.is_on('minutes'));
+        ok($input.is_on('minutes'), 'expected cursor to be on minutes, is actually on: ' + $input.on($input.cursor()));
         $input.set_selection(7, 8);
-        ok($input.is_on('meridian'));
+        ok($input.is_on('meridian'), 'expected cursor to be on meridian, is actually on: ' + $input.on($input.cursor()));
     });
     start();
 });
