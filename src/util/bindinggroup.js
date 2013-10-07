@@ -23,14 +23,16 @@ define([
                 widgets = asSettable.flattened(self.get('widgets') || {}),
                 name = self.get('name');
             t.dfs(root, function(el, parentEl, ctrl) {
-                var params, widget = _.find(widgets, function(w) {
-                        return w.node === el? w : null;
+                var $widget, params, widget = _.find(widgets, function(w) {
+                        return (w.node || w.el) === el? w : null;
                     }),
                     group = el.getAttribute('data-bind-group') || 'main';
 
-                if (group === name && widget && widget.$node.attr('data-bind')) {
+                // handle widget and views
+                $widget = widget && (widget.$node || widget.$el);
+                if (group === name && widget && $widget.attr('data-bind')) {
                     params = {
-                        prop: widget.$node.attr('data-bind'),
+                        prop: $widget.attr('data-bind'),
                         twoWay: true,
                         widget: widget
                     };
