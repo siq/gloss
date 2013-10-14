@@ -10,6 +10,34 @@ define([
     'tmpl!./timepicker/timepicker.mtpl'
 ], function($, _, moment, Widget, SimpleView, BaseMenu, TextBox, accessors, template) {
 
+    var duexgitize_hours = function(num) {
+        return (String(num).length==1) ? "0" + num : num;
+    };
+    var duexgitize_minutes = function(num) {
+        return (String(num).length==1) ? num + "0" : num;
+    };
+
+    var generate_options = function (increment) {
+        var hours = [12].concat(_.range(1, 12)),
+            minutes = _.range(0, 59, increment),
+            ams = [],
+            pms = [];
+        _.each(hours, function(hour) {
+            _.each(minutes, function(minute) {
+                var str = duexgitize_hours(hour) + ":" + duexgitize_minutes(minute);
+                ams.push(str + " AM");
+                pms.push(str + " PM");
+            });
+        });
+        return _.map(ams.concat(pms), function(time) {
+            return "<option>" + time + "</option>";
+        });
+    };
+    var default_time_selection = function() {
+        var now = new Date();
+    };    var update_time_input = function() {
+
+    };
     var TimePicker = SimpleView.extend({
         defaults: {
             format: 'hh:mm A'
@@ -127,6 +155,7 @@ define([
             var $input = this.$el.children('input[type=text]');
             this.input = TextBox(this.$el.children('input[type=text]'));
             this.input.$node.extend(new accessors);
+//          this.timeOptions = generate_options(30);
             if(this.input.$node[0].setSelectionRange) {
                 this.input.$node.attr('placeholder', this.options.format);
             } else {
