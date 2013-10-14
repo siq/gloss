@@ -1,0 +1,16 @@
+.time-select .time-input {
+  display: block;
+}
+.timeselect .time-drop {
+  display: block;
+}
+.time-drop ol {
+  list-style:none;
+  width: 8em;
+  padding-left: 1em;
+  height: 10em;
+  overflow-y: scroll;
+}
+.time-drop ol li{
+   position: relative;
+}
