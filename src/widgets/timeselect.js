@@ -67,9 +67,36 @@ define([
             duration: 200
         });
     };
-    var validate_12_hour = function(timeString) {
+
+    var read_time = function(timeString) {
+        var hours = timeString.split(':')[0],
+            minutes = timeString.split(':')[1],
+            meridian = timeString.split(' ')[1];
+        return {hours: hours, minutes: minutes, meridian: meridian};
     };
+
+    var validate_12_hour = function(timeString) {
+        var valid_hours = function(hours) {
+           var h = parseInt(hours);
+           return(!isNaN(h) && h > 0 && h < 13);
+        };
+        var valid_minutes = function(minutes) {
+            var m = parseInt(minutes);
+            return(!isNaN(m) && m >= 0 && m < 60);
+        };
+        var valid_meridian = function(meridian) {
+            return (meridian === 'PM' || meridian === 'AM');
+        };
+        var time = read_time(timeString);
+
+        return (timeString.length === 'hh:mm AA'.length &&
+                valid_hours(time.hours) &&
+                valid_minutes(time.minutes) &&
+                valid_meridian(time.meridian));
+    };
+
     var validate_24_hour = function(timeString) {
+        // To implement
     };
     // Add validation
     var TimeSelect = SimpleView.extend({
@@ -92,7 +119,7 @@ define([
 
         _bindEvents: function() {
             var self = this,
-		$input = self.$el.find('.time-input');
+            $input = self.$el.find('.time-input');
             self._super.apply(this,arguments),
 
             $input.click(function(){
@@ -102,21 +129,20 @@ define([
                                                   self.get('minuteIncrement'),
                                                   calc_time_element_height(self.$timeElements));
             });
-        self.timeSelector.find('.time-options').on('click', function(evt) {
+            self.timeSelector.find('.time-options').on('click', function(evt) {
                 $input.val(evt.target.innerHTML);
                 self.timeSelector.find('.time-options').toggleClass('hidden');
-        });
+            });
             self.timeSelector.on('change', function() {
                 self.$el.find('.time-input').val(self.timeSelector.getValue());
                 self.timeSelector.hide();
             });
             return self;
         },
-        init: function() {
-            this._super.apply(this, arguments);
-        }
 
-        // get value
+        getValue: function() {
+           return read_time(this.$el.find('.time-input'));
+        }
     });
     return TimeSelect;
 });
