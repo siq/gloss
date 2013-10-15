@@ -9,10 +9,12 @@ define([
         /* do nothing */
     }};
 
-    test('Instantiation', function() {
+    test('Manual', function() {
         var t = TimeSelect();
         t.appendTo($('body'));
+        $('<input type=text></input>').appendTo($('body'));
         ok(true);
     });
+
     start();
 });
