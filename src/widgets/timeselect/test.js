@@ -1,13 +1,8 @@
 define([
     'vendor/jquery',
-    'vendor/underscore',
-    'vendor/moment',
     './../timeselect'
-], function($, _, moment, TimeSelect) {
+], function($, TimeSelect) {
     'use strict';
-    var dummyEvent = {preventDefault: function() {
-        /* do nothing */
-    }};
 
     test('Manual', function() {
         var t = TimeSelect();

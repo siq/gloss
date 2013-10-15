@@ -1,5 +1,6 @@
 define([
-    'vendor/jquery'
+    'vendor/jquery',
+    'vendor/underscore'
 ], function($, _) {
     return new function() {
         this.duexgitize_hours = function(num) {
@@ -9,21 +10,22 @@ define([
             return (String(num).length==1) ? num + "0" : num;
         };
         this.generate_time_strings = function(hours, minutes) {
-        var ams = [],
-            pms = [];
-            _.each(hours, function(hour) {
-                _.each(minutes, function(minute) {
-                    var str = this.duexgitize_hours(hour) + ":" + this.duexgitize_minutes(minute);
-                    ams.push(str + " AM");
-                    pms.push(str + " PM");
+            var ams = [],
+                pms = [],
+                self = this;
+                _.each(hours, function(hour) {
+                    _.each(minutes, function(minute) {
+                        var str = self.duexgitize_hours(hour) + ":" + self.duexgitize_minutes(minute);
+                        ams.push(str + " AM");
+                        pms.push(str + " PM");
+                    });
                 });
-            });
             return ams.concat(pms);
         };
         this.generate_time_options = function (increment) {
             var hours = [12].concat(_.range(1, 12)),
                 minutes = _.range(0, 59, increment);
-            
+
             var times = this.generate_time_strings(hours, minutes),
                 str = "";
             _.each(times, function(time) {
@@ -39,7 +41,7 @@ define([
                 }, function() {
                     $el.css('background','white');
                 });
-	    });
+            });
             self.$el.find('.time-options').css('cursor', 'pointer');
         };
         this.calc_time_element_height = function($timeElements) {
@@ -75,13 +77,13 @@ define([
                 return (meridian === 'PM' || meridian === 'AM');
             };
             var time = read_time(timeString);
-            
+
             return (timeString.length === 'hh:mm AA'.length &&
                     valid_hours(time.hours) &&
                     valid_minutes(time.minutes) &&
                     valid_meridian(time.meridian));
         };
-        
+
         var validate_24_hour = function(timeString) {
             // To implement
         };

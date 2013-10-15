@@ -13,12 +13,16 @@
 .time-drop ol {
   list-style:none;
   position:relative;
-  z-index:3; 
+  z-index:3;
   padding-left: 1em;
   height: 10em;
   overflow-y: scroll;
 }
 .time-drop ol li{
   position: relative;
-  z-index:3; 
+  z-index:3;
+}
+
+.time-select .hidden {
+  display:none;
 }
