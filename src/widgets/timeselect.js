@@ -2,7 +2,7 @@ define([
     './simpleview',
     './timeselect/private',
     'css!./timeselect/timeselect.css'
-], function(SimpleView, p) {
+], function(SimpleView, priv) {
 
     var TimeSelect = SimpleView.extend({
         defaults: {
@@ -15,11 +15,11 @@ define([
         _initWidgets: function() {
             var self = this;
             this._super.apply(this, arguments);
-            self.timeSelector = this.$el.find('.time-drop').html( p.generate_time_options(self.get('minuteIncrement')) );
+            self.timeSelector = this.$el.find('.time-drop').html( priv.generate_time_options(self.get('minuteIncrement')) );
             self.$timeElements = self.timeSelector.find('.time-options li');
 
             self.timeSelector.find('.time-options').addClass('hidden');
-            p.add_hover_behavior(self, this.$el.find('.time-options').children());
+            priv.add_hover_behavior(self, this.$el.find('.time-options').children());
         },
 
         _bindEvents: function() {
@@ -29,10 +29,10 @@ define([
 
             $input.click(function(){
                 self.timeSelector.find('.time-options').toggleClass('hidden');
-                p.set_time_elements_to_current_time(self.timeSelector,
-                                                    self.$timeElements,
-                                                    self.get('minuteIncrement'),
-                                                    p.calc_time_element_height(self.$timeElements));
+                priv.set_time_elements_to_current_time(self.timeSelector,
+                                                       self.$timeElements,
+                                                       self.get('minuteIncrement'),
+                                                       priv.calc_time_element_height(self.$timeElements));
             });
             self.timeSelector.find('.time-options').on('click', function(evt) {
                 $input.val(evt.target.innerHTML);
@@ -41,7 +41,7 @@ define([
             return self;
         },
         getValue: function() {
-           return p.read_time(this.$el.find('.time-input'));
+           return priv.parse_time(this.$el.find('.time-input').val(), false);
         }
     });
     return TimeSelect;
