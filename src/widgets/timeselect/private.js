@@ -59,7 +59,7 @@ define([
                     $el.css('background','white');
                 });
             });
-            self.$el.find('.time-options').css('cursor', 'pointer');
+            self.$node.find('.time-options').css('cursor', 'pointer');
         };
         this.calc_time_element_height = function($timeElements) {
             return $timeElements.eq(1).position().top - $timeElements.eq(0).position().top;
