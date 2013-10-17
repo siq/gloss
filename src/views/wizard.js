@@ -135,6 +135,12 @@ define([
                     return  $el.closest(selector)[0] === $visible[0];
                 });
         },
+        // this is a propagated call from a Modal so this will only be called when the wizard is in a Modal
+        // it fixes the case when the form is not yet showing just one pane which cases the modal
+        // position to be calculated incorrectly
+        beforeShow: function() {
+            this.set('currentPane', 0, {update: true});
+        },
         getPanes: function() {
             return this.$el.find(this.get('fieldsetSelector'));
         },
