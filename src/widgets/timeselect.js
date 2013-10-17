@@ -116,7 +116,7 @@ define([
             });
             self.onPageClick(function() {
                 $timeOptions.hide();
-            });
+            }, {once: false});
         },
         getValue: function() {
            return priv._parse_time(this.$node.find('.time-input').val(), false);
