@@ -109,14 +109,19 @@ define([
                 if(Widget.identifyKeyEvent(evt)==='tab'){
                     $timeOptions.hide();
                 }
+                self.trigger('change');
             });
             $timeOptions.on('click', function(evt) {
                 $input.val(evt.target.innerHTML);
+                self.trigger('change');
                 $timeOptions.hide();
             });
             self.onPageClick(function() {
                 $timeOptions.hide();
             }, {once: false});
+        },
+        validate: function() {
+            return priv._validate(this.$node.find('.time-input').val(), false);
         },
         getValue: function() {
            return priv._parse_time(this.$node.find('.time-input').val(), false);
