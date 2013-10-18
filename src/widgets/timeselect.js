@@ -54,7 +54,7 @@ define([
                     return ((!isNaN(hours)) && (hours > 0) && (hours < maxHours));
                 },
                 validate_minutes = function(minutes) {
-                    return ((!isNaN(minutes)) && (minutes > 0) && (minutes < maxHours));
+                    return ((!isNaN(minutes)) && (minutes > -1) && (minutes < 60));
                 },
                 validate_meridian = function() {
                     return (military) ? (time.meridian===null) : (time.meridian === 'PM' || time.meridian === 'AM');

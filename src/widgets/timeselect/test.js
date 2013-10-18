@@ -66,6 +66,8 @@ define([
             equal(parsed24.meridian, null);
         });
         test('validate', function() {
+            ok(ts._validate('03:30 PM', false));
+            ok(ts._validate('03:00 PM', false));
             ok(ts._validate(twelve, false));
             ok(ts._validate(twentyfour, true));
             ok(!ts._validate('ab:cd: 34', true));
