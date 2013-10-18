@@ -46,11 +46,24 @@ define([
         this._validate = function(timeString, military) {
             var time = this._parse_time(timeString),
                 maxHours = (military) ? 24 : 12,
-                strLen = (military) ? 'hh:mm'.length : 'hh:mm MM'.length;
-            return (timeString.length === strLen &&
-                    (!isNaN(time.hours) && time.hours > 0 && time.hours < maxHours) &&                         // Hours
-                    (!isNaN(time.minutes) && time.minutes >= 0 && time.minutes < 60) &&                        // Minutes
-                    (military) ? (time.meridian===null) : (time.meridian === 'PM' || time.meridian === 'AM')); // Meridian
+                strLen = (military) ? 'hh:mm'.length : 'hh:mm MM'.length,
+                validate_string_format = function(str) {
+                    return (military) ? (str.charAt(2)===':') : (str.charAt(2)===':' && str.charAt(5) === ' ');
+                },
+                validate_hours = function(hours) {
+                    return ((!isNaN(hours)) && (hours > 0) && (hours < maxHours));
+                },
+                validate_minutes = function(minutes) {
+                    return ((!isNaN(minutes)) && (minutes > 0) && (minutes < maxHours));
+                },
+                validate_meridian = function() {
+                    return (military) ? (time.meridian===null) : (time.meridian === 'PM' || time.meridian === 'AM');
+                };
+            return ((timeString.length === strLen) &&
+                    validate_string_format(timeString) &&
+                    validate_hours(time.hours) &&
+                    validate_minutes(time.minutes) &&
+                    validate_meridian(time.meridian));
         };
         /* user interaction fns */
         this._add_hover_behavior = function(self, elements) {

@@ -70,11 +70,16 @@ define([
             ok(ts._validate(twentyfour, true));
             ok(!ts._validate('ab:cd: 34', true));
             ok(!ts._validate('ab cd__ b', true));
+
+            ok(!ts._validate('11:cd: AM', true));
+            ok(!ts._validate('ab:10: AM', true));
+            ok(!ts._validate('ab/10: AM', true));
+            ok(!ts._validate('ab&10: AM', true));
         });
     })();
 
 
-    test('Manual', function() {
+    test('manual', function() {
         var t = TimeSelect();
         t.appendTo($('body'));
         $('<input type=text></input>').appendTo($('body'));
