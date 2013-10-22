@@ -51,7 +51,7 @@ define([
                     return (military) ? (str.charAt(2)===':') : (str.charAt(2)===':' && str.charAt(5) === ' ');
                 },
                 validate_hours = function(hours) {
-                    return ((!isNaN(hours)) && (hours > 0) && (hours < maxHours));
+                    return ((!isNaN(hours)) && (hours > 0) && (hours <= maxHours));
                 },
                 validate_minutes = function(minutes) {
                     return ((!isNaN(minutes)) && (minutes > -1) && (minutes < 60));
