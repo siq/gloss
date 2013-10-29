@@ -11,15 +11,15 @@ define([
                 index = numStr.indexOf('.');
             return (!isNaN(num) && index !== -1) ? (numStr.split('.')[1].length) : 0;
         };
-        this._destroy_mantissa = function(num) {
+        this._extract_mantissa = function(num) {
             var prec = this._read_precision(num);
             return (prec===-1 || prec===0) ? num : num * Math.pow(10, prec);
         };
         this._mod_float = function(num, step) {
             var prec = this._read_precision(num),
                 sprec = this._read_precision(step),
-                tNum = this._destroy_mantissa(num) * Math.pow(10, sprec),
-                tStep = this._destroy_mantissa(step) * Math.pow(10, prec),
+                tNum = this._extract_mantissa(num) * Math.pow(10, sprec),
+                tStep = this._extract_mantissa(step) * Math.pow(10, prec),
                 numerator = tNum%tStep,
                 denominator = prec * sprec;
             return (denominator===0) ? numerator : numerator / denominator;
@@ -52,7 +52,6 @@ define([
             this.options.min = this.$node.attr('min'),
             this.options.max = this.$node.attr('max'),
             this.options.step = this.$node.attr('step');
-
         },
         getContraints: function() {
             return {min: this.options.min, max: this.options.max, step: this.options.step};

@@ -15,11 +15,11 @@ define([
         equal(numberBox._read_precision(10), 0);
         equal(numberBox._read_precision(1), 0);
     });
-    test('_destroy_mantissa', function() {
-        equal(numberBox._destroy_mantissa(.001), 1);
-        equal(numberBox._destroy_mantissa(0.001), 1);
-        equal(numberBox._destroy_mantissa(10.01), 1001);
-        equal(numberBox._destroy_mantissa(30.003), 30003);
+    test('_extract_mantissa', function() {
+        equal(numberBox._extract_mantissa(.001), 1);
+        equal(numberBox._extract_mantissa(0.001), 1);
+        equal(numberBox._extract_mantissa(10.01), 1001);
+        equal(numberBox._extract_mantissa(30.003), 30003);
     });
     test('_mod_float', function() {
         equal(numberBox._mod_float(10.01, 0.01), 0);
