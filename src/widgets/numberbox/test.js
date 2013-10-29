@@ -3,7 +3,7 @@ define([
     'vendor/jquery',
     './../numberbox'
 ], function($, NumberBox) {
-    var numberBox = NumberBox({nodeTemplate: '<input type=number min=-10 max=1000 step=0.0001></input>'}, true);
+    var numberBox = NumberBox('<input type=number min=-10 max=1000 step=0.0001></input>', true);
     test('numberbox instantiation', function() {
         ok(numberBox.prependTo('body'));
     });

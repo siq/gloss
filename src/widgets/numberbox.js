@@ -67,6 +67,6 @@ define([
         }
     });
     return function(opts, withPrivate) {
-        return (withPrivate) ? _.extend(NumberBox.extend(opts)(), priv) : NumberBox.extend(opts)();
+        return (withPrivate) ? _.extend(NumberBox(opts), priv) : NumberBox(opts);
     };
 });
