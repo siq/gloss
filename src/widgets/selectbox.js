@@ -120,7 +120,7 @@ define([
             }
         },
         setValue: function(value, silent) {
-            if(this.options.entries == null) {
+            if(this.options.entries == null || this.getValue() === value) {
                 return this;
             }
             if(!$.isPlainObject(value)) {
