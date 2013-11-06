@@ -47,6 +47,7 @@ define([
         defaults: {
             placeholder: null
         },
+        type: 'NumberBox',
         create: function() {
             this._super.apply(this, arguments);
             this.options.min = this.$node.attr('min'),

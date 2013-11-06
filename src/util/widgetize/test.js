@@ -23,7 +23,7 @@ define([
         ok(widgets[0] instanceof Button,    'item 0 is a Button');
         ok(widgets[1] instanceof TextBox,   'item 1 is a TextBox');
         ok(widgets[2] instanceof CheckBox,  'item 2 is a CheckBox');
-        ok(widgets[3] instanceof NumberBox, 'item 3 is a NumberBox');
+        ok(widgets[3].type === 'NumberBox', 'item 3 is a NumberBox');
     });
 
     test('correctly widgetize descendents', function() {
@@ -38,7 +38,7 @@ define([
         ok(widgets[5]   instanceof TextBox,             'textbox 3');
         ok(widgets[6]   instanceof TextBox,             'textbox 4');
 
-        ok(widgets[7]   instanceof NumberBox,           'numberbox');
+        ok(widgets[7].type === 'NumberBox', 'numberbox');
 
         ok(widgets[8]   instanceof SelectBox,           'selectbox 1');
         ok(widgets[9]   instanceof SelectBox,           'selectbox 2');
