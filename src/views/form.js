@@ -9,13 +9,14 @@ define([
     './../mixins/aswidgetizable',
     './../widgets/simpleview',
     './../widgets/messagelist',
+    './../widgets/spinner',
     './../util/bindinggroup',
     './../util/errorUtils',
     'tmpl!./form/form.mtpl',
     'tmpl!./form/footer.mtpl',
     'css!./form/form.css'
 ], function($, _, Class, asListenable, asSettable, fields, Model,
-    asWidgetizable, SimpleView, MessageList, BindingGroup, errorUtils,
+    asWidgetizable, SimpleView, MessageList, Spinner, BindingGroup, errorUtils,
     template, footerTemplate) {
     'use strict';
 
@@ -88,10 +89,15 @@ define([
                 }, {});
         },
         _initWidgets: function() {
-            var $messageList = this.$el.children('.messagelist');
+            var spinnerOverlay,
+                $messageList = this.$el.children('.messagelist');
             if ($messageList.length) {
                 this.set('messageList', MessageList($messageList));
             }
+            spinnerOverlay = this.$el.find('.spinner-overlay');
+            Spinner(null, {
+                target: spinnerOverlay[0]
+            }).appendTo(spinnerOverlay);
             return this._super.apply(this, arguments);
         },
         _onEscape: function(evt) {
