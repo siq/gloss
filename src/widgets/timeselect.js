@@ -1,9 +1,10 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
+    'vendor/moment',
     './widget',
     'css!./timeselect/timeselect.css'
-], function($, _, Widget) {
+], function($, _, moment, Widget) {
 
     var priv = new function() {
         this._duexgitize = function(num) {
@@ -135,6 +136,16 @@ define([
         },
         validate: function() {
             return priv._validate(this.$node.find('.time-input').val(), false);
+        },
+        setValue: function(val) {
+            var localStr = null,
+                m = null;
+            if(val instanceof String &&
+               val.charAt(val.length-1)==='Z') {
+                localStr = val.substring(0, val.length-1);
+            }
+            m = moment((localStr) ? localStr : val).format('hh:mm A');
+            this.$node.find('.time-input').val(m);
         },
         getValue: function() {
            return priv._parse_time(this.$node.find('.time-input').val(), false);

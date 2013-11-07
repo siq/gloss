@@ -1,8 +1,9 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
+    'vendor/moment',
     './../timeselect'
-], function($, _, TimeSelect) {
+], function($, _, moment, TimeSelect) {
     'use strict';
 
     var ts = TimeSelect(null, true);
@@ -79,6 +80,27 @@ define([
             ok(!ts._validate('ab:10: AM', true));
             ok(!ts._validate('ab/10: AM', true));
             ok(!ts._validate('ab&10: AM', true));
+        });
+        test('setValue', function() {
+            var strTimeOne = "2013-11-15T22:00:00Z",
+                strTimeTwo = "2013-11-15T03:45:00",
+                dTime = new Date(),
+                minuteOffset = dTime.getTimezoneOffset();
+
+            ts.setValue(strTimeOne);
+            equal(ts.getValue().hours, (dTime.getHours()===12) ? 12 : (22 - Math.floor(minuteOffset/60)) % 12);
+            equal(ts.getValue().minutes, 0 + minuteOffset%60);
+            equal(ts.getValue().meridian, 'PM');
+
+            ts.setValue(strTimeTwo);
+            equal(ts.getValue().hours, 3);
+            equal(ts.getValue().minutes, 45);
+            equal(ts.getValue().meridian, 'AM');
+
+            ts.setValue(dTime);
+            equal(ts.getValue().hours, (dTime.getHours()===12) ? 12 : dTime.getHours()%12);
+            equal(ts.getValue().minutes, dTime.getMinutes());
+            equal(ts.getValue().meridian, moment().format('A'));
         });
     })();
 
