@@ -40,7 +40,7 @@ define([
         ok(wg.getWidget('textbox3') instanceof TextBox, 'textbox 3');
         ok(wg.getWidget('textbox4') instanceof TextBox, 'textbox 4');
 
-        ok(wg.getWidget('numberbox1') instanceof NumberBox, 'numberbox');
+        ok(wg.getWidget('numberbox1').type, 'NumberBox', 'numberbox');
 
         ok(wg.getWidget('selectbox1') instanceof SelectBox, 'selectbox 1');
         ok(wg.getWidget('selectbox2') instanceof SelectBox, 'selectbox 2');

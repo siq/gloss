@@ -41,7 +41,7 @@ define([
         ok(widgets.textbox3             instanceof TextBox,             'textbox 3');
         ok(widgets.textbox4             instanceof TextBox,             'textbox 4');
 
-        ok(widgets.numberbox1           instanceof NumberBox,           'numberbox');
+        ok(widgets.numberbox1.type === 'NumberBox', 'numberbox');
 
         ok(widgets.selectbox1           instanceof SelectBox,           'selectbox 1');
         ok(widgets.selectbox2           instanceof SelectBox,           'selectbox 2');
