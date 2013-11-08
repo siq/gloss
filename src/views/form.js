@@ -67,7 +67,8 @@ define([
             for (i = 0, l = widgets.length; i < l; i++) {
                 $el = widgets[i].$node || widgets[i].$el;
                 if ($el.is(':visible') && !$el.is(':disabled')) {
-                    $el.focus();
+                    // stupid time out for IE8 bug
+                    setTimeout(function() {$el.focus();}, 10);
                     break;
                 }
             }
