@@ -148,7 +148,10 @@ define([
             this.$node.find('.time-input').val(m);
         },
         getValue: function() {
-           return priv._parse_time(this.$node.find('.time-input').val(), false);
+            if( this.validate() ) {
+                return priv._parse_time(this.$node.find('.time-input').val(), false);
+            }
+            return null;
         }
     });
 
