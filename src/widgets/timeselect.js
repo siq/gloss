@@ -144,8 +144,15 @@ define([
                val.charAt(val.length-1)==='Z') {
                 localStr = val.substring(0, val.length-1);
             }
-            m = moment((localStr) ? localStr : val).format('hh:mm A');
-            this.$node.find('.time-input').val(m);
+            if(val) {
+                m = moment((localStr) ? localStr : val);
+                if( m.isValid() ) {
+                    m = m.format('hh:mm A');
+                    this.$node.find('.time-input').val((m) ? m : null);
+                } else {
+                    this.$node.find('.time-input').val(val);
+                }
+            }
         },
         getValue: function() {
             if( this.validate() ) {
