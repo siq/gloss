@@ -160,7 +160,8 @@ define([
         var values = initialValues(),
             myForm = MyForm().appendTo('body'),
             m = FinnickyModel();
-
+        // If the model has a cid, the model will be populated with values from it's bound widgets, the test do not expect this
+        m.cid = null;
         m.set(values, {validate: true}).then(function() {
             var newValues = _.extend({}, values, {
                 name: 'foo 2',
