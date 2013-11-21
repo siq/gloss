@@ -2,9 +2,9 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     'vendor/moment',
-    './widget',
+    './formwidget',
     'css!./timeselect/timeselect.css'
-], function($, _, moment, Widget) {
+], function($, _, moment, FormWidget) {
 
     var priv = new function() {
         this._duexgitize = function(num) {
@@ -94,7 +94,7 @@ define([
         };
     };
 
-    var TimeSelect = Widget.extend({
+    var TimeSelect = FormWidget.extend({
         defaults: {
             format: 'hh:mm A',
             hoverColor: '#ccc',
@@ -159,6 +159,16 @@ define([
                 return priv._parse_time(this.$node.find('.time-input').val(), false);
             }
             return null;
+        },
+        disable: function() {
+            this._super.apply(this, arguments);
+            this.$node.find('input').prop('disabled', true);
+            return this;
+        },
+        enable: function() {
+            this._super.apply(this, arguments);
+            this.$node.find('input').prop('disabled', false);
+            return this;
         }
     });
 
