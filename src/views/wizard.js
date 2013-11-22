@@ -84,21 +84,21 @@ define([
                 self = this,
                 earliest = 0,
                 errorBindings,
-                extract_el = function(binding) {
+                extractEl = function(binding) {
                     return (binding.get('widget').$node || binding.get('widget').$el);
                 },
-                extract_binding_field = function(el) {
+                extractBindingField = function(el) {
                     return (el.attr('data-bind') || el.attr('name'));
                 },
-                is_error_field = function(binding, errorProps) {
-                    return _.contains(errorProps, extract_binding_field(extract_el(binding)));
+                isErrorField = function(binding, errorProps) {
+                    return _.contains(errorProps, extractBindingField(extractEl(binding)));
                 };
 
             if (fieldErrors) {
                 earliest = self.$panes.length-1;
                 errorProps = _.keys(fieldErrors.serialize({flatten: true})),
                 errorBindings = _.filter(self.bindingGroups.main.bindings, function(binding) {
-                    return is_error_field(binding, errorProps);
+                    return isErrorField(binding, errorProps);
                 });
 
                 _.each(self.bindingGroups, function(group) {
