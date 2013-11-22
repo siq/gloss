@@ -80,12 +80,29 @@ define([
             return pane;
         },
         _processErrors: function(globalErrors, fieldErrors) {
-            var errorProps, self = this, earliest = 0;
+            var errorProps,
+                self = this,
+                earliest = 0,
+                errorBindings,
+                extract_el = function(binding) {
+                    return (binding.get('widget').$node || binding.get('widget').$el);
+                },
+                extract_binding_field = function(el) {
+                    return (el.attr('data-bind') || el.attr('name'));
+                },
+                is_error_field = function(binding, errorProps) {
+                    return _.contains(errorProps, extract_binding_field(extract_el(binding)));
+                };
+
             if (fieldErrors) {
                 earliest = self.$panes.length-1;
-                errorProps = _.keys(fieldErrors.serialize({flatten: true}));
+                errorProps = _.keys(fieldErrors.serialize({flatten: true})),
+                errorBindings = _.filter(self.bindingGroups.main.bindings, function(binding) {
+                    return is_error_field(binding, errorProps);
+                });
+
                 _.each(self.bindingGroups, function(group) {
-                    _.each(group.bindings, function(binding) {
+                    _.each(errorBindings, function(binding) {
                         var pane = self._paneFromBinding(binding);
                         earliest = pane < earliest? pane : earliest;
                     });

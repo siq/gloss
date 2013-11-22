@@ -75,6 +75,29 @@ define([
         start();
     });
 
+    asyncTest('validate error on last pane', function() {
+        var m, ml, appendTo = 'body',
+            tw = TestWizard({
+                templates: {fieldsets: testTemplate}
+            }).appendTo(appendTo);
+        tw.set('model', m = window.m = Resource());
+        tw.show();
+
+        tw.getWidget('name').setValue('foo');
+        tw.getWidget('composition.type').setValue('attribute-filter');
+        tw.getWidget('composition.expression').setValue('some value');
+
+        tw.getWidget('next').trigger('click');
+        // do no set required field on last pane, but allow submission
+        tw.get('widgets').submit.$node.attr('disabled', false);
+        tw.get('widgets').submit.$node.removeClass('disabled');
+        tw.getWidget('submit').trigger('click');
+
+        equal(tw.get('currentPane', 0), 1);
+
+        start();
+    });
+
     // TODO: write tests for corner cases:
     //  - calling model.set() w/ an invalid value after the value was already
     //    set to something valid
