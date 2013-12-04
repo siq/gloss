@@ -69,7 +69,7 @@ define([
             // if it's a moment object, and it failed to successfully parse
             // this.input.getValue(), then it will be a valid date, but
             // inputDate.isValid() will return false
-            var inputDate = moment(this.input.getValue());
+            var inputDate = moment(this.input.getValue(), [this.options.format]);
             opts = opts || {};
             if (inputDate) {
                 if (inputDate.isValid()) {

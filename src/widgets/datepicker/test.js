@@ -171,6 +171,15 @@ define([
         dateIsSelected(dp, moment('2012-07-28'));
     });
 
+    // note for this case the format must be YYYYMMDD
+    test('setting value without dahses "-" in the input sets correct value', function() {
+        var dp = DatePicker(undefined);
+
+        dp.$node.find('input[type=text]').val('20131225')
+            .trigger($.Event('keydown', {which: 9}));
+        dateIsSelected(dp, moment('2013-12-25'));
+    });
+
     test('invalid value in the input is reset', function() {
         var dp = DatePicker()
             .appendTo($('#qunit-fixture'))
