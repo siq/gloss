@@ -34,7 +34,7 @@ define([
             var self = this;
             self.listenTo('model', 'change', '_validateFields');
             _.bindAll(self, 'submit', 'processErrors', '_createSnapshot',
-                '_restoreFromSnapShot', '_resetSnapshot', '_onEscape');
+                '_restoreFromSnapShot', '_resetSnapshot');
             self.on('cancel', self._resetSnapshot)
                 .on('click', '[name=cancel_btn]', function(evt) {
                     evt.preventDefault();
@@ -46,7 +46,7 @@ define([
                         self._validateFields)
                 .on('keyup', function(evt) {
                     if (evt.keyCode === 27) {
-                        self._onEscape(evt);
+                        self.trigger('cancel');
                     }
                 });
             self._initBindingGroups();
@@ -100,9 +100,6 @@ define([
                 target: spinnerOverlay[0]
             }).appendTo(spinnerOverlay);
             return this._super.apply(this, arguments);
-        },
-        _onEscape: function(evt) {
-            this._resetSnapshot();
         },
         // this is intended to be overridden by child classes.
         //
