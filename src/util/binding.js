@@ -68,12 +68,9 @@ define([
             if (changed.twoWay) {
                 bindUIChange = bindUIChange || this.get('twoWay');
             }
+
             if (bindPropChange) {
-                if (this.get('twoWay') && this.get('model.cid')) {
-                    this._onUIChange();
-                } else {
-                    this._setValueFromModel();
-                }
+                this._setValueFromModel();
                 this.get('model').on('change', this._onPropChange);
             }
             if (bindUIChange) {
