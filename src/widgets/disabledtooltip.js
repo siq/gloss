@@ -25,7 +25,9 @@ define([
                 }
             });
             $overlay.on('click', function() {
-                self.options.wrapTarget.trigger('click');
+                if (!self.isWrapTargetDisabled()) {
+                    self.options.wrapTarget.trigger('click');
+                }
             });
             this.update();
         },
