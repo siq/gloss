@@ -161,6 +161,12 @@ define([
         getPanes: function() {
             return this.$el.find(this.get('fieldsetSelector'));
         },
+        propagate: function(value) {
+            this._super.apply(this, arguments);
+            if (value === 'enable' && this.get('currentPane') === 0) {
+                this.getWidget('back').disable();
+            }
+        },
         show: function() {
             this.set('currentPane', 0, {update: true});
             return this._super.apply(this, arguments);
