@@ -17,7 +17,11 @@ define([
                         '_onModelChange', '_onPropChange', '_unCheckHeader');
 
             this._super.apply(this, arguments);
-            var delegateSelector = 'tbody tr .'+this.columnClass()+' input';
+            var self = this,
+                grid = this.get('grid'),
+                inputSelector = '.'+this.columnClass()+' input',
+                delegateSelector = 'tbody tr .'+this.columnClass()+' input',
+                selectableEvent = grid.get('selectableEvent');
 
             if (this.get('prop') == null) {
                 this.set({prop: '_' + this.el.id + '_checked'});
@@ -31,6 +35,28 @@ define([
                     evt.stopPropagation();
                 })
                 .on('propchange', this._onPropChange);
+
+            // selecting the row checks the input if grid is not selectable
+            if (!grid.get('selectable')) {
+                this.get('grid').on(selectableEvent, 'tbody tr', function(evt) {
+                    var $target = $(evt.currentTarget),
+                        $input = $target.find(inputSelector),
+                        model = grid._modelFromTr($target.closest('tr')),
+                        checked = model.get(self.get('prop'));
+                    if ($input.is(':disabled')) {
+                        return;
+                    }
+                    if (self.get('type') === 'radio') {
+                        _.each(self.get('grid').get('models'), function(m) {
+                            if (m !== model) {
+                                m.del(self.get('prop'), {silent: true});
+                            }
+                        });
+                    }
+                    // we want toggle behavior for checkboxes
+                    model.set(self.get('prop'), self.get('type') === 'radio' ? true : !checked);
+                });
+            }
         },
 
         _getName: function() {
