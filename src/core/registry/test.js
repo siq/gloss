@@ -2,8 +2,8 @@
 define([
     'vendor/jquery',
     './../registry',
-    './../../widgets/widget',
-    './../../view'
+    './../../widgets/base/widget',
+    './../../views/view'
 ], function($, Registry, Widget, View) {
 
     var registry = Registry.getInstance();

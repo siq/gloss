@@ -6,7 +6,7 @@ define([
     'vendor/moment',
     'mesh/tests/nestedpolymorphicexample',
     'mesh/fields',
-    './../../widgets/simpleview',
+    './../../views/simpleview',
     './../widgetize',
     './../bindinggroup',
     'tmpl!./testForm.mtpl',

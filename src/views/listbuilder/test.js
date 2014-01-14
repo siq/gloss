@@ -1,9 +1,9 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 define([
     'vendor/jquery',
-    './../../widgets/powergrid',
-    './../../widgets/powergrid/columnmodel',
-    './../../widgets/powergrid/column',
+    './../../widgets/user_display/powergrid',
+    './../../widgets/user_display/powergrid/columnmodel',
+    './../../widgets/user_display/powergrid/column',
     './../listbuilder',
     'mesh/tests/mockedexample'
 ], function($, PowerGrid, ColumnModel, Column, ListBuilder, Mock) {

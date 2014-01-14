@@ -1,6 +1,6 @@
 define([
     'vendor/underscore',
-    './../widgets/simpleview',
+    './simpleview',
     'tmpl!./breadcrumb/breadcrumb.mtpl'
 ], function(_, SimpleView, template) {
 

@@ -1,18 +1,18 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    './../widgets/widget',
-    './../widgets/button',
-    './../widgets/numberbox',
-    './../widgets/checkbox',
-    './../widgets/radiogroup',
-    './../widgets/togglegroup',
-    './../widgets/checkboxgroup',
-    './../widgets/selectbox',
-    './../widgets/textbox',
-    './../widgets/messagelist',
-    './../widgets/multiselect',
-    './../widgets/datepicker'
+    './../widgets/base/widget',
+    './../widgets/user_inputs/button',
+    './../widgets/user_inputs/numberbox',
+    './../widgets/user_inputs/checkbox',
+    './../widgets/user_inputs/radiogroup',
+    './../widgets/user_inputs/togglegroup',
+    './../widgets/user_inputs/checkboxgroup',
+    './../widgets/user_inputs/selectbox',
+    './../widgets/user_inputs/textbox',
+    './../widgets/user_display/messagelist',
+    './../widgets/user_inputs/multiselect',
+    './../widgets/user_inputs/datepicker'
 ], function($, _, Widget, Button, NumberBox, CheckBox, RadioGroup, ToggleGroup,
     CheckBoxGroup, SelectBox, TextBox, MessageList, MultiSelect, DatePicker) {
 

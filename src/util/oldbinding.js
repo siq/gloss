@@ -3,8 +3,8 @@ define([
     'vendor/t',
     'bedrock/class',
     'bedrock/mixins/assettable',
-    './../widgets/widget',
-    './../widgets/formwidget'
+    './../widgets/base/widget',
+    './../widgets/base/formwidget'
 ], function(_, t, Class, asSettable, Widget, FormWidget) {
     var textContent = document.createElement('span').textContent?
         'textContent' : 'innerText';
@@ -92,7 +92,7 @@ define([
     //  - changing the UI (either the `widget` or the `el`): i mean.. this
     //    would be kind of silly, right?
     //
-    // [formwidget]: https://github.com/siq/gloss/blob/master/src/widgets/formwidget.js
+    // [formwidget]: https://github.com/siq/gloss/blob/master/src/widgets/base/formwidget.js
     //
     var Binding = Class.extend({
         init: function(options) {

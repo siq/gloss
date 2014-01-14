@@ -2,7 +2,7 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     './../core/registry',
-    './../widgets/simpleview',
+    './simpleview',
     './form',
     'tmpl!./wizard/header.mtpl',
     'tmpl!./wizard/wizard.mtpl',

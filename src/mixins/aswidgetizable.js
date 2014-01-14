@@ -1,6 +1,6 @@
 define([
     'vendor/underscore',
-    './../widgets/messagelist',
+    './../widgets/user_display/messagelist',
     './../util/widgetize'
 ], function(_, MessageList, widgetize) {
     return function() {

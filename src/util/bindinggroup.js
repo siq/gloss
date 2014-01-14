@@ -4,7 +4,7 @@ define([
     'vendor/t',
     'bedrock/class',
     'bedrock/mixins/assettable',
-    './../widgets/widget',
+    './../widgets/base/widget',
     './widgetize',
     './binding'
 ], function($, _, t, Class, asSettable, Widget, widgetize, Binding) {

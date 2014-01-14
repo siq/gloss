@@ -1,12 +1,12 @@
 define([
     'vendor/underscore',
     './../mixins/aswidgetizable',
-    './../widgets/button',
-    './../widgets/simpleview',
+    './../widgets/user_inputs/button',
+    './simpleview',
     'tmpl!./textinsert/textinsert.mtpl',
     'tmpl!./textinsert/tr.mtpl',
     'css!./textinsert/textinsert.css',
-    'css!./../widgets/powergrid/powergrid.css'
+    'css!./../widgets/user_display/powergrid/powergrid.css'
 ], function(_, asWidgetizable, Button, SimpleView, template, trTemplate) {
     'use strict';
 
