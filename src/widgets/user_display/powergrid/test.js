@@ -457,6 +457,62 @@ define([
         });
     });
 
+    module('disabled row');
+
+    var DisabledRowGrid = function(isDisabled) {
+        isDisabled = isDisabled || function(m) {return true;};
+        return PowerGrid.extend({
+            defaults: {selectable: true},
+            _isModelDisabled: isDisabled
+        });
+    };
+    
+    asyncTest("selecting a disabled model doesn't select the row", function() {
+        setup({
+            gridClass: DisabledRowGrid(),
+            // appendTo: 'body',
+            appendTo: '#qunit-fixture'
+        }).then(function(g, options) {
+            g.select(g.get('collection').findWhere({text_field: 'item 7'}));
+            equal(g.$el.find('.selected').length, 0, 'item was not selected');
+            equal(g._renderRowCount, 0, 'no row was rerendered');
+            equal(g._renderCount, 1, 'grid wasnt rerendered');
+
+            g.$el.find('td:contains(item 2)').trigger(g.get('selectableEvent'));
+            equal(g.$el.find('.selected').length, 0, 'click does not select didabled item');
+            equal(g._renderRowCount, 0, 'no rows were re-rendered');
+            start();
+        });
+    });
+
+    asyncTest("disabled model doesn't prevent selecting another row", function() {
+        setup({
+            gridClass: DisabledRowGrid(function(m) {
+                    return m.text_field === 'item 2';
+                }),
+            // appendTo: 'body',
+            appendTo: '#qunit-fixture'
+        }).then(function(g, options) {
+            g.select(g.get('collection').findWhere({text_field: 'item 7'}));
+            equal(g.$el.find('.selected').length, 1, 'only one is selected');
+            equal(trim(g.$el.find('.selected td.col-text_field').text()),
+                'item 7', 'correct row selected');
+            equal(g._renderCount, 1, 'grid wasnt rerendered');
+
+            g.$el.find('td:contains(item 2)').trigger(g.get('selectableEvent'));
+            equal(g.$el.find('.selected').length, 0, 'click does not select didabled item');
+            // row render count incremented from unselecting previouse selection
+            equal(g._renderRowCount, 2, 'no rows were re-rendered');
+
+            g.select(g.get('collection').findWhere({text_field: 'item 1'}));
+            equal(g.$el.find('.selected').length, 1, 'only one is selected');
+            equal(trim(g.$el.find('.selected td.col-text_field').text()),
+                'item 1', 'correct row selected');
+            equal(g._renderCount, 1, 'grid wasnt rerendered');
+            start();
+        });
+    });
+
     module('resizing');
 
     var resizable = function(colModelClass) {
@@ -684,7 +740,9 @@ define([
     });
 
     asyncTest('showing after resize', function() {
-        setup({appendTo: 'body'}).then(function(g) {
+        setup({
+            // appendTo: 'body'
+        }).then(function(g) {
             var w, c = g.get('collection'), col = g.get('columnModel').columns[0];
             col.set('width', 400);
             g.del('collection');
@@ -807,7 +865,7 @@ define([
 
     asyncTest('spinner shows up', function() {
         setup({
-            appendTo: 'body',
+            // appendTo: 'body',
             gridOptions: {
                 selectable: 'multi',
                 columnModelClass: resizable(BasicColumnModel)
@@ -815,7 +873,8 @@ define([
         }).then(function(g) {
             // disable/enable before inserting in the dom, just to make sure
             g.disable().enable().disable().enable();
-            g.appendTo('body').disable();
+            // g.appendTo('body')
+            g.disable();
             equal(g.spinner.spinner.el.nodeType === 1, true,
                 'spinner instantiated');
             equal($(g.spinner.spinner.el).css('display'), 'block',
@@ -922,7 +981,9 @@ define([
     // wider than the grid, and it is scrolled horizontally, then it will no
     // longer match up with the header unless the header also scrolls
     asyncTest('header scrolls horizontally when body scrolls', function() {
-        setup({appendTo: 'body'}).then(function(g) {
+        setup({
+            // appendTo: 'body'
+        }).then(function(g) {
             ok(true);
             g.get('columnModel').columns[0].set('width', 500);
             g.$el.find('.row-inner-wrapper').scrollLeft(50);

@@ -229,6 +229,15 @@ define([
             return this.get('models').length === total;
         },
 
+        // in some cases we may want to disable a row
+        // to maintain a data drive UI that disabled attribute should come
+        // from the model but the attribute that defines what 'disabled' is
+        // will change from model to model.
+        // this method should be override to define what 'disabled' means
+        _isModelDisabled: function(model) {
+            return false;
+        },
+
         _modelFromTr: function(tr) {
             var idx = this.$tbody.children('tr').index(tr);
             return idx >= 0? this.get('models')[idx] : null;
@@ -487,13 +496,17 @@ define([
                     return idx >= 0;
                 });
                 _.each(_.range(_.min(indices), _.max(indices)), function(i) {
-                    if (!models[i].get(a)) {
+                    // add model to change array to set selectedAttr on model
+                    // if it's no already selected an the model is not 'disabled'
+                    if (!models[i].get(a) && !self._isModelDisabled(models[i])) {
                         changes.push({model: models[i], action: 'set'});
                     }
                 });
             } else {
                 _.each(selectModels, function(m) {
-                    if (!m.get(a)) {
+                    // add model to change array to set selectedAttr on model
+                    // if it's no already selected an the model is not 'disabled'
+                    if (!m.get(a) && !self._isModelDisabled(m)) {
                         changes.push({model: m, action: 'set'});
                     }
                 });

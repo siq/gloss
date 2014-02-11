@@ -7,10 +7,10 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
-    ../../user_display/powergrid',
+    '../../user_display/powergrid',
     'mesh/tests/mockedexample',
     'mesh/tests/examplefixtures',
-    ../../user_display/powergrid/utils'
+    '../../user_display/powergrid/utils'
 ], function($, _, PowerGrid, Example, exampleFixtures, utils) {
 
     var BasicColumnModel = utils.BasicColumnModel,

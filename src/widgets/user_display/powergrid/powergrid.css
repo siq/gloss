@@ -2,6 +2,9 @@ tr.selected {
   background-color: gray;
 }
 
+tr.disabled {
+  color: lightgray;
+}
 .powergrid.selectable table tbody {
   cursor: default;
 }
