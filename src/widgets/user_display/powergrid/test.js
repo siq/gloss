@@ -488,8 +488,8 @@ define([
     asyncTest("disabled model doesn't prevent selecting another row", function() {
         setup({
             gridClass: DisabledRowGrid(function(m) {
-                    return m.text_field === 'item 2';
-                }),
+                return m.text_field === 'item 2';
+            }),
             // appendTo: 'body',
             appendTo: '#qunit-fixture'
         }).then(function(g, options) {
@@ -509,6 +509,24 @@ define([
             equal(trim(g.$el.find('.selected td.col-text_field').text()),
                 'item 1', 'correct row selected');
             equal(g._renderCount, 1, 'grid wasnt rerendered');
+            start();
+        });
+    });
+
+    asyncTest("setting disabled attr on a model unselects the row", function() {
+        setup({
+            gridClass: DisabledRowGrid(function(m) {
+                return !!m.get('disabled');
+            }),
+            appendTo: 'body',
+            // appendTo: '#qunit-fixture'
+        }).then(function(g, options) {
+            var model = g.get('collection').findWhere({text_field: 'item 2'});
+            g.select(model);
+            equal(g.$el.find('.selected').length, 1, 'item was selected');
+
+            model.set('disabled', true);
+            equal(g.$el.find('.selected').length, 0, 'click does not select didabled item');
             start();
         });
     });

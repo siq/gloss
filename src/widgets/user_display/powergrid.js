@@ -265,7 +265,12 @@ define([
         },
 
         _onModelChange: function(eventName, coll, model, changed) {
-            // console.log(this.el.id+' changing '+model.get("text_field"));
+            // this is the only logical place to handle unsetting the selectedAttr
+            // if a model disable property was set as defined by `_isModelDisabled`
+            var selectedAttr = this.get('selectedAttr');
+            if (this._isModelDisabled(model) && model.get(selectedAttr)) {
+                model.set(selectedAttr, false);
+            }
             this.rerender(model);
         },
 
