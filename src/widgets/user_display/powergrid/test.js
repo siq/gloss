@@ -518,8 +518,8 @@ define([
             gridClass: DisabledRowGrid(function(m) {
                 return !!m.get('disabled');
             }),
-            appendTo: 'body',
-            // appendTo: '#qunit-fixture'
+            // appendTo: 'body',
+            appendTo: '#qunit-fixture'
         }).then(function(g, options) {
             var model = g.get('collection').findWhere({text_field: 'item 2'});
             g.select(model);

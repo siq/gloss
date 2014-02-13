@@ -229,6 +229,10 @@ define([
             return this.get('models').length === total;
         },
 
+        _isDisabled: function() {
+            return this.$el.hasClass('disabled');
+        },
+
         // in some cases we may want to disable a row
         // to maintain a data drive UI that disabled attribute should come
         // from the model but the attribute that defines what 'disabled' is
@@ -482,6 +486,8 @@ define([
                 selected = function(m) { return m.get(a); };
 
             opts = opts || {};
+
+            if (this._isDisabled()) return;
 
             // first just get a list of all the changes that need to happen
             if (!opts.dontUnselectOthers && !opts.selectTo) {
