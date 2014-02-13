@@ -67,6 +67,9 @@ define([
         this.getValue = function() {
             var multi = this._asFormWidgetIsMultiSelect(),
                 m = this._asFormWidgetSelected();
+            if (this._isDisabled()) {
+                return [];
+            }
             return multi? m && _.mpluck(m, prop) : m && m.get(prop);
         };
 
