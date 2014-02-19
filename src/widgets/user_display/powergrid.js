@@ -47,7 +47,8 @@ define([
             // this attribute tells the grid to load more data when scrolled to
             // the bottom of the grid
             infiniteScroll: false,
-            increment: 50
+            increment: 50,
+            bufferSize:100
         },
 
         template: template,
@@ -129,7 +130,22 @@ define([
             var self = this,
                 $rowInnerWrapper = this.$rowInnerWrapper,
                 $rowTable = this.$el.find('.rows'),
-                scrollLoadDfd;
+                scrollLoadDfd,
+                bufferSize = this.get('bufferSize'),
+                increment = self.get('increment'),
+                trHeight,
+                doDelete,
+                silent =false,
+                total = null,
+                scroll = 0,
+                prevScroll = -1,
+                didScroll;
+                
+            if (increment > bufferSize){
+            	console.warn('Increment cannot be greater than buffer size. Making increment equal to buffer size');
+            	increment = buffferSize;
+            	self.set('increment',increment);
+            }
             //  - handle vertical scroll for infinite scrolling
             self.on('click', '.loading-text a.reload', function() {
                 self.scrollLoadSpinner.disable();
@@ -140,8 +156,34 @@ define([
                     rowHeight = $rowInnerWrapper.height(),
                     rowTableHeight = $rowTable.height(),
                     scrollBottom = rowTableHeight - rowHeight - rowTop,
-                    increment = self.get('increment'),
                     collection = self.get('collection');
+                    
+                if(rowTop === 0){
+                	var limit = collection.query.params.limit || bufferSize,
+                		offsetPrev,
+                    	offset = collection.query.params.offset || 0;
+                    if(offset > 0){
+                    	offsetPrev = offset;
+                    	offset = offset - increment;
+                    	if(offset >= 0){
+                    		limit = increment;
+                    	}else{
+                    		limit = increment + offset;
+                    		offset = 0;
+                    	}
+                    	//offset = (offset - increment > 0) ? (offset - increment) : 0;
+						//limit = offset != 0 ? bufferSize : (offsetPrev+increment);
+						
+						collection.query.params.limit = limit;
+                    	collection.query.params.offset = offset;
+						
+						self.scrollLoadSpinner.disable();
+						
+						self.set('scrollTargetIdx',parseInt(limit/3,10)); 
+                    	
+                    	scrollLoadDfd = collection.load().then(function(models) {});
+                    }
+                }
 
                 if (!collection || !self.get('infiniteScroll') || //  - only valid if there is a collection and infiniteScroll is set
                     scrollLoadDfd && scrollLoadDfd.state() === 'pending' || //  - if currenlty loading then do nothing
@@ -149,15 +191,42 @@ define([
                     self._isAllDataLoaded()) {//  - already loaded all the data
                     return;
                 }
+                
 
                 //  - check if reached bottom of table for loading more data
                 if (scrollBottom <= 0) {
-                    var limit = (collection.query.params.limit || 0) + increment;
+                    var limit = (collection.query.params.limit || 0) + increment,
+                    	offset = collection.query.params.offset || 0,
+                    	models,
+                    	newTotal,
+                    	overflow;
+                    	
+                    total = total || collection.total;
+                    doDelete = limit  > bufferSize;
+                    
+                    if(doDelete){
+                    	overflow = limit - bufferSize;
+	                    limit = limit - overflow;
+                    	offset = offset + overflow;
+                    	if(offset >= total){
+                    		offset = offset - increment;
+                    		limit = total - offset;
+                    	}
+                    	else if(offset + limit > total){
+                    		limit = total-offset;
+                    	}
+                    }
                     collection.query.params.limit = limit;
-
+                    collection.query.params.offset = offset;
+					
                     self.scrollLoadSpinner.disable();
-                    self.set('scrollTop', $rowInnerWrapper.scrollTop());
-                    scrollLoadDfd = collection.load().then(function(models) {});
+                    models = self.get('models');
+                    self.set('scrollTargetIdx',parseInt(limit/2,10));   
+                    self.set('scrollTop',$rowInnerWrapper.scrollTop());
+                                        
+                    scrollLoadDfd = collection.refresh().then(function(models) {
+                    	console.log(models.length);
+                    });
                 }
             });
         },
@@ -224,9 +293,17 @@ define([
 
         //  - this function is used to determine if all that objects in a collection have been loaded
         //  - it should be overriden in the two layer search API case
+        
+        // this.get('models').length probably returns only the visible rows, cached rows are not accounted for
         _isAllDataLoaded: function() {
-            var total = (this.get('collection')) ? this.get('collection').total : 0;
-            return this.get('models').length === total;
+            var collection = this.get('collection'),
+            	total = collection ? collection.total : 0,
+            	offset = collection.query.params.offset || 0,
+            	limit = collection.query.params.limit || 0;
+            return (limit+offset) ?
+            		(this.get('collection').models.length === total) && 
+            		(limit + offset === total) :
+            		this.get('collection').models.length === total;
         },
 
         _isDisabled: function() {
@@ -336,7 +413,8 @@ define([
 
             if (this.get('infiniteScroll') && rows.length) {
                 //  - spinner for infinite scroll
-                var $target = this.$tbody.find('.micro-spinner');
+                var $target = this.$tbody.find('.micro-spinner'),
+                	scrollTarget;
                 this.scrollLoadSpinner = Spinner(null, {
                     target: $target[0],
                     opts: {
@@ -356,7 +434,14 @@ define([
                         left: 'auto'
                     }
                 }).appendTo($target);
-                this._setScrollTop();
+                //this._setScrollTop();
+                scrollTarget = models[this.get('scrollTargetIdx')];
+                if( scrollTarget && this._trFromModel(scrollTarget)){ //ensure that the model exists in memory and on the viewport
+                	this._scrollTo(scrollTarget);
+                	this.del('scrollTargetIdx')
+                }else{
+                	this._setScrollTop();
+                }
             }
 
             if (selected) {
