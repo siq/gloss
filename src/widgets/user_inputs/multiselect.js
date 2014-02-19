@@ -11,7 +11,6 @@ define([
     'css!./multiselect/multiselect.css'
 ], function($, _, Widget, FormWidget, CollectionViewable, Button,
     CheckBoxGroup, BaseMenu, template) {
-
     var BaseMenuUnderRoundedCorners = BaseMenu.extend({
         _getWidth: function() {
             var left = 0, right = 0, w = this.options.width;
@@ -64,7 +63,8 @@ define([
             if (self.node.tagName.toLowerCase() === 'select') {
                 $replacement = $(self.nodeTemplate())
                     .attr('name', self.$node.attr('name'))
-                    .attr('id', self.$node.attr('id'));
+                    .attr('id', self.$node.attr('id'))
+                    .attr('data-bind',self.$node.attr('data-bind'));
                 $original = self.$node;
                 self.node = (self.$node = $replacement)[0];
                 self.$node.insertAfter($original);
