@@ -26,7 +26,7 @@ define([
                 ['input[type=submit],input[type=reset]', Button],
                 ['input[type=number]', NumberBox],
                 ['div.multiselect, select.multiselect, select[multiple]', MultiSelect],
-                ['select:not([multiple], .multiselect)', SelectBox],
+                ['select:not([multiple]),.select', SelectBox],
                 ['textarea', TextBox],
                 ['div.radiogroup', RadioGroup],
                 ['div.togglegroup', ToggleGroup],
