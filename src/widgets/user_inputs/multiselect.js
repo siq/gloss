@@ -46,7 +46,7 @@ define([
         },
 
         create: function() {
-            var $replacement, $original, self = this, options = self.options,dataBindAttr;
+            var $replacement, $original, self = this, options = self.options;
 
             this._super();
 
@@ -61,13 +61,10 @@ define([
             }
 
             if (self.node.tagName.toLowerCase() === 'select') {
-            	dataBindAttr = self.$node.attr('data-bind');
                 $replacement = $(self.nodeTemplate())
                     .attr('name', self.$node.attr('name'))
-                    .attr('id', self.$node.attr('id'));
-                if(!(_.isNull(dataBindAttr) || _.isUndefined(dataBindAttr) || _.isEmpty(dataBindAttr))){
-                	$replacement.attr('data-bind',dataBindAttr);
-                }
+                    .attr('id', self.$node.attr('id'))
+                    .attr('data-bind',self.$node.attr('data-bind'));
                 $original = self.$node;
                 self.node = (self.$node = $replacement)[0];
                 self.$node.insertAfter($original);
