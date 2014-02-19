@@ -166,9 +166,9 @@ define([
                     	offsetPrev = offset;
                     	offset = offset - increment;
                     	if(offset >= 0){
-                    		limit = bufferSize;
+                    		limit = increment;
                     	}else{
-                    		limit = bufferSize + offset;
+                    		limit = increment + offset;
                     		offset = 0;
                     	}
                     	//offset = (offset - increment > 0) ? (offset - increment) : 0;
@@ -224,8 +224,8 @@ define([
                     self.set('scrollTargetIdx',parseInt(limit/2,10));   
                     self.set('scrollTop',$rowInnerWrapper.scrollTop());
                                         
-                    scrollLoadDfd = collection.load(null,true).then(function(models) {
-                    	//console.log(models.length);
+                    scrollLoadDfd = collection.refresh().then(function(models) {
+                    	console.log(models.length);
                     });
                 }
             });
