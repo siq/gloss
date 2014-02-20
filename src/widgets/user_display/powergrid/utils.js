@@ -19,6 +19,13 @@ define([
                 Column.extend({defaults: {name: 'enumeration_field'}})
             ]
         }),
+        teardown = function(){
+            var g = window.g;
+            if(g && g.$el) {
+                g.$el.remove();
+            }
+            window.g = g = null;
+        },
         setup = function(options) {
             var g, dfd = $.Deferred();
 
@@ -62,6 +69,7 @@ define([
     return {
         BasicColumnModel: BasicColumnModel,
         setup: setup,
-        trim: trim
+        trim: trim,
+        teardown: teardown
     };
 });
