@@ -487,8 +487,6 @@ define([
 
             opts = opts || {};
 
-            if (this._isDisabled()) return;
-
             // first just get a list of all the changes that need to happen
             if (!opts.dontUnselectOthers && !opts.selectTo) {
                 _.each(models, function(m) {
