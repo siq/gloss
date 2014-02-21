@@ -61,6 +61,7 @@ define([
             bufferSize:100,
             limit:100
         },
+        /* the core test function, accepts options to configure window size*/
         runTest = function(opts) {
             var _$dfd = $.Deferred();
             opts = $.extend(defaults, opts);
@@ -189,6 +190,19 @@ define([
         runTest({limit:50,increment:50,bufferSize:100});
     });
     
+    asyncTest('scroll down when total records is equal to the initial limit',function(){
+        teardown();
+        totalRecords = 50;
+        Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
+        runTest({limit:50,increment:50,bufferSize:100});
+    });
+    
+    asyncTest('scroll down with significantly larger increment and buffersize values',function(){
+        teardown();
+        totalRecords = 900;
+        Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
+        runTest({limit:15,increment:300,bufferSize:500});
+    });
     
     
     start();
