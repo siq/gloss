@@ -6,10 +6,15 @@ define([
     'css!./fileupload/fileupload.css'
 ], function($, _, Form, template) {
     return Form.extend({
-        defaults: {action: '/upload', src: '/upload',
-                   display: {label: 'label',
-                             databind: 'databind',
-                             button: 'Browse...'}},
+        defaults: {
+            action: '/upload',
+            src: '/upload',
+            display: {
+                label: 'label',
+                databind: 'databind',
+                button: 'Browse...'
+            }
+        },
         template: template,
         _bindEvents: function() {
             this._super.apply(this,arguments);
