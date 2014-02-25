@@ -225,8 +225,8 @@ define([
                     self.set('scrollTargetIdx',parseInt(limit/2,10));   
                     self.set('scrollTop',$rowInnerWrapper.scrollTop());
                                         
-                    scrollLoadDfd = collection.load(null,true).then(function(models) {
-                    	//console.log(models.length);
+                    scrollLoadDfd = collection.load().then(function(models) {
+                    	return true;
                     });
                 }
             });
