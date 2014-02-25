@@ -201,7 +201,7 @@ define([
         teardown();
         totalRecords = 900;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({limit:15,increment:300,bufferSize:500});
+        runTest({limit:20,increment:300,bufferSize:500});
     });
     
     
