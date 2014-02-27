@@ -10,45 +10,21 @@
     width:96%;
 }
 .fileupload .fileupload-actual {
-//    z-index: 1;
     position:abosolute;
     top:0px;
     left:0px;
     height:auto;
     width: 100%;
-//    opacity: 0;
-//    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"
 }
-/*
-.fileupload .fileinput-display {
-    width: 80%;
-}
-*/
 .inputs .button {
     position:relative;
     top:2px;
-/*    z-index: -1; */
 }
 .fileupload-actual .fileupload-input {
     width:100%; // ensure underlying button is 'clickable'
     margin:0px;
     padding:0px;
-/*
-    opacity: 0;
-    z-index: 1;
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"
-*/
 }
-/*
-.fileupload .fileupload-display {
-    z-index: -1;
-    height:auto;
-    width:100%;
-    position:absolute;
-    top:0px;
-    left:0px;
-}
-*/
 iframe #submissionFrame {
     height: 1px;
     display:none;
