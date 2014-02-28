@@ -1,17 +1,10 @@
-<% var strs = data.options.strings; %>
-<div class='fileupload'>
-  <div class=fileupload-actual>
-    <form id=fileupload-form
-          action='<%= data.options.action %>'
-          method='POST'
-          target='submissionFrame'
-          enctype='multipart/form-data'
-          encoding='multipart/form-data'>
-        <label class=fileupload-label></label>
-        <div class=inputs>
-          <input class=fileupload-input type='file' name='file' size='20'></input>
-        </div>
-    </form>
+<form class=fileupload
+    action="<%= this.get('action') %>"
+    method='POST'
+    target="<%= this.get('target') %>"
+    enctype='multipart/form-data'
+    encoding='multipart/form-data'>
+  <div class=inputs>
+    <input class=fileupload-input type='file' name='file'></input>
   </div>
-  <iframe id='submissionFrame' name='submissionFrame' class='fileupload-iframe hidden' src='<%= data.options.src %>' ></iframe>
-</div>
+</form>

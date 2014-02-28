@@ -7,17 +7,38 @@ define([
     'css!./fileupload/fileupload.css'
 ], function($, _, fields, Form, template) {
 
+    var $submissionFrame,
+        iFrame = ["<iframe",
+            "name='<%= name %>'",
+            "class='submissionFrame hidden'",
+            "src='<%= src %>' >",
+        "</iframe>"].join(' '),
+        
+        iFrameTmpl = function(name, src) {
+            return _.template(iFrame, {name: name, src: src});
+        };
+
     return Form.extend({
         defaults: {
             action: '/upload',
             src: '/upload',
             display: {
-                label: 'label',
-                databind: 'databind',
-                button: 'Browse...'
+                button: 'browse...'
             }
         },
         template: template,
+        init: function() {
+            this.set('target', _.uniqueId('_targetFrame_'), {silent: true});
+            return this._super.apply(this, arguments);
+        },
+        _initWidgets: function() {
+            this._super.apply(this, arguments);
+            $submissionFrame = $(iFrameTmpl(
+                this.get('target'),
+                this.get('src')
+            )).appendTo(this.$el);
+            return this;
+        },
         _bindEvents: function() {
             var self = this;
             this._super.apply(this,arguments);
@@ -29,10 +50,11 @@ define([
         getValue: function() {
             return this.get('filename');
         },
+        // return a deferred
+        // the deferred will resolve with a file uuid form the server or fail
         postUpload: function(evt) {
             var self = this,
-                dfd = $.Deferred(),
-                $submissionFrame = this.$el.find('#submissionFrame');
+                dfd = $.Deferred();
 
             if (evt) {
                 evt.preventDefault();
@@ -40,9 +62,8 @@ define([
             if (!this.get('filename')) {
                 dfd.reject(fields.NonNullError('no file selected for upload'));
             } else {
-                // Don't upload the same file more than once, if it's the same file...
-                this.$el.find('form').submit();
-                // this.$el.find('form').submit(evt);
+                this.$el.submit();
+                // this.$el.submit(evt);
                 $submissionFrame.on('load', function() {
                     var postResponse = $submissionFrame[0].contentDocument.body,
                         fileUUID;
@@ -63,7 +84,14 @@ define([
             return dfd;
         },
         show: function() {
+            var fileInputClone;
             this._super.apply(this, arguments);
+
+            /* IE 8 wont allow programmatic reseting of a file input's value. */
+            fileInputClone = this.$el.find('.fileupload-input').clone(true);
+            fileInputClone.val(''); // ff retains this value, ie8 doesn't
+            this.$el.find('.fileupload-input').remove();
+            this.$el.find('.inputs').append(fileInputClone);
             return this;
         },
         submit: function(evt) {

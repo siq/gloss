@@ -1,31 +1,3 @@
-.fileupload {
-    position:relative;
-}
-.fileupload .label {
-    height:1em;
-}
-.fileupload .inputs {
-    height:auto;
-    padding:0px;
-    width:96%;
-}
-.fileupload .fileupload-actual {
-    position:abosolute;
-    top:0px;
-    left:0px;
-    height:auto;
-    width: 100%;
-}
-.inputs .button {
-    position:relative;
-    top:2px;
-}
-.fileupload-actual .fileupload-input {
-    width:100%; // ensure underlying button is 'clickable'
-    margin:0px;
-    padding:0px;
-}
-iframe #submissionFrame {
-    height: 1px;
-    display:none;
+iframe .submissionFrame {
+    display: none;
 }
