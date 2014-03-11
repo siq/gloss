@@ -15,7 +15,7 @@ define([
         flattenedErrors = (typeof flattenedErrors === "undefined") ? {} : flattenedErrors;
         if(structuralErrors) {
             if($.isArray(structuralErrors)) {
-                if (structuralErrors[0].message) {
+                if (structuralErrors[0].message || structuralErrors[0].token) {
                     flattenedErrors[parentFieldName] = structuralErrors;
                 } else {
                     $.each(structuralErrors, function(field, errors) {
