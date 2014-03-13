@@ -511,17 +511,23 @@ define([
         },
 
         _sort: function(opts) {
-            var ascending, self = this,
+            var ascending, models, self = this,
                 column = _.find(self.get('columnModel').columns, function(c) {
                     return c.get('sort');
                 });
             if (!column || !column.get('sortable') || !self.get('models')) {
                 return;
             }
+            // copy the models array
+            // to make the sorting reproducable we need to use the `currentPage` from collection
+            // if a collection is not present we just fallback to the models
+            models = this.get('collection') ?
+                this.get('collection').currentPage() :
+                this.get('models').slice(0);
             ascending = /asc/i.test(column.get('sort'));
             self.set('models',
-                // copy the models array then sort it
-                self.get('models').slice(0).sort(function(a, b) {
+                // sort the models array
+                models.sort(function(a, b) {
                     return (ascending? 1 : -1) * sort.userFriendly(
                         column.getSortValue(a), column.getSortValue(b));
                 }), opts);
