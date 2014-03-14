@@ -436,7 +436,7 @@ define([
             // to make the sorting reproducable we need to use the `currentPage` from collection
             // if a collection is not present we just fallback to the models
             models = this.get('collection') ?
-                this.get('collection').currentPage() :
+                this.get('collectionMap').call(this, this.get('collection').currentPage()) :
                 this.get('models').slice(0);
             ascending = /asc/i.test(column.get('sort'));
             self.set('models',
