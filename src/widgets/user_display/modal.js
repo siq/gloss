@@ -80,7 +80,9 @@ define([
         },
 
         open: function() {
-            var self = this;
+            var self = this,
+                marginTop,
+                winHeight = $(window).height();
 
             if (! this.$backdrop.parent().length && this.$node.parent().length) {
                 this.$backdrop.insertBefore(this.$node);
@@ -107,7 +109,11 @@ define([
                 }
 
                 if (!this.options.height) {
-                    this.$node.css({marginTop: -size.height/2 + 'px'});
+                    marginTop = -size.height/2;
+                    if (size.height > winHeight) {
+                        marginTop = -((size.height - (size.height - winHeight))/2);
+                    }
+                    this.$node.css({marginTop: marginTop + 'px'});
                 }
 
                 this._positioned = true;
