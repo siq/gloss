@@ -47,7 +47,8 @@ define([
             // this attribute tells the grid to load more data when scrolled to
             // the bottom of the grid
             infiniteScroll: false,
-            increment: 50
+            increment: 50,
+            bufferSize: null
         },
 
         template: template,
@@ -129,104 +130,104 @@ define([
             var self = this,
                 $rowInnerWrapper = this.$rowInnerWrapper,
                 $rowTable = this.$el.find('.rows'),
-                scrollLoadDfd,
                 bufferSize = this.get('bufferSize'),
-                increment = self.get('increment'),
+                collection,
+                increment = this.get('increment'),
+                limit,
+                models,
+                offset,
+                overflow,
+                rowHeight,
+                rowTableHeight,
+                rowTop,
+                scrollLoadDfd,
                 trHeight,
-                doDelete,
                 total = null;
-                
-            if (increment > bufferSize){
-            	console.warn('Increment cannot be greater than buffer size. Making increment equal to buffer size');
-            	increment = buffferSize;
-            	self.set('increment',increment);
-            }
+
             //  - handle vertical scroll for infinite scrolling
             self.on('click', '.loading-text a.reload', function() {
                 self.scrollLoadSpinner.disable();
-                scrollLoadDfd = self.get('collection').load({reload: true});
+                scrollLoadDfd = self.get('collection').load({
+                    reload: true
+                });
             });
-            
+
             $rowInnerWrapper.on('scroll', function(evt) {
-                var rowTop = $rowInnerWrapper.scrollTop(),
-                    rowHeight = $rowInnerWrapper.height(),
-                    rowTableHeight = $rowTable.height(),
-                    scrollBottom = rowTableHeight - rowHeight - rowTop,
-                    collection = self.get('collection');
-                
+                collection = self.get('collection');
+                rowHeight = $rowInnerWrapper.height();
+                rowTableHeight = $rowTable.height();
+                rowTop = $rowInnerWrapper.scrollTop();
+                scrollBottom = rowTableHeight - rowHeight - rowTop;
+
                 //  - check if reached top of table for loading data from previous window(s)
-                if(rowTop === 0){
-                	var limit = collection.query.params.limit || bufferSize,
-                		offsetPrev,
-                    	offset = collection.query.params.offset || 0;
-                    if(offset > 0){
-                    	offsetPrev = offset;
-                    	offset = offset - increment;
-                    	if(offset >= 0){
-                    		limit = bufferSize;
-                    	}else{
-                    		limit = bufferSize + offset;
-                    		offset = 0;
-                    	}
-                    	//offset = (offset - increment > 0) ? (offset - increment) : 0;
-						//limit = offset != 0 ? bufferSize : (offsetPrev+increment);
-						
-						collection.query.params.limit = limit;
-                    	collection.query.params.offset = offset;
-						
-						self.scrollLoadSpinner.disable();
-						
-						self.set('scrollTargetIdx',parseInt(limit/3,10)); 
-                    	
-                    	scrollLoadDfd = collection.load().then(function(models) {});
+                if (rowTop === 0 && bufferSize) {
+                    limit = collection.query.params.limit || bufferSize;
+                    offset = collection.query.params.offset || 0;
+                    if (offset > 0) {
+                        //offset = offset - increment;
+                        /*if(offset >= 0){
+                            limit = bufferSize;
+                        }else{
+                            limit = bufferSize + offset;
+                            offset = 0;
+                        }*/
+                        offset = (offset - increment > 0) ? (offset - increment) : 0;
+                        limit = bufferSize;
+                        collection.query.params.limit = limit;
+                        collection.query.params.offset = offset;
+                        self.scrollLoadSpinner.disable();
+                        self.set('scrollTop', 100);
+                        scrollLoadDfd = collection.load().then(function(models) {});
                     }
                 }
 
                 if (!collection || !self.get('infiniteScroll') || //  - only valid if there is a collection and infiniteScroll is set
                     scrollLoadDfd && scrollLoadDfd.state() === 'pending' || //  - if currenlty loading then do nothing
                     self.get('models').length <= 0 || // - scrolling to load 'more' data only makes sense when there is data to scroll
-                    self._isAllDataLoaded()) {//  - already loaded all the data
+                    self._isAllDataLoaded()) { //  - already loaded all the data
                     return;
                 }
-                
+
 
                 //  - check if reached bottom of table for loading more data
                 if (scrollBottom <= 0) {
-                    var limit = (collection.query.params.limit || 0) + increment,
-                    	offset = collection.query.params.offset || 0,
-                    	models,
-                    	newTotal,
-                    	overflow;
-                    	
-                    
-                    total = total || collection.total;
-                    limit = limit <= total ? limit : total;
-                    doDelete = limit  > bufferSize;
-                    
-                    if(doDelete){
-                    	overflow = limit - bufferSize;
-	                    limit = limit - overflow;
-                    	offset = offset + overflow;
-                    	if(offset >= total){
-                    		offset = offset - increment;
-                    		limit = total - offset;
-                    	}
-                    	else if(offset + limit > total){
-                    		limit = total-offset;
-                    	}
+                    limit = (collection.query.params.limit || 0) + increment;
+
+                    //total = total || collection.total;
+                    //limit = limit <= total ? limit : total;
+
+                    if (bufferSize && (limit > bufferSize)) {
+                        offset = collection.query.params.offset || 0
+                        overflow = limit - bufferSize;
+                        limit = limit - overflow;
+                        offset = offset + overflow;
+
+                        /*stay away from collection.total. The two layer search API returns the 
+                          number of records for that search, not the number of records in the entire db
+                        */
+
+                        /*if(offset >= total) {
+                            offset = offset - increment;
+                            limit = total - offset;
+                        }
+                        else if(offset + limit > total) {
+                            limit = total-offset;
+                        }*/
+                        collection.query.params.limit = limit;
+                        collection.query.params.offset = offset;
+                        //models = self.get('models');
+
+                        // set the index of the element which needs to be focussed when new data scrolls in
+                        // self.set('scrollTargetIdx',parseInt(limit/2,10));   
+                        self.set('scrollTop', parseInt($rowInnerWrapper.scrollTop() / 2, 10));
+                    } else {
+                        collection.query.params.limit = limit;;
+                        self.set('scrollTop', $rowInnerWrapper.scrollTop());
                     }
-                    collection.query.params.limit = limit;
-                    collection.query.params.offset = offset;
-					
+
                     self.scrollLoadSpinner.disable();
-                    models = self.get('models');
-                    
-                    // set the index of the element which needs to be focussed when new data scrolls in
-                    self.set('scrollTargetIdx',parseInt(limit/2,10));   
-                    self.set('scrollTop',$rowInnerWrapper.scrollTop());
-                                        
                     scrollLoadDfd = collection.load().then(function(models) {
-                    	return true;
+                        return true;
                     });
                 }
             });
@@ -302,9 +303,9 @@ define([
                offset = collection.query.params.offset || 0,
                limit = collection.query.params.limit || 0;
            return (limit+offset) ?
-            	  (this.get('collection').models.length === total) && 
-            	  (limit + offset === total) :
-            	  this.get('collection').models.length === total;
+            	  (collection.models.length === total) && 
+            	  (limit + offset >= total) :
+            	  collection.models.length === total;
         },
 
         _isDisabled: function() {
@@ -391,7 +392,7 @@ define([
                 columns = this.get('columnModel'),
                 models = this.get('models'),
                 selected = this.selected();
-                
+
             var start = (new Date()).valueOf();
 
             if (!columns || !models) {
@@ -435,14 +436,7 @@ define([
                         left: 'auto'
                     }
                 }).appendTo($target);
-                //this._setScrollTop();
-                scrollTarget = models[this.get('scrollTargetIdx')];
-                if(scrollTarget && this._trFromModel(scrollTarget)) { //ensure that the model exists in memory and on the viewport
-                	this._scrollTo(scrollTarget);
-                	this.del('scrollTargetIdx')
-                } else {
-                	this._setScrollTop();
-                }
+                this._setScrollTop();
             }
 
             if (selected) {
