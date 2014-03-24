@@ -191,6 +191,25 @@ define([
         ok(pager);
         start();
     });
+    
+    asyncTest('collection edge case - current load is same as previous load', function() {
+        setup({
+            gridOptions: {selectable: true}
+        }).then(function(grid, pager, options) {
+            ok(grid);
+            pager.$el.find('.next-page').click();
+            setTimeout(function() {
+                pager.$el.find('.prev-page').click();
+                setTimeout(function() {
+                    pager.$el.find('.next-page').click();
+                    setTimeout(function() {
+                        equal(grid.get('models')[0].id,26, "id matches the first element of page 2 - 26");
+                        start();
+                    }, 100);
+                }, 100);
+            }, 100);
+        });
+    });
 
     start();
 
