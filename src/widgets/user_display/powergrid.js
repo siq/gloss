@@ -50,9 +50,9 @@ define([
             // tell the grid how many additional models to load
             increment: 50,
             windowFactor: 1
-            // the window size determines how many models will be rendered at once
+            // the windowSize determines how many models will be rendered at once
             // this creates a virtual window that improves grid render performance
-            // the window size is a factor of the `increment` and `windowFactor`
+            // the windowSize is a factor of the `increment` and `windowFactor`
             // windowSize = increment * windowFactor
             // **Note: if windowSize evaluates to a flasey value then all data will
             //      load without a virtual window
@@ -150,7 +150,7 @@ define([
                 $rowInnerWrapper = this.$rowInnerWrapper,
                 $rowTable = this.$el.find('.rows'),
                 increment = this.get('increment'),
-                bufferSize = Math.round(increment * this.get('windowFactor')) || null,
+                windowSize = Math.round(increment * this.get('windowFactor')) || null,
                 collection,
                 limit,
                 models,
@@ -180,12 +180,12 @@ define([
                 scrollBottom = rowTableHeight - rowHeight - rowTop;
 
                 //  - check if reached top of table for loading data from previous window(s)
-                if (rowTop === 0 && bufferSize) {
-                    limit = collection.query.params.limit || bufferSize;
+                if (rowTop === 0 && windowSize) {
+                    limit = collection.query.params.limit || windowSize;
                     offset = collection.query.params.offset || 0;
                     if (offset > 0) {
                         offset = (offset - increment > 0) ? (offset - increment) : 0;
-                        limit = bufferSize;
+                        limit = windowSize;
                         collection.query.params.limit = limit;
                         collection.query.params.offset = offset;
                         self.scrollLoadSpinner.disable();
@@ -205,9 +205,9 @@ define([
                 //  - check if reached bottom of table for loading more data
                 if (scrollBottom <= 0) {
                     limit = (collection.query.params.limit || 0) + increment;
-                    if (bufferSize && (limit > bufferSize)) {
+                    if (windowSize && (limit > windowSize)) {
                         offset = collection.query.params.offset || 0;
-                        overflow = limit - bufferSize;
+                        overflow = limit - windowSize;
                         limit = limit - overflow;
                         offset = offset + overflow;
 
