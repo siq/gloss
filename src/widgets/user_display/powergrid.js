@@ -49,7 +49,7 @@ define([
             infiniteScroll: false,
             // tell the grid how many additional models to load
             increment: 50,
-            windowFactor: 1
+            windowFactor: null
             // the windowSize determines how many models will be rendered at once
             // this creates a virtual window that improves grid render performance
             // the windowSize is a factor of the `increment` and `windowFactor`
