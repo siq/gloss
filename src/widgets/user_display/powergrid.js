@@ -161,6 +161,7 @@ define([
                 rowTop,
                 scrollLoadDfd,
                 trHeight,
+                scrollBottom,
                 total = null;
 
             //  - handle vertical scroll for infinite scrolling
@@ -183,13 +184,6 @@ define([
                     limit = collection.query.params.limit || bufferSize;
                     offset = collection.query.params.offset || 0;
                     if (offset > 0) {
-                        //offset = offset - increment;
-                        /*if(offset >= 0){
-                            limit = bufferSize;
-                        }else{
-                            limit = bufferSize + offset;
-                            offset = 0;
-                        }*/
                         offset = (offset - increment > 0) ? (offset - increment) : 0;
                         limit = bufferSize;
                         collection.query.params.limit = limit;
@@ -211,12 +205,8 @@ define([
                 //  - check if reached bottom of table for loading more data
                 if (scrollBottom <= 0) {
                     limit = (collection.query.params.limit || 0) + increment;
-
-                    //total = total || collection.total;
-                    //limit = limit <= total ? limit : total;
-
                     if (bufferSize && (limit > bufferSize)) {
-                        offset = collection.query.params.offset || 0
+                        offset = collection.query.params.offset || 0;
                         overflow = limit - bufferSize;
                         limit = limit - overflow;
                         offset = offset + overflow;
@@ -224,23 +214,12 @@ define([
                         /*stay away from collection.total. The two layer search API returns the 
                           number of records for that search, not the number of records in the entire db
                         */
-
-                        /*if(offset >= total) {
-                            offset = offset - increment;
-                            limit = total - offset;
-                        }
-                        else if(offset + limit > total) {
-                            limit = total-offset;
-                        }*/
                         collection.query.params.limit = limit;
                         collection.query.params.offset = offset;
-                        //models = self.get('models');
 
-                        // set the index of the element which needs to be focussed when new data scrolls in
-                        // self.set('scrollTargetIdx',parseInt(limit/2,10));   
                         self.set('scrollTop', parseInt($rowInnerWrapper.scrollTop() / 2, 10));
                     } else {
-                        collection.query.params.limit = limit;;
+                        collection.query.params.limit = limit;
                         self.set('scrollTop', $rowInnerWrapper.scrollTop());
                     }
 
@@ -314,17 +293,18 @@ define([
 
         //  - this function is used to determine if all that objects in a collection have been loaded
         //  - it should be overriden in the two layer search API case
-        //  - this.get('models').length probably returns only the visible rows, cached rows 
-        //  - are not accounted for
+        //  - when windowing is enabled `this.get('models').length` returns only the rows 
+        //  - available in that window
+        //  - use `collection.models.length` instead, which returns all the rows in the collection
         _isAllDataLoaded: function() {
-           var collection = this.get('collection'),
-               total = collection ? collection.total : 0,
-               offset = collection.query.params.offset || 0,
-               limit = collection.query.params.limit || 0;
-           return (limit+offset) ?
-            	  (collection.models.length === total) && 
-            	  (limit + offset >= total) :
-            	  collection.models.length === total;
+            var collection = this.get('collection'),
+                total = collection ? collection.total : 0,
+                offset = collection.query.params.offset || 0,
+                limit = collection.query.params.limit || 0;
+            return (limit + offset) ?
+                (collection.models.length === total) &&
+                (limit + offset >= total) :
+                collection.models.length === total;
         },
 
         _isDisabled: function() {
