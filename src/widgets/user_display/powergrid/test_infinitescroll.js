@@ -58,7 +58,6 @@ define([
         testyUp = $('<button>Scroll To Top</button>'),
         defaults = {
             increment:50,
-            bufferSize:100,
             limit:100
         },
         /* the core test function, accepts options to configure window size*/
@@ -72,7 +71,7 @@ define([
                     infiniteScroll: true,
                     increment: opts.increment,
                     keyboardNavigation:false,
-                    bufferSize:opts.bufferSize
+                    windowFactor: opts.windowFactor
                 },
                 delay:delay,
                 appendTo: 'body',
@@ -83,7 +82,6 @@ define([
                 	oldLimit = collection.query.params.limit,
                 	$rowWrapper = g.$el.find('.row-inner-wrapper'),
                     $rows = g.$el.find('.rows'),
-                    buffer = g.get('bufferSize'),
                     inter;
                 
                 // set height and widths for visual resize testing
@@ -155,53 +153,54 @@ define([
         scrollToBeginning();
     });
     
-    asyncTest('scroll down when total records is a multiple of increment but not a multiple of buffersize',function(){
+    asyncTest('scroll down when total records is a multiple of increment but not a multiple of virtual window size',function(){
         teardown();
         totalRecords = 450;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        $dfd = runTest({increment:50,bufferSize:100});
+        $dfd = runTest({increment:50,windowFactor:2});
     });
     
-    asyncTest('scroll down when total records is not a multiple of increment but is a multiple of buffersize',function(){
+    asyncTest('scroll down when total records is not a multiple of increment but is a multiple of virtual window size',function(){
         teardown();
         totalRecords = 400;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({increment:75,bufferSize:100});
+        // windowSize = 100 = Math.round(75*1.33)
+        runTest({increment:75,windowFactor:1.33});
     });
     
-    asyncTest('scroll down when increment, buffersize and total records have no common factor',function(){
+    asyncTest('scroll down when increment, virtual window size and total records have no common factor',function(){
         teardown();
         totalRecords = 287;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({increment:30,bufferSize:100});
+        runTest({increment:30,windowFactor:3.33});
     });
 
     asyncTest('scroll down when total records is less than the buffer size',function(){
         teardown();
         totalRecords = 90;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({limit:50,increment:50,bufferSize:100});
+        runTest({limit:50,increment:50,windowFactor:2});
     });
     
     asyncTest('scroll down when total records is less than the initial limit',function(){
         teardown();
         totalRecords = 40;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({limit:50,increment:50,bufferSize:100});
+        runTest({limit:50,increment:50,windowFactor:2});
     });
     
     asyncTest('scroll down when total records is equal to the initial limit',function(){
         teardown();
         totalRecords = 50;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({limit:50,increment:50,bufferSize:100});
+        runTest({limit:50,increment:50,windowFactor:2});
     });
     
-    asyncTest('scroll down with significantly larger increment and buffersize values',function(){
+    asyncTest('scroll down with significantly larger increment and virtual window size values',function(){
         teardown();
         totalRecords = 900;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures,totalRecords));
-        runTest({limit:20,increment:300,bufferSize:500});
+        runTest({limit:20,increment:300,windowFactor:1.666});
     });
     
     

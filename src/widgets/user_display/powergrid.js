@@ -47,8 +47,27 @@ define([
             // this attribute tells the grid to load more data when scrolled to
             // the bottom of the grid
             infiniteScroll: false,
+            // tell the grid how many additional models to load
             increment: 50,
-            bufferSize: null
+            windowFactor: 1
+            // the window size determines how many models will be rendered at once
+            // this creates a virtual window that improves grid render performance
+            // the window size is a factor of the `increment` and `windowFactor`
+            // windowSize = increment * windowFactor
+            // **Note: if windowSize evaluates to a flasey value then all data will
+            //      load without a virtual window
+            //      i.e. windowFactor = 0 || null || undefined
+
+            //             _________________   <-----------------------|
+            //             |               |                           |
+            //             |               |                           |
+            //         ____|_______________|____   <---|               |
+            //         |   |               |   |       |               |
+            //         |   |               |   |   grid height     Window Size
+            //         |   |               |   |       |               |
+            //         |___|_______________|___|   <---|               |
+            //             |               |                           |
+            //             |_______________|   <-----------------------|
         },
 
         template: template,
@@ -130,9 +149,9 @@ define([
             var self = this,
                 $rowInnerWrapper = this.$rowInnerWrapper,
                 $rowTable = this.$el.find('.rows'),
-                bufferSize = this.get('bufferSize'),
-                collection,
                 increment = this.get('increment'),
+                bufferSize = Math.round(increment * this.get('windowFactor')) || null,
+                collection,
                 limit,
                 models,
                 offset,

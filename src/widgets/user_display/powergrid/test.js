@@ -846,13 +846,14 @@ define([
 
     module('infinite scroll');
 
-    asyncTest('scroll to bottom loads more data', function() {
+    asyncTest('scroll to bottom loads more data no windowFactor', function() {
         setup({
             // appendTo: 'body',
             params: {limit: 25},
             gridOptions: {
                 infiniteScroll: true,
-                increment: 300
+                increment: 300,
+                windowFactor: null
             }
         }).then(function(g, options) {
             // set height and widths for visual resize testing
