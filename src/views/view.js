@@ -249,7 +249,7 @@ define([
         };
     });
 
-    asSettable.call(View.prototype, {propName: 'options', onChange: 'update'});
+    asSettable.call(View.prototype, {propName: 'options', onChange: 'update', areEqual: _.isEqual});
 
     View.extend = _.wrap(View.extend, function(func) {
         var rest = Array.prototype.slice.call(arguments, 1),
