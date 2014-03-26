@@ -49,7 +49,7 @@ define([
             infiniteScroll: false,
             // tell the grid how many additional models to load
             increment: 50,
-            windowFactor: 1
+            windowFactor: 0
             // the windowSize determines how many models will be rendered at once
             // this creates a virtual window that improves grid render performance
             // the windowSize is a factor of the `increment` and `windowFactor`
@@ -291,11 +291,9 @@ define([
             var collection = this.get('collection'),
                 total = collection ? collection.total : 0,
                 offset = collection.query.params.offset || 0,
-                limit = collection.query.params.limit || 0;
-            return (limit + offset) ?
-                (collection.models.length === total) &&
-                (limit + offset >= total) :
-                collection.models.length === total;
+                limit = collection.query.params.limit || 0,
+                atEnd = offset + limit >= total;
+            return atEnd && collection.models.length === total;
         },
 
         _isDisabled: function() {
