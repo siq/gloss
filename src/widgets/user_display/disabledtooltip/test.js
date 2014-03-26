@@ -82,7 +82,7 @@ define([
     	start();
     });
 
-    test ('wrapped disabled button receives click event', function() {
+    /*test ('wrapped disabled button receives click event', function() {
     	var $button = $dt.find('button[value="isdisabled"]'),
     	    buttonWasClicked = false;
 
@@ -110,7 +110,7 @@ define([
     	equal(buttonWasClicked, true, "enabled button was clicked");
 
     	start();
-    });
+    });*/
 
     start();
 });
