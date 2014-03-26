@@ -49,7 +49,7 @@ define([
             infiniteScroll: false,
             // tell the grid how many additional models to load
             increment: 50,
-            windowFactor: null
+            windowFactor: 1
             // the windowSize determines how many models will be rendered at once
             // this creates a virtual window that improves grid render performance
             // the windowSize is a factor of the `increment` and `windowFactor`
@@ -150,19 +150,19 @@ define([
                 $rowInnerWrapper = this.$rowInnerWrapper,
                 $rowTable = this.$el.find('.rows'),
                 increment = this.get('increment'),
-                windowSize = Math.round(increment * this.get('windowFactor')) || null,
+                windowSize = Math.round(increment * this.get('windowFactor')) || 0,
                 collection,
                 limit,
                 models,
                 offset,
-                overflow,
+                currentOffset,
                 rowHeight,
                 rowTableHeight,
+                trHeight,
                 rowTop,
                 scrollLoadDfd,
-                trHeight,
                 scrollBottom,
-                total = null;
+                scrollTop;
 
             //  - handle vertical scroll for infinite scrolling
             self.on('click', '.loading-text a.reload', function() {
@@ -176,20 +176,21 @@ define([
                 collection = self.get('collection');
                 rowHeight = $rowInnerWrapper.height();
                 rowTableHeight = $rowTable.height();
+                trHeight = $rowInnerWrapper.find('tr').first().height();
                 rowTop = $rowInnerWrapper.scrollTop();
                 scrollBottom = rowTableHeight - rowHeight - rowTop;
+                currentOffset = collection.query.params.offset || 0;
 
                 //  - check if reached top of table for loading data from previous window(s)
                 if (rowTop === 0 && windowSize) {
-                    limit = collection.query.params.limit || windowSize;
                     offset = collection.query.params.offset || 0;
                     if (offset > 0) {
-                        offset = (offset - increment > 0) ? (offset - increment) : 0;
+                        offset = (offset - windowSize > 0) ? offset - windowSize : 0;
                         limit = windowSize;
                         collection.query.params.limit = limit;
                         collection.query.params.offset = offset;
                         self.scrollLoadSpinner.disable();
-                        self.set('scrollTop', 100);
+                        self.set('scrollTop', scrollBottom-trHeight);
                         scrollLoadDfd = collection.load().then(function(models) {});
                     }
                 }
@@ -201,32 +202,22 @@ define([
                     return;
                 }
 
-
-                //  - check if reached bottom of table for loading more data
                 if (scrollBottom <= 0) {
-                    limit = (collection.query.params.limit || 0) + increment;
-                    if (windowSize && (limit > windowSize)) {
-                        offset = collection.query.params.offset || 0;
-                        overflow = limit - windowSize;
-                        limit = limit - overflow;
-                        offset = offset + overflow;
-
-                        /*stay away from collection.total. The two layer search API returns the 
-                          number of records for that search, not the number of records in the entire db
-                        */
-                        collection.query.params.limit = limit;
-                        collection.query.params.offset = offset;
-
-                        self.set('scrollTop', parseInt($rowInnerWrapper.scrollTop() / 2, 10));
+                    if (windowSize) {
+                        limit = windowSize;
+                        offset = currentOffset + windowSize;
+                        scrollTop = 1;
                     } else {
-                        collection.query.params.limit = limit;
-                        self.set('scrollTop', $rowInnerWrapper.scrollTop());
+                        limit = (collection.query.params.limit || 0) + increment;
+                        offset = currentOffset;
+                        scrollTop = $rowInnerWrapper.scrollTop();
                     }
+                    collection.query.params.limit = limit;
+                    collection.query.params.offset = offset;
 
                     self.scrollLoadSpinner.disable();
-                    scrollLoadDfd = collection.load().then(function(models) {
-                        return true;
-                    });
+                    self.set('scrollTop', scrollTop);
+                    scrollLoadDfd = collection.load().then(function(models) {});
                 }
             });
         },
