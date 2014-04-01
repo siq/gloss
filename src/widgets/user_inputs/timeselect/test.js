@@ -82,7 +82,7 @@ define([
             ok(!ts._validate('ab&10: AM', true));
         });
         test('setValue', function() {
-            var strTimeOne = "2013-11-15T22:00:00Z",
+            var strTimeOne = "2013-11-15T23:00:00Z",
                 strTimeTwo = "2013-11-15T03:45:00",
                 dTime = new Date(),
                 minuteOffset = dTime.getTimezoneOffset();
