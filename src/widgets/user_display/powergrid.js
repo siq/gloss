@@ -179,11 +179,11 @@ define([
                 trHeight = $rowInnerWrapper.find('tr').first().height();
                 rowTop = $rowInnerWrapper.scrollTop();
                 scrollBottom = rowTableHeight - rowHeight - rowTop;
-                currentOffset = collection.query.params.offset || 0;
+                currentOffset = self.get('collection.query.params.offset') || 0;
 
                 //  - check if reached top of table for loading data from previous window(s)
                 if (rowTop === 0 && windowSize) {
-                    offset = collection.query.params.offset || 0;
+                    offset = currentOffset;
                     if (offset > 0) {
                         offset = (offset - windowSize > 0) ? offset - windowSize : 0;
                         limit = windowSize;
