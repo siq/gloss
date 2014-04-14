@@ -2,6 +2,7 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
+    'bedrock/mixins/assettable',
     './../../base/widget',
     './../../user_display/grid',
     './../../user_display/grid/row',
@@ -11,7 +12,7 @@ define([
     './../../../test/api/v1/targetvolumeprofile',
     'mesh/tests/example',
     'text!./../../../test/api/v1/test/fixtures/targetvolumeprofile.json'
-], function($, _, Widget, Grid, Row, CollectionViewable, Form, Mock,
+], function($, _, asSettable, Widget, Grid, Row, CollectionViewable, Form, Mock,
     TargetVolumeProfile, Example, tvpFixture) {
 
     var RowClass = Row.extend({
@@ -128,6 +129,7 @@ define([
                 this._super(updated);
             }
         });
+    asSettable.call(CountingGridClass.prototype, {propName: 'options', onChange: 'update'});
 
     asyncTest('setting collection does not set models twice', function() {
         Example.models.clear();
@@ -151,6 +153,8 @@ define([
         }, 100);
     });
 
+    // The dedup of triggering updates is encapsulated by asSettable these days.
+    // Since this is an old school widget grid (not the powergrid) it doesn't have assettable
     asyncTest('setting loaded collection does not set models twice', function() {
         Example.models.clear();
         var collection = Example.collection(), grid, previousCount;
@@ -216,7 +220,7 @@ define([
         // therefore
         grid = CountingGridClass(undefined, {collection: collection});
 
-        collection.reset({limit: 5});
+        collection.reset();
 
         // now that we've reset the query, this second load call will resolve
         // before the first
