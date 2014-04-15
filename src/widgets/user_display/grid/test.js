@@ -724,8 +724,8 @@ define([
 
         collection.on('update change', function() {
             var models = grid.options.models;
-            // ok(allModelsChecked(models), 'all rows selected after checking header checkbox');
-            ok(allRowsSelected(grid), 'all rows selected after checking header checkbox');
+            ok(allModelsChecked(models), 'all rows selected after checking header checkbox');
+            // ok(allRowsSelected(grid), 'all rows selected after checking header checkbox');
             callCount++;
         });
 
@@ -736,8 +736,9 @@ define([
             // all row checked
             simulateCheckboxClick($checkedColTh);
             setTimeout(function() {
-                // I don't know why but the simiulated click causes two calls
-                equal(callCount, 2, 'callback event once');
+                // `load` triggers an update = 1
+                // simulateCheckboxClick trigger update from the grid and from checkboxcolumn = 1 + 2 = 3
+                equal(callCount, 3, 'callback event once');
                 start();
             }, 500);
         });
