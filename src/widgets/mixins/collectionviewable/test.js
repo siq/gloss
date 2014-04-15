@@ -129,7 +129,7 @@ define([
                 this._super(updated);
             }
         });
-    asSettable.call(CountingGridClass.prototype, {propName: 'options', onChange: 'update'});
+    asSettable.call(CountingGridClass.prototype, {propName: 'options', onChange: 'updateWidget'});
 
     asyncTest('setting collection does not set models twice', function() {
         Example.models.clear();
