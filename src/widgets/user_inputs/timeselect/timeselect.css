@@ -3,6 +3,8 @@
 }
 .time-select .time-input {
   display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
 .time-select .time-drop{
   position: absolute;
