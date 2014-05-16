@@ -232,14 +232,14 @@ define([
             this._focusOnFirstVisibleBinding();
             return ret;
         },
-        submit: function(evt) {
+        submit: function(evt, params) {
             var self = this;
             if (evt) {
                 evt.preventDefault();
             }
             this.resetFields();
             return self._validateModel().then(function() {
-                return self.get('model').save();
+                return self.get('model').save(params);
             }).fail(self.processErrors);
         },
         update: function(changed) {
