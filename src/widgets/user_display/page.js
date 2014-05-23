@@ -31,6 +31,11 @@ define([
                 self._prependTmpl();
                 self.load.resolve();
             });
+            $(document).ajaxComplete(function(evt, request, settings) {
+                if(request.status===403) {
+                    location.reload();
+                }
+            });
         },
         on: function(event, callback) {
             /* if the page is already loaded then just return
