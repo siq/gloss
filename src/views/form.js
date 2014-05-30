@@ -53,6 +53,7 @@ define([
         },
         _createSnapshot: function(model) {
             model = model instanceof Model.Model? model : this.get('model');
+            if (!model) return;
             this._snapshot = _.reduce(this.bindingGroups,
                 function(snapshot, group) {
                     _.each(group.bindings, function(binding) {
@@ -249,7 +250,9 @@ define([
                 if (this.previous('model') && this._snapshot) {
                     this._restoreFromSnapShot(this.previous('model'));
                 }
-                this._createSnapshot();
+                if (this.has('model')) {
+                    this._createSnapshot();
+                }
                 this.set('models.main', this.get('model'));
             }
             if (changed.models) {
