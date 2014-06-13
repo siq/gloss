@@ -6,8 +6,12 @@ define([
     '../form',
     './../../../data/mock',
     './../../../test/api/v1/targetvolume',
-    'text!./../../../test/api/v1/test/fixtures/targetvolume.json'
-], function($, _, CheckBoxGroup, Form, Mock, TargetVolume, targetvolume_json) {
+    'text!./../../../test/api/v1/test/fixtures/targetvolume.json',
+    'mesh/tests/example',
+    'mesh/tests/examplefixtures',
+    'mesh/tests/mockutils'
+], function($, _, CheckBoxGroup, Form, Mock, TargetVolume, targetvolume_json,
+    Example, exampleFixtures, mockUtils) {
 
     var valueMatchesCheckboxes = function(checkboxes, value) {
         _.each(checkboxes, function(cb) {
@@ -15,7 +19,8 @@ define([
             equal(cb.node.checked, idx >= 0);
         });
     };
-
+    
+    var BigMock = mockUtils('Example', Example, exampleFixtures);
     Mock(TargetVolume, JSON.parse(targetvolume_json));
 
     asyncTest('checkbox instantiation from collection', function() {
@@ -116,6 +121,35 @@ define([
             }, 15);
         });
     }
+
+    test('performance check', function() {
+        var start, cbg,
+            limit = 1000,
+            collection = BigMock.collection({limit: limit}),
+            $perfButton = $("<button class='perf-button'>performance check</button>");
+
+        $perfButton.appendTo('body');
+        $('body').on('click', '.perf-button', function() {
+            $perfButton.text('working...');
+            cbg = CheckBoxGroup(undefined, {
+                translate: function(item) {
+                    return {value: item.id, name: item.text_field};
+                }
+            }).appendTo('body');
+
+            start = new Date();
+            cbg.set('collection', collection);
+        });
+        collection.on('update', function() {
+            var end = new Date(),
+                timeLapse = (end-start)/1000;
+            
+            console.log('time:', timeLapse);
+            $('.perf-button').after('<b>'+limit+' object in '+timeLapse+' seconds</b> ');
+            $perfButton.text('performance check');
+        });
+        ok(true);
+    });
 
     start();
 });

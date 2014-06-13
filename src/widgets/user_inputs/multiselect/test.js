@@ -7,8 +7,12 @@ define([
     './../../../data/mock',
     './../../../test/api/v1/targetvolume',
     'text!./../../../test/api/v1/test/fixtures/targetvolume.json',
+    'mesh/tests/example',
+    'mesh/tests/examplefixtures',
+    'mesh/tests/mockutils',
     'tmpl!./multiselecttesttemplate.mtpl'
-], function($, _, Multiselect, Form, Mock, TargetVolume, targetvolume_json, tmpl) {
+], function($, _, Multiselect, Form, Mock, TargetVolume, targetvolume_json,
+    Example, exampleFixtures, mockUtils, tmpl) {
 
     var valueMatchesCheckboxes = function(checkboxes, value) {
         _.each(checkboxes, function(cb) {
@@ -17,6 +21,7 @@ define([
         });
     };
 
+    var BigMock = mockUtils('Example', Example, exampleFixtures);
     Mock(TargetVolume, JSON.parse(targetvolume_json));
 
     asyncTest('multiselect instantiation from collection', function() {
@@ -83,7 +88,7 @@ define([
         var form = Form($(tmpl()), {widgetize: true}),
             wd = null;
 
-        form.appendTo($('#qunit-fixture'));    
+        form.appendTo($('#qunit-fixture'));
 
         wd = form.getWidget('my-multiselect2'); 
         ok(wd);
@@ -126,6 +131,35 @@ define([
         ms = Multiselect($select);
         equal($('#qunit-fixture').find('select').length, 0);
         equal($('#qunit-fixture').find('.multiselect').length, 1);
+    });
+
+    test('performance check', function() {
+        var start, ms,
+            limit = 1000,
+            collection = BigMock.collection({limit: limit}),
+            $perfButton = $("<button class='perf-button'>performance check</button>");
+        
+        $perfButton.appendTo('body');
+        $('body').on('click', '.perf-button', function() {
+            $perfButton.text('working...');
+            ms = Multiselect(undefined, {
+                translator: function(item) {
+                    return {value: item.id, name: item.text_field, checked: item.selected};
+                }
+            }).appendTo('body');
+
+            start = new Date();
+            ms.set('collection', collection);
+        });
+        collection.on('update', function() {
+            var end = new Date(),
+                timeLapse = (end-start)/1000;
+
+            console.log('time:', timeLapse);
+            $('.perf-button').after('<b>'+limit+' object in '+timeLapse+' seconds</b> ');
+            $perfButton.text('performance check');
+        });
+        ok(true);
     });
 
     start();
