@@ -2,9 +2,43 @@ define([
     'vendor/underscore',
     '../base/formwidget',
     '../mixins/collectionviewable',
-    './checkbox',
     'tmpl!./checkboxgroup/checkboxgroup.mtpl'
-], function(_, FormWidget, CollectionViewable, CheckBox, template) {
+], function(_, FormWidget, CollectionViewable, template) {
+
+    // A mock checkbox because instantiating a CheckBox widget is to expesive for large data sets
+    var MockCheckbox = function(params) {
+        this.$node = $(params.el);
+        this.node = this.$node.get(0);
+        this.options = params.options;
+        this.$node.addClass('checkbox');
+
+        this.id = this.$node.attr('id');
+        if (this.id == null) {
+            this.id = _.uniqueId('checkboxgroup-widget');
+            this.$node.attr('id', this.id);
+        }
+
+        this.getValue = function() {
+            var checked = $(this.node).is(':checked');
+            return checked ? this.options.value : null;
+        };
+
+        this.setValue = function(value) {
+            var $el = $(this.node),
+                checked = $el.is(':checked');
+
+            if (typeof value === 'undefined') {
+                value = false;
+            }
+            if(value !== checked) {
+                $el.prop('checked', value);
+            }
+        };
+        if (this.options.initialValue === true) {
+            this.$node.prop('checked', true);
+        }
+    };
+
     return FormWidget.extend({
         defaults: {
             template: template,
@@ -19,11 +53,14 @@ define([
         create: function() {
             var self = this;
             this._super();
-            this.$node.find('input[type=checkbox]').each(function(i, el) {
-                if (!self.registry.isWidget(el)) {
-                    (self.checkboxes = self.checkboxes || []).push(CheckBox(el));
-                }
+            this.$node.find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
+                var cb = new MockCheckbox({
+                    el: el,
+                    options: {}
+                });
+                (self.checkboxes = self.checkboxes || []).push(cb);
             });
+
             this.on('change', '.checkall', function(evt) {
                 var checked = $(evt.target).is(':checked'),
                     value = checked ? 'all' : 'none';
@@ -40,7 +77,7 @@ define([
         getValue: function() {
             return _.filter(
                 _.map(this.checkboxes, function(cb) {
-                    return cb.getValue()? cb.options.value : null;
+                    return cb.getValue();
                 }),
                 function(v) { return v !== null; }
             );
@@ -63,7 +100,7 @@ define([
             if (!_.isEqual(cur, array)) {
                 _.each(this.checkboxes, function(cb) {
                     var value = _.indexOf(array, cb.options.value);
-                    cb.setValue(value >= 0, true);
+                    cb.setValue(value >= 0);
                 });
                 if (!silent) {
                     this.trigger('change');
@@ -90,6 +127,14 @@ define([
             return entries;
         },
 
+        disable: function() {
+            this.$node.find('input[type=checkbox]').attr('disabled', true);
+            return this._super.apply(this, arguments);
+        },
+        enable: function() {
+            this.$node.find('input[type=checkbox]').attr('disabled', false);
+            return this._super.apply(this, arguments);
+        },
         updateWidget: function(updated) {
             var options = this.options, checkboxes,
                 checkedEntries = this._readCheckboxState();
@@ -100,23 +145,24 @@ define([
             }
 
             if (updated.entries) {
-                _.each(this.checkboxes || [], function(cb) { cb.destroy(); });
                 this.checkboxes = checkboxes = [];
                 this.$node.html(options.template(this))
                     .find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
-                        checkboxes.push(CheckBox(el, {
-                            value: options.entries[i].value,
-                            name: options.entries[i].name,
-                            initialValue: checkedEntries[i]
-                        }));
+                        var cb = new MockCheckbox({
+                            el: el,
+                            options: {
+                                value: options.entries[i].value,
+                                name: options.entries[i].name,
+                                initialValue: checkedEntries[i]
+                            }
+                        });
+                        checkboxes.push(cb);
                     });
             }
             if (updated.checked && this.options.checked) {
                 this.$node.find('.checkall').attr('checked', true);
                 this.setValue('all');
             }
-
-
         }
     }, {mixins: [CollectionViewable]});
 });

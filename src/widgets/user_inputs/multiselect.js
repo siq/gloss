@@ -167,8 +167,6 @@ define([
             if (updated.entries) {
                 self.checkBoxGroup.set('entries', options.entries);
             }
-
-
         }
     }, {mixins: [CollectionViewable]});
 });
