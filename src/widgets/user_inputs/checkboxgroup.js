@@ -53,12 +53,13 @@ define([
         create: function() {
             var self = this;
             this._super();
+            this.checkboxes = checkboxes = [];
             this.$node.find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
                 var cb = new MockCheckbox({
                     el: el,
                     options: {}
                 });
-                (self.checkboxes = self.checkboxes || []).push(cb);
+                checkboxes.push(cb);
             });
 
             this.on('change', '.checkall', function(evt) {
