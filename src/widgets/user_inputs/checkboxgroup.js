@@ -10,7 +10,6 @@ define([
         this.$node = $(params.el);
         this.node = this.$node.get(0);
         this.options = params.options;
-        this.$node.addClass('checkbox');
 
         this.id = this.$node.attr('id');
         if (this.id == null) {
