@@ -6,6 +6,7 @@ define([
     return ToolTip.extend({
         defaults: {
             //jquery wrapped dom element to wrap
+            customName: null,
             wrapTarget: null,
             postDelay: 0,
             },
@@ -32,6 +33,9 @@ define([
             this.update();
         },
         _initiateShow: function(event) {
+            if (this.options.customName) {
+                this.$node.text(this.options.customName);
+            }
             if (this.isWrapTargetDisabled()) {
                 this._super(event);
             }
