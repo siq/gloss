@@ -240,7 +240,10 @@ define([
             }
             this.resetFields();
             return self._validateModel().then(function() {
-                return self.get('model').save(params);
+                return self.get('model').save(params).then(function() {
+                    // successful save so we should update the snapshot
+                    self._createSnapshot();
+                });
             }).fail(self.processErrors);
         },
         update: function(changed) {
