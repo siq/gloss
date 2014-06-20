@@ -2,9 +2,10 @@ define([
     'vendor/jquery',
     'vendor/underscore',
     'vendor/moment',
+    './../base/widget',
     './../base/formwidget',
     'css!./timeselect/timeselect.css'
-], function($, _, moment, FormWidget) {
+], function($, _, moment, Widget, FormWidget) {
 
     var priv = new function() {
         this._duexgitize = function(num) {
@@ -119,9 +120,10 @@ define([
             priv._add_hover_behavior(self, $timeOptions.children());
 
             $input.on('focus click', show_times);
-            $input.on('keypress', function(evt) {
-                if(Widget.identifyKeyEvent(evt)==='tab'){
+            this.on('keyup keydown', '.time-input', function(evt) {
+                if(Widget.identifyKeyEvent(evt) in {enter:'', tab:''}){
                     $timeOptions.hide();
+                    self.setValue($input.val());
                 }
                 self.trigger('change');
             });
@@ -150,8 +152,11 @@ define([
                     m = m.format('hh:mm A');
                     this.$node.find('.time-input').val((m) ? m : null);
                 } else {
+                    val = this.validate(val) ? val : moment().format('hh:mm A');
                     this.$node.find('.time-input').val(val);
                 }
+            } else {
+                this.$node.find('.time-input').val(null);
             }
         },
         getValue: function() {
