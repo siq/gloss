@@ -162,9 +162,15 @@ define([
             this.update();
         },
         tdElToDate: function(td) {
-            var _date = +$(td).text(), date;
+            var _date = +$(td).text(), date,
+                m = moment();
             if (!isNaN(_date)) {
-                date = moment(this.options.date).date(_date);
+                // set the date but the time is not tracked here so set to current browser time
+                date = moment(this.options.date)
+                    .date(_date)
+                    .hours(m.hours())
+                    .minutes(m.minutes())
+                    .seconds(m.seconds());
                 if (date.month() === this.options.date.month()) {
                     return date;
                 }
