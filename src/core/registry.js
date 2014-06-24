@@ -256,7 +256,11 @@ define([
     var instance;
     return {
         getInstance: function() {
-            return instance || (window.registry = instance = Registry());
+            if (!instance) {
+                // merge on window.registry just incase
+                window.registry = instance = $.extend(true, window.registry || {}, Registry());
+            }
+            return instance;
         },
         resetInstance: function() {
             instance = null;
