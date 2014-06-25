@@ -134,6 +134,7 @@ define([
             });
             self.onPageClick(function() {
                 $timeOptions.hide();
+                self.setValue($input.val());
             }, {once: false});
         },
         validate: function() {
