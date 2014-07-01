@@ -1,9 +1,12 @@
 define([
     'vendor/underscore',
+    './../core/registry',
     './../widgets/user_display/messagelist',
     './../util/widgetize'
-], function(_, MessageList, widgetize) {
+], function(_, Registry, MessageList, widgetize) {
     return function() {
+
+        var registry = Registry.getInstance();
 
         var widgetsDict = function(widgets) {
                 var widgetDict = {};

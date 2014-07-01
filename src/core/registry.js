@@ -107,7 +107,8 @@ define([
         },
 
         propagate: function(el, method) {
-            var rest = Array.prototype.slice.call(arguments, 2);
+            var rest = Array.prototype.slice.call(arguments, 2),
+                registry = instance;
             if (el) {
                 _.each(registry.childWidgetsAndViews(el), function(child) {
                     if (_.isFunction(child[method])) {
@@ -179,7 +180,8 @@ define([
         },
 
         updateWidgetNodes: function(candidates, naive) {
-            var candidate, widget;
+            var candidate, widget,
+                registry = instance;
             for (var i = 0, l = candidates.length; i < l; i++) {
                 candidate = candidates[i];
                 if (candidate != null) {
