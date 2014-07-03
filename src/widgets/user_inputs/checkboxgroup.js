@@ -1,10 +1,14 @@
 define([
     'vendor/underscore',
+    './../../core/registry',
     '../base/formwidget',
     '../mixins/collectionviewable',
     'tmpl!./checkboxgroup/checkboxgroup.mtpl'
-], function(_, FormWidget, CollectionViewable, template) {
+], function(_, Registry, FormWidget, CollectionViewable, template) {
 
+    // we use the registry to add our MockCheckboxes so we don't
+    // try to re-instatiate them during widgetize
+    var registry = Registry.getInstance();
     // A mock checkbox because instantiating a CheckBox widget is to expesive for large data sets
     var MockCheckbox = function(params) {
         this.$node = $(params.el);
@@ -13,9 +17,15 @@ define([
 
         this.id = this.$node.attr('id');
         if (this.id == null) {
-            this.id = _.uniqueId('checkboxgroup-widget');
+            this.id = _.uniqueId('widget');
             this.$node.attr('id', this.id);
         }
+        registry.widgets[this.id] = this;
+
+        // this is just so the mock checkbox will play with the registry
+        this.propagate = function() {
+            return this;
+        };
 
         this.getValue = function() {
             var checked = $(this.node).is(':checked');
