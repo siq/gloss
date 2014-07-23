@@ -173,9 +173,8 @@ define([
 
      test('value is clamped when max changes below value', function() {
         var p = Progress()
-            // .appendTo('#qunit-fixture');
-            .appendTo('body');
-
+            .appendTo('#qunit-fixture');
+            // .appendTo('body');
 
         // 100%
         // 1/1 = 1 = 100%
