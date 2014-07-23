@@ -1,0 +1,6 @@
+<div class=progress>
+  <span class=divider></span>
+  <div class=progress-bar>
+    <span class=progress-value></span>
+  </div>
+</div>

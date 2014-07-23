@@ -1,0 +1,55 @@
+.progress {
+  display: inline-block;
+
+  /*this is the entry points for styling variables*/
+  width: 175px;
+  height: 25px;
+}
+
+/*.progress,*/
+.progress .progress-bar,
+.progress .progress-value,
+.progress .divider {
+  box-sizing: border-box;
+}
+
+.progress .progress-bar {
+  position: relative;
+  display: block;
+  height: 50%;
+  width: 100%;
+  /*vertical center the bar*/
+  top: 25%;
+
+  /*this is the entry points for styling variables*/
+  border-radius: 2px;
+  border: 1px solid lightgray;
+  background-color: whiteSmoke;
+}
+
+.progress .progress-value {
+  display: block;
+  text-indent: -9999px;
+  height: 100%;
+
+  /*this is the entry points for styling variables*/
+  border-radius: 2px;
+  background-color: gray;
+
+  -webkit-transition: width 1s ease-in-out;
+  -moz-transition: width 1s ease-in-out;
+  -o-transition: width 1s ease-in-out;
+  transition: width 1s ease-in-out;
+
+  width: 0%;
+}
+
+.progress .divider {
+  position: relative;
+  float: left;
+  left: 50%;
+  height: 100%;
+
+  /*this is the entry points for styling variables*/
+  border-left: 2px solid lightgray;
+}
