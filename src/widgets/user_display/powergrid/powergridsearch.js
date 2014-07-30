@@ -101,6 +101,7 @@ define([
                 evt.preventDefault();
             }
             if (!collection) {
+                console.warn('powergridsearch only works with a collection backing it!');
                 return;
             }
             self.propagate('disable');
