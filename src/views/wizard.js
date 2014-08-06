@@ -14,7 +14,6 @@ define([
     var registry = Registry.getInstance(),
 
         Header = SimpleView.extend({
-            template: headerTemplate,
             update: function(changed) {
                 this._super.apply(this, arguments);
                 if (changed.totalPanes || changed.currentPane) {
@@ -27,6 +26,7 @@ define([
         template: wizardTemplate,
         defaults: {
             templates: {
+                header: headerTemplate,
                 footer: footerTemplate
             },
             currentPane: 0,
@@ -41,6 +41,8 @@ define([
                 totalPanes: this.$panes.length,
                 $el: this.$el.children('h2')
             });
+            // provide a header template than can be overridden
+            this.header.template = this.get('templates.header');
             return ret;
         },
         _bindEvents: function() {

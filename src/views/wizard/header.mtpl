@@ -6,7 +6,7 @@
 <% for(var i=0; i<totalPanes; i++) { %>  
   <span class="progress <%=(currentPane === i)? 'selected' : '';%>">
     <span class="<%=(currentPane === i)? 'selected-step' : '';%>"><%=i+1%></span>
-    <%=paneStrings[i]? paneStrings[i].title : ''%>
+    <%=paneStrings && paneStrings[i]? paneStrings[i].title : ''%>
   </span>
 <% } %>
 </h2>
