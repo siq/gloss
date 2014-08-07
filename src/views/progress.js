@@ -60,6 +60,8 @@ define([
                 this.waitForInitialRender.then(function() {
                     var max = self.get('max');
                     self.$el.find('.progress-value').width(format.percent(progress/max, 2));
+                    // since we're moving from the right (max - progress)/max
+                    self.$el.find('.divider').css('right', format.percent((max - progress)/max, 2));
                     self.$el.attr('value', progress);
                 });
             }

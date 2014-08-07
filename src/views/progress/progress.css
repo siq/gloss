@@ -1,6 +1,7 @@
 .progress {
   position: relative;
   display: inline-block;
+  overflow: hidden;
 
   /*this is the entry points for styling variables*/
   width: 175px;
@@ -16,7 +17,6 @@
 
 .progress .progress-bar {
   position: absolute;
-  display: block;
   height: 50%;
   width: 100%;
   /*vertical center the bar*/
@@ -34,23 +34,34 @@
   height: 100%;
 
   /*this is the entry points for styling variables*/
-  border-radius: 2px;
+  border-radius: 2px 0px 0px 2px;
   background-color: gray;
 
+  /*animation effect*/
   -webkit-transition: width 1s ease-in-out;
   -moz-transition: width 1s ease-in-out;
   -o-transition: width 1s ease-in-out;
   transition: width 1s ease-in-out;
 
+  /*initial value*/
   width: 0%;
 }
 
 .progress .divider {
-  position: relative;
-  float: left;
-  left: 50%;
+  position: absolute;
   height: 100%;
+  width: 10px;
 
   /*this is the entry points for styling variables*/
-  border-left: 2px solid lightgray;
+  border: 3px solid #666666;
+  border-left: none;
+
+  /*animation effect*/
+  -webkit-transition: right 1s ease-in-out;
+  -moz-transition: right 1s ease-in-out;
+  -o-transition: right 1s ease-in-out;
+  transition: right 1s ease-in-out;
+
+  /*initial value - this is opposite cuz it's from the right*/
+  right: 100%;
 }
