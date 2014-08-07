@@ -1,8 +1,10 @@
 <div class=listbuilder>
 	<div class=selected-data>
+    <label><%=this.get('strings.label.selected_data') || ''%></label>
 		<div class=grid></div>
 	</div>
   <div class=data>
+    <label><%=this.get('strings.label.available_data') || ''%></label>
     <div class=grid></div>
     <div class=filter></div>
   </div>
