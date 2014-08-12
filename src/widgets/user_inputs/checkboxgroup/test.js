@@ -151,5 +151,40 @@ define([
         ok(true);
     });
 
+    module('checkboxgroup with icon')
+    test('checkboxgroup instantiation with icon configuration', function() {
+        var iconCbg = window.iconCbg = CheckBoxGroup(undefined, {
+                icon: 'eye',
+                entries: [{
+                    name: 'Value-1',
+                    value: 0
+                }, {
+                    name: 'value-2',
+                    value: 1
+                }]
+            }),
+            icons;
+        iconCbg.$node.appendTo($('body'));
+        icons = iconCbg.$node.find('span.icon');
+        ok(icons.length === 2);
+        $.each(icons, function(i, icon) {
+            ok($(icon).hasClass('eye'));
+        });
+    });
+
+    asyncTest('ensure that clicking on the icon triggers the right handlers',function(){
+        var clicked = false;
+        iconCbg.on('click','span.icon.eye',function(){
+            if(clicked) return;
+            clicked = true;
+            ok(true);
+            start();
+        });
+
+        setTimeout(function(){
+            $(iconCbg.$node.find('span.icon.eye')[0]).click();
+        },800);
+    });
+
     start();
 });

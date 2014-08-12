@@ -1,0 +1,10 @@
+div.checkboxgroup span.icon {
+	font-size: 14px;
+	margin: 2px;
+	cursor: pointer;
+	color:#57a7eb;
+}
+
+div.checkboxgroup span.icon.active {
+	color:black;
+}

@@ -3,8 +3,11 @@ define([
     './../../core/registry',
     '../base/formwidget',
     '../mixins/collectionviewable',
-    'tmpl!./checkboxgroup/checkboxgroup.mtpl'
-], function(_, Registry, FormWidget, CollectionViewable, template) {
+    'auxl/icons',
+    'tmpl!./checkboxgroup/checkboxgroup.mtpl',
+    'css!lookandfeel/icons.css',
+    'css!./checkboxgroup/checkboxgroup.css'
+], function(_, Registry, FormWidget, CollectionViewable, Icons,template) {
 
     // we use the registry to add our MockCheckboxes so we don't
     // try to re-instatiate them during widgetize
@@ -54,6 +57,8 @@ define([
             checked: false,
             checkall: false,
             checkallLabel: 'Check All',
+            icon:false, /*icon name that maps to the list of icons in auxl.icons*/
+            Icons:Icons, /*a ref to auxl/icons*/
             translate: function(model) {
                 return {name: model.name, value: model.id};
             }
@@ -63,6 +68,7 @@ define([
             var self = this;
             this._super();
             this.checkboxes = checkboxes = [];
+            this.options.icon = this.options.icon || this.$node.attr('data-icon') || false;
             this.$node.find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
                 var cb = new MockCheckbox({
                     el: el,
@@ -80,6 +86,17 @@ define([
                 // normally we would cache this but since the template can be
                 // rerendered at run-time the cached value might be invalid
                 self.$node.find('.checkall').attr('checked', false);
+            });
+
+            // handle the icon click. Similar handlers can be used for custom handling
+            this.on('click','span.icon', function(e){
+                var $el = $(this);
+                e.preventDefault();
+                if($el.hasClass('active')){
+                    $el.removeClass('active');
+                } else{
+                    $el.addClass('active');
+                }
             });
             this.update();
         },
