@@ -154,7 +154,7 @@ define([
     module('checkboxgroup with icon')
     test('checkboxgroup instantiation with icon configuration', function() {
         var iconCbg = window.iconCbg = CheckBoxGroup(undefined, {
-                icon: 'eye',
+                icon: '<span class="icon eye" title="View All">S</span>',
                 entries: [{
                     name: 'Value-1',
                     value: 0

@@ -3,11 +3,9 @@ define([
     './../../core/registry',
     '../base/formwidget',
     '../mixins/collectionviewable',
-    'auxl/icons',
     'tmpl!./checkboxgroup/checkboxgroup.mtpl',
-    'css!lookandfeel/icons.css',
     'css!./checkboxgroup/checkboxgroup.css'
-], function(_, Registry, FormWidget, CollectionViewable, Icons,template) {
+], function(_, Registry, FormWidget, CollectionViewable, template) {
 
     // we use the registry to add our MockCheckboxes so we don't
     // try to re-instatiate them during widgetize
@@ -57,18 +55,34 @@ define([
             checked: false,
             checkall: false,
             checkallLabel: 'Check All',
-            icon:false, /*icon name that maps to the list of icons in auxl.icons*/
-            Icons:Icons, /*a ref to auxl/icons*/
+            /*there are 2 ways of defining the icon to be used for a checkbox group
+            * 1. programmatically (CheckboxGroup(..)) - pass in the markup to be used for the icon as
+            *  `icon:'<span><!--icon-definition--></span>'`
+            * 2. decalaratively (from a widgetgroup or using aswidgetizable) - use a data-icon attribute and
+            *  place the HTML string for the icon inside a span element with class=`icon-definition`
+            *  eg <div class=checkboxgroup data-icon="eg-icon">
+            *       <span class="icon-definition"><!-- markup for the icon --></span>
+            *     </div>
+            */
+            icon:false, /*icon markup string; false to disable icons*/
             translate: function(model) {
                 return {name: model.name, value: model.id};
             }
         },
 
         create: function() {
-            var self = this;
+            var self = this,
+                $node = this.$node,
+                $iconDef,
+                iconHTML;
             this._super();
             this.checkboxes = checkboxes = [];
-            this.options.icon = this.options.icon || this.$node.attr('data-icon') || false;
+            if($node.attr('data-icon')){
+                $iconDef = $node.find('.icon-definition');
+                iconHTML = $iconDef.html() || '';
+                this.options.icon = iconHTML;
+                $iconDef.remove();
+            }
             this.$node.find('input[type=checkbox]:not(.checkall)').each(function(i, el) {
                 var cb = new MockCheckbox({
                     el: el,
@@ -88,15 +102,10 @@ define([
                 self.$node.find('.checkall').attr('checked', false);
             });
 
-            // handle the icon click. Similar handlers can be used for custom handling
+            // this is to prevent the icon click from bubbling to the checkbox. there is still
+            // a visible state change (pressed) on the checkbox element.
             this.on('click','span.icon', function(e){
-                var $el = $(this);
                 e.preventDefault();
-                if($el.hasClass('active')){
-                    $el.removeClass('active');
-                } else{
-                    $el.addClass('active');
-                }
             });
             this.update();
         },

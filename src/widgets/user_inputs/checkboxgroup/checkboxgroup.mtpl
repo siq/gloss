@@ -8,7 +8,7 @@
   <label>
     <input class=checkbox type=checkbox data-value="<%=entry.value%>" />
     <% if(data.options.icon) { %>
-    	<%== data.options.Icons[data.options.icon] %>
+      <%== data.options.icon %>
     <% } %>
     <%=entry.name%>
   </label>
