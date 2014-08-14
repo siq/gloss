@@ -51,6 +51,7 @@ define([
 
     asyncTest('correctly clears search params', function() {
         var appendTo = '#qunit-fixture', cutoff1 = 993, cutoff2 = 994;
+        appendTo = 'body';
         setup({appendTo: appendTo}).then(function(g) {
             var originalLength = g.get('models').length,
                 search = MySearch(null, {collection: g.get('collection')})
@@ -73,7 +74,8 @@ define([
                                 'filter worked correctly for '+m.get('text_field'));
                         });
                         ok(g.get('models').length < originalLength);
-                        ok(g.get('models').length > cutoff1Length);
+                        ok(g.get('models').length > cutoff1Length
+                            || (cutoff1Length === 0 && g.get('models').length === cutoff1Length));
 
                         search.getWidget('clear').trigger('click');
                         setTimeout(function() {
