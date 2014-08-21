@@ -146,7 +146,7 @@ define([
             }
             if(open && !self.opened && !self.state.disabled) {
                 Widget.onPageClick(self.$node, function() {
-                    self.toggle(false);
+                    return self.toggle(false);
                 });
                 self.$node.addClass('open').find('.arrow').html('&#x25b2;');
                 self.menu.show();
