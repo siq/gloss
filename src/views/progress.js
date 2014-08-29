@@ -3,7 +3,7 @@ define([
     'vendor/underscore',
     './simpleview',
     './../util/format',
-    'text!./progress/progress.mtpl',
+    'tmpl!./progress/progress.mtpl',
     'css!./progress/progress.css'
 ], function ($, _, SimpleView, format, template) {
 
