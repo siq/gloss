@@ -1,0 +1,29 @@
+.off-canvas > h1 {
+  border-bottom: 2px solid #57a7eb;
+  /*this is just junk testing stuff*/
+  margin-bottom: 10px;
+}
+
+/*test css*/
+.off-canvas {
+  z-index: 1;
+}
+
+.container {
+  -webkit-perspective: 1500px;
+  perspective: 1500px;
+}
+.parent-view {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+
+  -webkit-transition: 1s ease all;
+  transition: 1s ease all;
+}
+
+.parent-view.drop {
+  -webkit-transition: .3s ease all;
+  transition: .3s ease all;
+  -webkit-transform: translate3d(0, 0, -300px);
+  transform: translate3d(0, 0, -300px);
+}

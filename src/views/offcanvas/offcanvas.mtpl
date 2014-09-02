@@ -1,0 +1,7 @@
+<div class='off-canvas hidden'>
+  <% if (this.get('title')) { %>
+    <h1>
+      <%=this.get('title')%>
+    </h1>
+  <% } %>
+</div>

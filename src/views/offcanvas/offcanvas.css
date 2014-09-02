@@ -1,0 +1,44 @@
+.off-canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /*height: 100%;*/
+
+  /* we need to stick to the right if we slide out from the right*/
+  right: 0;
+
+  /*prevent flickering on some browsers*/
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+
+  background-color: #f5f5f5;
+}
+
+/*default state is hidden*/
+.off-canvas.hidden {
+  margin-right: -100%;
+  /*animations*/
+  -webkit-transition: margin-right .3s ease;
+  transition: margin-right .3s ease;
+
+  /*override base.css otherwise we won't get our nifty transitions*/
+  display: block !important;
+  visibility: visible;
+}
+
+.off-canvas {
+  margin-right: 0%;
+  /*animations*/
+  -webkit-transition: margin-right 1s ease;
+  transition: margin-right 1s ease;
+}
+
+/*header*/
+.off-canvas > h1 {
+  margin: 0;
+  border: 0;
+  background-color: black;
+  color: white;
+  font-size: 18px;
+  padding: 8px 12px;
+}
