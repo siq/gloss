@@ -100,6 +100,79 @@ define([
             height: '600px',
             'background-color': '#aaa'
         });
+        ok(view);
+    });
+
+    // check the test.css for style
+    test('in a view with a sticky footer', function() {
+        var view = setup({
+                // appendTo: '#qunit-fixture'
+                appendTo: 'body'
+            }),
+            parentView = View().appendTo('body');
+
+        var lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            template = [
+                '<form>',
+                    '<div class=wrapper>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                    '</div>',
+                    '<footer>footer</footer>',
+                '<form>'
+            ].join('');
+        $(template).appendTo(view.$el);
+        // $('<p style="width: 500px;">Im content!</p>').appendTo(view.$el);
+        view.appendTo(parentView.$el);
+        // parent needs some style to contain the offcanvas view
+        parentView.$el.css({
+            // it MUST be postion relative
+            position: 'relative',
+            width: '800px',
+            height: '600px',
+            'background-color': '#aaa'
+        });
+        view.show();
+
+        ok(view);
+    });
+
+    // check the test.css for style
+    test('in a view with a sticky footer with overflow content', function() {
+        var view = setup({
+                // appendTo: '#qunit-fixture'
+                appendTo: 'body'
+            }),
+            parentView = View().appendTo('body');
+
+        var lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            template = [
+                '<form>',
+                    '<div class=wrapper>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                        '<p>'+lorem_ipsum+'</p>',
+                    '</div>',
+                    '<footer>footer</footer>',
+                '<form>'
+            ].join('');
+        $(template).appendTo(view.$el);
+        // $('<p style="width: 500px;">Im content!</p>').appendTo(view.$el);
+        view.appendTo(parentView.$el);
+        // parent needs some style to contain the offcanvas view
+        parentView.$el.css({
+            // it MUST be postion relative
+            position: 'relative',
+            width: '800px',
+            height: '600px',
+            'background-color': '#aaa'
+        });
+
+        view.show();
 
         ok(view);
     });

@@ -27,3 +27,33 @@
   -webkit-transform: translate3d(0, 0, -300px);
   transform: translate3d(0, 0, -300px);
 }
+
+/* test for stick footer with form */
+form {
+  /* 38px is the header height */
+  height: calc(100% - 38px);
+}
+/* this will be the form panes generally */
+.wrapper {
+  background-color: linen;
+  min-height: 100%;
+  /* bottom margin is -(footer) */
+  margin: 0 auto -30px;
+}
+.wrapper:after {
+  content: '';
+  display: block;
+}
+/*.wrapper:after is the pusher */
+footer, .wrapper:after {
+  height: 30px;
+}
+
+/* just style to make stick footer easily visible */
+p {
+  width: 500px;
+  margin: 0 0 15px 0;
+}
+footer {
+  background-color: skyblue;
+}

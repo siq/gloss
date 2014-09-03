@@ -3,6 +3,7 @@
   top: 0;
   bottom: 0;
   /*height: 100%;*/
+  overflow: auto;
 
   /* we need to stick to the right if we slide out from the right*/
   right: 0;
