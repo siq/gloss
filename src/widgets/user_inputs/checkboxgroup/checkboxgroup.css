@@ -8,3 +8,6 @@ div.checkboxgroup span.icon {
 div.checkboxgroup span.icon.active {
 	color:black;
 }
+div.checkboxgroup span.icon.disabled {
+    color: grey;
+}
