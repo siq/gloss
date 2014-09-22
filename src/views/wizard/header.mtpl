@@ -3,8 +3,8 @@
         currentPane = this.get('currentPane');
 %>
 <h2>
-<% for(var i=0; i<totalPanes; i++) { %>  
-  <span class="progress <%=(currentPane === i)? 'selected' : '';%>">
+<% for(var i=0; i<totalPanes; i++) { %>
+  <span class="wizard-progress <%=(currentPane === i)? 'selected' : '';%>">
     <span class="<%=(currentPane === i)? 'selected-step' : '';%>"><%=i+1%></span>
     <%=paneStrings && paneStrings[i]? paneStrings[i].title : ''%>
   </span>
