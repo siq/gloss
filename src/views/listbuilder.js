@@ -183,6 +183,10 @@ define([
                 }
             });
         },
+        clearFilter: function() {
+            this.dataFilter._onClickClear();
+            return this;
+        },
         clearStatus: function(){
             return this.selectedDataGrid.clearStatus
                 .apply(this.selectedDataGrid, arguments);
