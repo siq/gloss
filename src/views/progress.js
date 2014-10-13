@@ -58,10 +58,20 @@ define([
                 progress = this.get('value');
 
                 this.waitForInitialRender.then(function() {
-                    var max = self.get('max');
-                    self.$el.find('.progress-value').width(format.percent(progress/max, 2));
+                    var max = self.get('max'),
+                        width,
+                        right;
+                    // if max is 0,we end up dividing by 0
+                    if (max === 0) {
+                        width = format.percent(0, 2);
+                        right = format.percent(1, 2);
+                    } else {
+                        width = format.percent(progress / max, 2);
+                        right = format.percent((max - progress) / max, 2);
+                    }
+                    self.$el.find('.progress-value').width(width);
                     // since we're moving from the right (max - progress)/max
-                    self.$el.find('.divider').css('right', format.percent((max - progress)/max, 2));
+                    self.$el.find('.divider').css('right', right);
                     self.$el.attr('value', progress);
                 });
             }

@@ -17,6 +17,7 @@ define([
     module('base functionality');
 
     test('$el value prop matches value option', function () {
+
         var p = Progress()
             .appendTo('#qunit-fixture');
             // .appendTo('body');
@@ -190,6 +191,70 @@ define([
         equal(p.getValue(), 0.5, 'clamped to new max');
         equal(p.$el.val(), 0.5, 'clamped to new max');
      });
+
+    test('Visual Test - setting max and value to 0 triggers change', function() {
+        var $div = $('<div><label>visual test - setting max and value to 0 triggers change</label><br/></div>');
+        var p = Progress();
+        p.appendTo($div);
+        ($div).appendTo('body');
+        p.set({
+            max: 1,
+            value: 0.5
+        });
+        p.set({
+            max: 0,
+            value: 0
+        });
+        p.$el.find('.progress-value')[0].style.width
+        equal(p.$el.find('.progress-value')[0].style.width, "0%", 'Width set to 0 when max and value are 0');
+        start();
+    });
+
+    module('Boundary conditions - visual tests');
+
+    test('Visual Test - value : 0, max: 0', function() {
+        var $div = $('<div><label>value : 0, max: 0</label><br/></div>');
+        var p = Progress();
+        p.appendTo($div);
+        ($div).appendTo('body');
+        p.setValue(0);
+        p.set('max', 0);
+        equal(p.$el.find('.progress-value')[0].style.width, "0%", 'Width set to 0');
+        start();
+    });
+
+    test('Visual Test - value : 1, max: 0', function() {
+        var $div = $('<div><label>value : 1, max: 0</label><br/></div>');
+        var p = Progress();
+        p.appendTo($div);
+        ($div).appendTo('body');
+        p.setValue(1);
+        p.set('max', 0);
+        equal(p.$el.find('.progress-value')[0].style.width, "0%", 'Width set to 0');
+        start();
+    });
+
+    test('Visual Test - value : 0, max: 1', function() {
+        var $div = $('<div><label>value : 0, max: 1</label><br/></div>');
+        var p = Progress();
+        p.appendTo($div);
+        ($div).appendTo('body');
+        p.setValue(0);
+        p.set('max', 1);
+        equal(p.$el.find('.progress-value')[0].style.width, "0%", 'Width set to 0');
+        start();
+    });
+
+    test('Visual Test - value : 1, max: 1', function() {
+        var $div = $('<div><label>value : 1, max: 1</label><br/></div>');
+        var p = Progress();
+        p.appendTo($div);
+        ($div).appendTo('body');
+        p.setValue(1);
+        p.set('max', 1);
+        equal(p.$el.find('.progress-value')[0].style.width, "100%", 'Width set to 100');
+        start();
+    });
 
     start();
 });
