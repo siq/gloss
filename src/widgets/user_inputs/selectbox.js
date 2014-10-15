@@ -47,11 +47,16 @@ define([
             if (options.entries == null) {
                 self.$node.children().each(function(i, el) {
                     var $el = $(el),
-                        entries = options.entries = options.entries || [];
-                    entries.push({
-                        content: $el.text(),
-                        value: num? +$el.val() : $el.val()
-                    });
+                        entries = options.entries = options.entries || [],
+                        disabled = $el.prop('disabled'),
+                        entry = {
+                            content: $el.text(),
+                            value: num? +$el.val() : $el.val()
+                        };
+                    if (disabled) {
+                        entry.disabled = disabled;
+                    }
+                    entries.push(entry);
                     if ($el.is(':selected')) {
                         self.entry = _.last(entries);
                     }

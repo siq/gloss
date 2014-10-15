@@ -23,10 +23,12 @@ define([
             });
         },
         select: function(entry) {
+            var $entry = this.$entries.find('li[value=' + entry.value + ']'),
+                disabled = entry.disabled || !!$entry.attr('disabled');
             if(this.options.updateDisplay){
                 this.hide();
             }
-            if (entry.disabled) return;
+            if (disabled) return;
             this.triggerHandler('select', entry);
             if(entry.onselect){
                 entry.onselect(entry);
