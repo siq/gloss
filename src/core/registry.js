@@ -10,72 +10,6 @@ define([
     var inBody = function($node) {
         return $node.parents('body').length > 0;
     };
-    (function($) {
-        var base_on = $.fn.on,
-            counter = 0;
-        var find_listener_index = function(args) {
-            var index = undefined;
-            var i=0,
-                len = args.length;
-            while( i<len && !index ) {
-                if(typeof args[i] === "function") {
-                    index = i;
-                }
-                i++;
-            }
-            return index;
-        };
-        var logged_event_types = {
-            'change': true,
-            'update': true,
-            'show': false,
-            'hide': false,
-
-            'dblclick': false,
-            'canceled': false,
-            'finished': false,
-            'click': false,
-            'ajaxComplete': false,
-
-            'mousedown': false,
-            'mouseup': false,
-            'mouseenter': false,
-            'mouseleave': false,
-
-            'searchStarted': false,
-            'keydown': false,
-            'keyup': false
-        };
-        var build_new_listener = function(oldListener) {
-            return (oldListener) ? (function(listener) {
-                return function() {
-                    var event = arguments[0];
-                    if(arguments[0].type !== 'mousemove' && arguments[0].type!=='mouseleave' && arguments[0].type!=='mouseenter') {
-
-                        counter++;
-                        console.log("Total listeners triggered: " + counter + " event type: " + event.type );
-                        console.log("Llistener value: " + listener.valueOf() );
-//                        console.log(arguments[0].currentTarget);
-                        if( !listener.name ) {
-
-                        }
-                    }
-                    return listener.apply(this, arguments);
-                };
-            })(oldListener) : oldListener;
-        };
-        window.resetListenerCounter = function() {
-            counter = 0;
-        };
-        $.fn.on = function() {
-            var listenerIndex = find_listener_index(arguments),
-                new_listener = build_new_listener( arguments[listenerIndex] );
-            if( new_listener ) {
-                arguments[listenerIndex] = new_listener;
-            }
-            return base_on.apply(this, arguments);
-        };
-    })($);
 
     var Registry = Class.extend({
         init: function() {
@@ -321,6 +255,75 @@ define([
         }
     });
 
+    (function($) {
+        var base_on = $.fn.on,
+            counter = 0;
+        var find_listener_index = function(args) {
+            var index = undefined;
+            var i=0,
+                len = args.length;
+            while( i<len && !index ) {
+                if(typeof args[i] === "function") {
+                    index = i;
+                }
+                i++;
+            }
+            return index;
+        };
+        var logged_event_types = {
+            'change': true,
+            'update': true,
+            'show': false,
+            'hide': false,
+
+            'dblclick': false,
+            'canceled': false,
+            'finished': false,
+            'click': false,
+            'ajaxComplete': false,
+
+            'mousedown': false,
+            'mouseup': false,
+            'mouseenter': false,
+            'mouseleave': false,
+
+            'searchStarted': false,
+            'keydown': false,
+            'keyup': false
+        };
+        var build_new_listener = function(oldListener) {
+            return (oldListener) ? (function(listener) {
+                return function() {
+                    var event = arguments[0];
+                    if(arguments[0].type !== 'mousemove' && arguments[0].type!=='mouseleave' && arguments[0].type!=='mouseenter') {
+                        counter++;
+                        console.log("Total listeners triggered: " + counter + " event type: " + event.type );
+                        console.log("Llistener value: " + listener.valueOf() );
+                    }
+                    return listener.apply(this, arguments);
+                };
+            })(oldListener) : oldListener;
+        };
+        window.resetListenerCounter = function() {
+            counter = 0;
+        };
+        $.fn.on = function() {
+            var listenerIndex = find_listener_index(arguments),
+                new_listener = build_new_listener( arguments[listenerIndex] );
+            if( new_listener ) {
+                if(!window.registry.listeners) {
+                    window.registry.listeners = {};
+                }
+                if(!window.registry.listeners[arguments[0]]) {
+                    window.registry.listeners[arguments[0]] = [];
+                }
+                window.registry.listeners[arguments[0]].push(new_listener);
+                arguments[listenerIndex] = new_listener;
+            }
+            return base_on.apply(this, arguments);
+        };
+    })($);
+
     var instance;
     return {
         getInstance: function() {
@@ -334,4 +337,5 @@ define([
             instance = null;
         }
     };
+
 });
