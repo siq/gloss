@@ -23,7 +23,7 @@ define([
             });
         },
         select: function(entry) {
-            var $entry = this.$entries.find('li[value=' + entry.value + ']'),
+            var $entry = this.$entries.find('li[value="' + entry.value + '"]'),
                 disabled = entry.disabled || !!$entry.attr('disabled');
             if(this.options.updateDisplay){
                 this.hide();
@@ -40,7 +40,7 @@ define([
 
             if (!entry) return;
             entry.disabled = true;
-            $entry = self.$entries.find('li[value=' + entry.value + ']');
+            $entry = self.$entries.find('li[value="' + entry.value + '"]');
             if($entry.length < 1) return;
             $entry.attr('disabled', true);
         },
@@ -50,7 +50,7 @@ define([
 
             if (!entry) return;
             delete entry.disabled;
-            $entry = self.$entries.find('li[value=' + entry.value + ']');
+            $entry = self.$entries.find('li[value="' + entry.value + '"]');
             if($entry.length < 1) return;
             $entry.removeAttr('disabled');
         },
