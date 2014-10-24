@@ -63,7 +63,8 @@ define([
         testyUp = $('<button>Scroll To Top</button>'),
         defaults = {
             increment: 50,
-            limit: 100
+            limit: 100,
+            windowFactor: 1
         },
         /* the core test function, accepts options to configure window size*/
         runTest = function(opts) {
