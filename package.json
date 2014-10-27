@@ -15,10 +15,10 @@
   ],
   "version": "1.0.120",
   "dependencies": {
-    "siq-mesh": "git+ssh://git@github.com:siq/mesh.git",
-    "bedrockjs": "git+ssh://git@github.com:siq/bedrockjs.git",
-    "siq-vendor-js": "git+ssh://git@github.com:siq/siq-vendor-js.git",
-    "csi": "git+ssh://git@github.com:siq/csi.git"
+    "siq-mesh": "git+ssh://siq-git.dub.usoh.ibm.com:2222/mesh",
+    "bedrockjs": "git+ssh://siq-git.dub.usoh.ibm.com:2222/bedrockjs",
+    "siq-vendor-js": "git+ssh://siq-git.dub.usoh.ibm.com:2222/siq-vendor-js",
+    "csi": "git+ssh://siq-git.dub.usoh.ibm.com:2222/csi"
   },
   "csi": {
     "name": "gloss",
