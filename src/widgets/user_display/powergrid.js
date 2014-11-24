@@ -193,6 +193,7 @@ define([
                 if (rowTop === 0) {
                     self.scrollHead = 'top';
                     if (self.currentWindow > 0) {
+                        self.set('scrollTop', rowTableHeight-60);
                         self._rerender();
                     }
                 }                
@@ -227,17 +228,18 @@ define([
                         */
                         self.scrollHead = 'bottom';
                         limit = (collection.query.params.limit || 0) + increment;
-                        scrollTop = $rowInnerWrapper.scrollTop();
+                        // scrollTop = $rowInnerWrapper.scrollTop();
                         collection.query.params.limit = limit;
-
+                        self.set('scrollTop', 20);
                         self.scrollLoadSpinner.disable();
                         scrollLoadDfd = collection.load().then(function(models) {});
                     } else {
                         // handles scrolls to fetch local models
                         self.scrollHead = 'bottom';
+                        self.set('scrollTop', 20);
                         self._rerender();
                     }
-                    self.set('scrollTop', scrollTop);
+                    
                 }
             });
         },
@@ -335,8 +337,9 @@ define([
         },
 
         _modelFromTr: function(tr) {
-            var idx = this.$tbody.children('tr').index(tr);
-            return idx >= 0? this.get('models')[idx] : null;
+            var idx = this.$tbody.children('tr').index(tr),
+                windowOffset = this._windowOffset || 0;
+            return idx >= 0? this.get('models')[idx+windowOffset] : null;
         },
 
         _onColumnChange: function(evt, data) {
@@ -438,8 +441,8 @@ define([
             /* TODO : new scrollTop value cannot be the same as the previous since the viewport size is
             *  fixed. Must find a way to ensure that infinite scroll isn't a jumpy experience
             */
-            this.set('scrollTop', 50);
             this.scrollHead = scrollHead = null;
+            this._windowOffset = windowOffset;
             return models.slice(windowOffset, windowLimit);
         },
 
@@ -506,7 +509,8 @@ define([
                 this._setScrollTop();
             }
 
-            if (selected) {
+            if (selected &&
+                (this.windowFactor === 0 || _.indexOf(models,selected) >= 0)) {
                 this._scrollTo(selected);
             }
             this._renderCount++;
@@ -547,7 +551,11 @@ define([
                 // - this is the first row so just scroll to the top
                 scrollTo = 0;
             } else {
-                var top = this._trFromModel(model).position().top,
+                /*if the previously selected model is not included in the new window,
+                * don't attempt to scroll to that model
+                */
+                var model = this._trFromModel(model),
+                    top = (model.length > 0) ? model.position().top : 0,
                     gridHeight = this.$rowInnerWrapper.height();
                 if (top < trHeight) { // - row is above the grid view
                     scrollTo = scrollTop - headerHeight + top;
@@ -595,8 +603,10 @@ define([
         },
 
         _trFromModel: function(model) {
-            var idx = _.indexOf(this.get('models'), model);
-            return idx >= 0? this.$tbody.children('tr').eq(idx) : null;
+            var idx = _.indexOf(this.get('models'), model),
+                windowOffset = this._windowOffset || 0,
+                trIdx = idx >= windowOffset ? idx - windowOffset : idx;
+            return trIdx >= 0? this.$tbody.children('tr').eq(trIdx) : null;
         },
 
         col: function(columnName) {
