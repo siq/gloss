@@ -108,6 +108,9 @@ define([
             w = Widget.measureMinimumWidth($test, contents);
             this.$node.css({width: ''}).find('.content').width(w);
         },
+        getContent: function() {
+            return this.entry != null? this.entry.content : null;
+        },
         getValue: function() {
             return this.entry != null? this.entry.value : null;
         },
@@ -124,8 +127,9 @@ define([
 
             }
         },
-        setValue: function(value, silent) {
-            if(this.options.entries == null || this.getValue() === value) {
+        setValue: function(value, silent, opts) {
+            var update = (opts || {}).update;
+            if(!update && (this.options.entries == null || this.getValue() === value)) {
                 return this;
             }
             if(!$.isPlainObject(value)) {
