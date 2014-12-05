@@ -13,7 +13,7 @@
       "name": "Ralph Smith"
     }
   ],
-  "version": "1.0.120",
+  "version": "1.0.121",
   "dependencies": {
     "siq-mesh": "git+ssh://git.siqbuild.lab/var/git/mesh.git",
     "bedrockjs": "git+ssh://git.siqbuild.lab/var/git/bedrockjs.git",
