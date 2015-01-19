@@ -19,9 +19,9 @@
     "url": "git+ssh://git.siqbuild.lab/var/git/gloss.git"
   },
   "dependencies": {
-    "siq-mesh": "git+ssh://git.siqbuild.lab/var/git/mesh.git",
-    "bedrockjs": "git+ssh://git.siqbuild.lab/var/git/bedrockjs.git",
-    "siq-vendor-js": "git+ssh://git.siqbuild.lab/var/git/siq-vendor-js.git"
+    "siq-mesh": "git+ssh://git.siqbuild.lab/var/git/mesh.git#grunting",
+    "bedrockjs": "git+ssh://git.siqbuild.lab/var/git/bedrockjs.git#grunting",
+    "siq-vendor-js": "git+ssh://git.siqbuild.lab/var/git/siq-vendor-js.git#grunting"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
