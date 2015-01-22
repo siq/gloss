@@ -10,3 +10,6 @@ src/widgets/widgetgroup/test-*.css
 *.pydevproject
 *.project
 *.iml
+testResult.json
+testResult.xml
+static/
