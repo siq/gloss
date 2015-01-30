@@ -321,7 +321,7 @@ define([
         treegrid.load().done(function() {
             setTimeout(function() {
                 treegrid.options.rows[0].expand().done(function() {
-                    var rows, $rows, nodes = [], 
+                    var rows, $rows, nodes = [],
                         movee = treegrid.options.rows[0],
                         node = movee.options.node;
                     movee.moveTo(_.last(treegrid.options.rows));
@@ -629,6 +629,10 @@ define([
                                                             });
                                                         });
                                                     });
+                                                    // phantomjs freaks if we don't have this start call
+                                                    if (!!window._phantom) {
+                                                        start();
+                                                    }
                                                 });
                                             });
                                         });
