@@ -88,7 +88,9 @@ define([
                 minuteOffset = dTime.getTimezoneOffset();
 
             ts.setValue(strTimeOne);
-            equal(ts.getValue().hours, (dTime.getHours()===12) ? 12 : (22 - Math.floor(minuteOffset/60)) % 12);
+            var localHours = moment('2013-11-15T23:00:00Z').local().hours();
+            localHours = localHours > 12 ? localHours-12 : localHours;
+            equal(ts.getValue().hours, localHours);
             equal(ts.getValue().minutes, 0 + minuteOffset%60);
             equal(ts.getValue().meridian, 'PM');
 
