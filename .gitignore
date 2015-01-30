@@ -13,3 +13,4 @@ src/widgets/widgetgroup/test-*.css
 testResult.json
 testResult.xml
 static/
+gloss/
