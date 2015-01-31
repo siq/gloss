@@ -14,4 +14,4 @@ testResult.json
 testResult.xml
 static/
 gloss/
-src/*.css
+*.css
