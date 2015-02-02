@@ -19,7 +19,7 @@
     "url": "git+ssh://git.siqbuild.lab/var/git/gloss.git"
   },
   "dependencies": {
-    "siq-mesh": "git+ssh://git.siqbuild.lab/var/git/mesh.git",
+    "mesh-client": "git+ssh://git.siqbuild.lab/var/git/mesh-client.git",
     "bedrockjs": "git+ssh://git.siqbuild.lab/var/git/bedrockjs.git",
     "siq-vendor-js": "git+ssh://git.siqbuild.lab/var/git/siq-vendor-js.git"
   },
