@@ -596,7 +596,7 @@ define([
                 if (scrollTopValue > 1 && tableHeight - $rowInnerWrapper.height() - scrollTopValue >  1) {
                     $rowInnerWrapper.scrollTop(scrollTopValue);
                 } else {
-                    $rowInnerWrapper.scrollTop(tableHeight - $rowInnerWrapper.height()/2);
+                    $rowInnerWrapper.scrollTop((tableHeight - $rowInnerWrapper.height())/2);
                 }
                 this.del('scrollTop');
             }
