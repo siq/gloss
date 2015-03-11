@@ -48,6 +48,7 @@ define([
             // the bottom of the grid
             infiniteScroll: false,
             // tell the grid how many additional models to load
+            collectionLimit: null,
             increment: 50,
             windowFactor: 0
             // the windowSize determines how many models will be rendered at once
@@ -162,12 +163,16 @@ define([
                 scrollBottom,
                 scrollTop;
 
-            // why _windowSize and not windowSize? 
-            //  _windowSize is calculated and cannot/must not be set directly. To adjust it use windowFactor
-            // calculate _windowSize only once. 
-            // Pros - reduces repeated computations
-            // Cons - windowSize can't be adjusted again after initial setup
-            this._windowSize = Math.round(increment * this.get('windowFactor')) || 0;
+            /* why _windowSize and not windowSize?
+             *  _windowSize is calculated and cannot/must not be set directly. To adjust it use windowFactor
+             * calculate _windowSize only once.
+             * Pros - reduces repeated computations
+             * Cons - windowSize can't be adjusted again after initial setup
+             * we also use _windowSize to determine if the grid has infinite scroll and windowing enabled, reduces the
+             * overhead of frequent lookups for this.get('infiniteScroll') and this.get('windowFactor') to determine
+             * infinite scroll + windowing */
+
+            this._windowSize = this.get('infiniteScroll') ? (Math.round(increment * this.get('windowFactor')) || 0):0;
 
             //  - handle vertical scroll for infinite scrolling
             self.on('click', '.loading-text a.reload', function() {
@@ -192,14 +197,15 @@ define([
                 //  - check if reached top of table for loading data from previous window(s)
                 if (rowTop === 0) {
                     self.scrollHead = 'top';
-                    if (self.currentWindow > 0) {
-                        self.set('scrollTop', rowTableHeight-60);
+                    if (self.currentWindow > 1) {
+                        /*TODO: Figure out a way to calculate scrollTop to ensure scrolling is smooth*/
+                        self.set('scrollTop', rowTableHeight-120);
                         self._rerender();
                     }
-                }                
+                }
 
                 if (scrollBottom <= 0) {
-                    /* Since windowing is no longer associated with the data layer (collections) scrolling can 
+                    /* Since windowing is no longer associated with the data layer (collections) scrolling can
                     *  affect two things
                     *  1. load new rows from the server
                     *  2. render the rows from memory
@@ -208,11 +214,12 @@ define([
                     isAllDataLoaded = self._isAllDataLoaded();
                     isLastWindowLoaded = self._isLastWindowLoaded();
 
-                    // check for isLastWindowLoaded only if windowing is enabled,else return true
-                    endOfScroll = isAllDataLoaded && (!self._windowSize ? true : isLastWindowLoaded);
+                    // endOfScroll = true indicates the absolute end of scrolling to the bottom. All data has been loaded
+                    // from the server. The last window of rows on the client has been displayed.
+                    endOfScroll = isAllDataLoaded && isLastWindowLoaded;
 
                     /* evaluate if we load the next set of rows or simply return, only if
-                    *  a scroll-to-bottom has occured. Doing it before checking a scroll-to-bottom would result in 
+                    *  a scroll-to-bottom has occured. Doing it before checking a scroll-to-bottom would result in
                     *  evaluation on each scroll
                     * `scrollBottom <= 0` should be a lot cheaper than evaluating this huge expression
                     */
@@ -221,7 +228,7 @@ define([
                         self.get('models').length <= 0 || // - scrolling to load 'more' data only makes sense when there is data to scroll
                         endOfScroll) { //  - already loaded all the data in all windows
                         return;
-                    } else if (!isAllDataLoaded && (self.windowsCount == 1 || isLastWindowLoaded)) {
+                    } else if (!isAllDataLoaded && isLastWindowLoaded){
                         /* isAllDataLoaded = false indicates there is more to come from the server
                         *  self.windowsCount = 1 or isLastWindowLoaded = true; indicates we have scrolled out all the local models
                         *  and need to fetch new models from the server
@@ -229,17 +236,19 @@ define([
                         self.scrollHead = 'bottom';
                         limit = (collection.query.params.limit || 0) + increment;
                         // scrollTop = $rowInnerWrapper.scrollTop();
-                        collection.query.params.limit = limit;
+                        // collection.query.params.limit = limit;
                         self.set('scrollTop', 20);
                         self.scrollLoadSpinner.disable();
-                        scrollLoadDfd = collection.load().then(function(models) {});
+                        scrollLoadDfd = collection.load({
+                            limit:limit
+                        }).then(function(models) {});
                     } else {
                         // handles scrolls to fetch local models
                         self.scrollHead = 'bottom';
                         self.set('scrollTop', 20);
                         self._rerender();
                     }
-                    
+
                 }
             });
         },
@@ -306,7 +315,7 @@ define([
 
         //  - this function is used to determine if all that objects in a collection have been loaded
         //  - it should be overriden in the two layer search API case
-        //  - when windowing is enabled `this.get('models').length` returns only the rows 
+        //  - when windowing is enabled `this.get('models').length` returns only the rows
         //  - available in that window
         //  - use `collection.models.length` instead, which returns all the rows in the collection
         _isAllDataLoaded: function() {
@@ -320,7 +329,9 @@ define([
 
          // Used to determine if the last window is loaded
         _isLastWindowLoaded: function(){
-            return (this.windowsCount !== 1 && this.currentWindow == this.windowsCount - 1);
+            // if _windowsSize is falsy, it means there is only 1 window which covers the whole grid.
+            // so this method must return true
+            return !this._windowSize || (this.currentWindow === this.windowsCount);
         },
 
         _isDisabled: function() {
@@ -424,17 +435,17 @@ define([
                 totalModels = models.length;
 
             windowSize = this._windowSize;
-            
-            
+
+
             if (scrollHead == 'top') {
-                // currentWindow must be >= 0
-                currentWindow = Math.max(0,currentWindow-1);
+                // currentWindow must be >= 1
+                currentWindow = Math.max(1,currentWindow-1);
             } else if(scrollHead == 'bottom'){
-                // currentWindow can't be greater than the number of windows
-                currentWindow = Math.min(this.windowsCount - 1, currentWindow+1);
+                // currentWindow can't be greater than the number of windows and cannot be lesser than 1
+                currentWindow = Math.min(this.windowsCount, currentWindow+1);
             }
 
-            windowLimit = Math.min(totalModels,(currentWindow+1) * windowSize );
+            windowLimit = Math.min(totalModels,(currentWindow) * windowSize );
             windowOffset = Math.max(0,windowLimit - windowSize);
 
             this.currentWindow = currentWindow;
@@ -442,6 +453,7 @@ define([
             *  fixed. Must find a way to ensure that infinite scroll isn't a jumpy experience
             */
             this.scrollHead = scrollHead = null;
+            // we use the _windowOffset value to compute trFromModel and modelFromTr
             this._windowOffset = windowOffset;
             return models.slice(windowOffset, windowLimit);
         },
@@ -457,11 +469,11 @@ define([
                 *  adjust the models in the window based on this value.
                 */
                 if(!this.currentWindow){
-                    this.currentWindow = 0;
+                    this.currentWindow = 1;
                 }
                 models = this._applyWindow(models);
             }
-            
+
 
             var start = (new Date()).valueOf();
 
@@ -477,7 +489,7 @@ define([
                 rows.push(loadingRowTmpl({
                     grid: this,
                     status: this.get('collection').status,
-                    text: (this._isAllDataLoaded()) ? 'All objects loaded' : 'Loading ...'
+                    text: (this._isAllDataLoaded() && this._isLastWindowLoaded()) ? 'All objects loaded' : 'Loading ...'
                 }));
             }
 
@@ -509,16 +521,15 @@ define([
                 this._setScrollTop();
             }
 
-            if (selected &&
-                (this.windowFactor === 0 || _.indexOf(models,selected) >= 0)) {
+            /*if (selected &&
+                (!this._windowSize || _.indexOf(models,selected) >= 0)) {
+                this._scrollTo(selected);
+            }*/
+            // do not scroll to selected if windowing is enabled
+            if (selected && !this._windowSize) {
                 this._scrollTo(selected);
             }
             this._renderCount++;
-            // console.log([
-            //         'render time for',
-            //         this.get('models').length+':',
-            //         (new Date()).valueOf() - start
-            //     ].join(' '));
         },
 
         _rerenderRow: function(model) {
@@ -569,12 +580,24 @@ define([
         },
 
         _setScrollTop: function() {
+            var $rowInnerWrapper,
+                tableHeight,
+                scrollTopValue;
             if (!this.get('scrollTop')) {
                 return;
             }
+            $rowInnerWrapper = this.$rowInnerWrapper;
 
-            if (this.$rowInnerWrapper.is(':visible')) {
-                this.$rowInnerWrapper.scrollTop(this.get('scrollTop'));
+            if ($rowInnerWrapper.is(':visible')) {
+                scrollTopValue = this.get('scrollTop');
+                tableHeight = $rowInnerWrapper.find('table').height();
+                // we don't want to set a scrollTop that triggers another load. Could result in
+                // cyclic calls to load next/previous
+                if (scrollTopValue > 1 && tableHeight - $rowInnerWrapper.height() - scrollTopValue >  1) {
+                    $rowInnerWrapper.scrollTop(scrollTopValue);
+                } else {
+                    $rowInnerWrapper.scrollTop(tableHeight - $rowInnerWrapper.height()/2);
+                }
                 this.del('scrollTop');
             }
         },
@@ -788,7 +811,7 @@ define([
                 if(this._windowSize){
                     this.windowsCount = this._getWindowsCount(this.get('models'));
                 }
-                
+
             }
             if (updated.data) {
                 if (!(DummyModel = this.get('DummyModel'))) {
@@ -813,6 +836,9 @@ define([
                         .on('powerGridSearchStarted', this.disable)
                         .on('powerGridSearchCompleted', this._onSearchCompleted)
                         .on('powerGridSearchCleared', this._onSearchCleared);
+                    if(this.get('collectionLimit')){
+                        this.get('collection').query.limit(this.get('collectionLimit'));
+                    }
                 }
                 if (this.previous('collection') && !this.get('collection')) {
                     this.set('models', []);
