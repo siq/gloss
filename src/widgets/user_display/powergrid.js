@@ -161,7 +161,18 @@ define([
                 rowTop,
                 scrollLoadDfd,
                 scrollBottom,
-                scrollTop;
+                scrollTop,
+                getHeight = (function() {
+                    if ($('body')[0].hasOwnProperty('clientHeight')) {
+                        return function(el) {
+                            return el[0].clientHeight;
+                        }
+                    } else {
+                        return function(el) {
+                            return el[0].clientHeight;
+                        }
+                    }
+                })();
 
             /* why _windowSize and not windowSize?
              *  _windowSize is calculated and cannot/must not be set directly. To adjust it use windowFactor
@@ -188,11 +199,12 @@ define([
                     endOfScroll,
                     collection = self.get('collection');
 
-                rowHeight = $rowInnerWrapper.height();
-                rowTableHeight = $rowTable.height();
+                rowHeight = getHeight($rowInnerWrapper);
+                rowTableHeight = getHeight($rowTable);
                 // trHeight = $rowInnerWrapper.find('tr').first().height();
                 rowTop = $rowInnerWrapper.scrollTop();
                 scrollBottom = rowTableHeight - rowHeight - rowTop;
+
 
                 //  - check if reached top of table for loading data from previous window(s)
                 if (rowTop === 0) {
@@ -486,11 +498,19 @@ define([
             }
 
             if (this.get('infiniteScroll') && rows.length) {
-                rows.push(loadingRowTmpl({
-                    grid: this,
-                    status: this.get('collection').status,
-                    text: (this._isAllDataLoaded() && this._isLastWindowLoaded()) ? 'All objects loaded' : 'Loading ...'
-                }));
+                if (this._windowSize && this._isLastWindowLoaded() && this._isLastWindowLoaded()) {
+                    rows.push(loadingRowTmpl({
+                        grid: this,
+                        status: this.get('collection').status,
+                        text: 'All objects loaded'
+                    }));
+                } else {
+                    rows.push(loadingRowTmpl({
+                        grid: this,
+                        status: this.get('collection').status,
+                        text: this._isAllDataLoaded() ? 'All objects loaded' : 'Loading ...'
+                    }));
+                }
             }
 
             this.$tbody.html(rows.join(''));
