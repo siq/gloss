@@ -47,6 +47,7 @@ define([
             // this attribute tells the grid to load more data when scrolled to
             // the bottom of the grid
             infiniteScroll: false,
+            skipContinuityCheck:false,
             // tell the grid how many additional models to load
             collectionLimit: null,
             increment: 50,
@@ -150,13 +151,23 @@ define([
             var windowOffset,
                 windowLimit,
                 currentWindow,
-                increment = this.get('increment'),
-                scrollHead = this.scrollHead,
+                increment,
+                scrollHead,
+                collectionLimit,
+                $rowTable,
+                totalModels,
                 collection = this.get('collection'),
-                collectionLimit = collection.query.params.limit,
-                $rowTable = this.$el.find('.rows'),
-                totalModels = models.length,
                 windowSize = this._windowSize;
+
+            if(!windowSize || !collection){
+                return models;
+            }
+
+            increment = this.get('increment');
+            scrollHead = this.scrollHead;
+            collectionLimit = collection.query.params.limit;
+            $rowTable = this.$el.find('.rows');
+            totalModels = models.length;
 
             /* in the 1st pass currentWindow would not be set. We set this here and adjust the models in the window
              * based on this.
@@ -231,7 +242,8 @@ define([
             self.on('click', '.loading-text a.reload', function() {
                 self.scrollLoadSpinner.disable();
                 scrollLoadDfd = self.get('collection').load({
-                    reload: true
+                    reload: true,
+                    skipContinuityCheck:self.get('skipContinuityCheck')
                 });
             });
 
@@ -293,7 +305,8 @@ define([
                         self.set('scrollTop', (rowTableHeight - rowHeight)/2);
                         self.scrollLoadSpinner.disable();
                         scrollLoadDfd = collection.load({
-                            limit:limit
+                            limit:limit,
+                            skipContinuityCheck:self.get('skipContinuityCheck')
                         });
                     } else {
                         // handles scrolls to fetch local models
@@ -479,25 +492,20 @@ define([
             var i, l, rows = [],
                 columns = this.get('columnModel'),
                 models = this.get('models'),
-                selected = this.selected();
-
-            if (this._windowSize) {
-                models = this._applyWindow(models);
-            }
-
-
-            var start = (new Date()).valueOf();
+                selected = this.selected(),
+                start;
 
             if (!columns || !models) {
                 return;
             }
-
+            models = this._applyWindow(models);
+            start = (new Date()).valueOf();
             for (i = 0, l = models.length; i < l; i++) {
                 rows.push(columns.renderTr(models[i]));
             }
 
             if (this.get('infiniteScroll') && rows.length) {
-                if (this._windowSize && this._isLastWindowLoaded() && this._isLastWindowLoaded()) {
+                if (this._windowSize && this._isAllDataLoaded() && this._isLastWindowLoaded()) {
                     rows.push(loadingRowTmpl({
                         grid: this,
                         status: this.get('collection').status,
