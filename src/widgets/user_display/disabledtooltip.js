@@ -25,8 +25,23 @@ define([
                     $overlay.css('cursor', 'pointer');
                 }
             });
+            $overlay.on('mouseenter', function() {
+                if (!self.isWrapTargetDisabled()) {
+                    self.options.wrapTarget.trigger('mouseenter');
+                }
+            });
+            $overlay.on('mouseleave', function() {
+                self.options.wrapTarget.trigger('mouseleave');
+            });
+            $overlay.on('mousedown', function() {
+                if (!self.isWrapTargetDisabled()) {
+                    self.options.wrapTarget.trigger('mousedown');
+                }
+            });
             $overlay.on('click', function() {
                 if (!self.isWrapTargetDisabled()) {
+                    self.options.wrapTarget.trigger('focus');
+                    self.options.wrapTarget.addClass('checked');
                     self.options.wrapTarget.trigger('click');
                 }
             });
