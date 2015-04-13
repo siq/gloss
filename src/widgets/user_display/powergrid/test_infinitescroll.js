@@ -315,8 +315,8 @@ define([
         grid.rerender();
         setTimeout(function() {
             var text = grid.$el.find('.rows tr:last-child td .loading-text').text();
-            console.log(text);
-            ok(text && text.trim().toLowerCase().indexOf('loading') < 0);
+            ok(!((grid.options.collection.query.params || {}).limit),'Limit is undefined');
+            ok(text && text.trim().toLowerCase().indexOf('loading') < 0,'"Loading.." row is not displayed');
             start();
         }, 220);
     });
