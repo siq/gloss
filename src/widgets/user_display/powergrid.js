@@ -393,12 +393,8 @@ define([
         //  - available in that window
         //  - use `collection.models.length` instead, which returns all the rows in the collection
         _isAllDataLoaded: function() {
-            var collection = this.get('collection'),
-                total = collection ? collection.total : 0,
-                offset = collection.query.params.offset || 0,
-                limit = collection.query.params.limit || 0,
-                atEnd = offset + limit >= total;
-            return atEnd && collection.models.length === total;
+            var total = (this.get('collection')) ? this.get('collection').total : 0;
+            return this.get('models').length === total;
         },
 
          // Used to determine if the last window is loaded

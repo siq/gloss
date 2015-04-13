@@ -1,4 +1,4 @@
-/*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, 
+/*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual,
   raises, getTopBottom*/
 
 
@@ -58,6 +58,7 @@ define([
         scrollToTop,
         scrollToEnd,
         scrollToBeginning,
+        BasicColumnModel = utils.BasicColumnModel,
         delay = 100,
         testyDown = $('<button>Scroll To Bottom</button>'),
         testyUp = $('<button>Scroll To Top</button>'),
@@ -133,9 +134,9 @@ define([
                     inter = setTimeout(scrollToEnd, delay * 2);
                 };
 
-                // Utility buttons for one click scroll up/down	, uncomment for visual testing		
+                // Utility buttons for one click scroll up/down	, uncomment for visual testing
 
-                /*$('body').append(testyDown).append(testyUp); 
+                /*$('body').append(testyDown).append(testyUp);
                 testyDown.on('click',scrollToBottom);
 			    testyUp.on('click',scrollToTop);*/
 
@@ -150,6 +151,7 @@ define([
         };
 
     module('infinite scroll');
+
     asyncTest('scroll down/up loads the correct number of records', function() {
         var increment = 100,
             windowFactor = 1,
@@ -203,7 +205,7 @@ define([
                         }, 600);
                     }, 600);
                 }, 600);
-            }, 600);           
+            }, 600);
         });
     });
 
@@ -290,6 +292,33 @@ define([
             increment: 300,
             windowFactor: 1.666
         });
+    });
+
+    asyncTest('loading collection without limit and offset,should not display "Loading" when all objects are loaded', function() {
+        var ThisExample = mockResource('Example', MeshExample, fixturize(exampleFixtures, 25));
+        ThisExample.mockDelay(200);
+        var $container = $('<div class=container></div>'),
+            grid = PowerGrid({
+                columnModelClass: BasicColumnModel,
+                collection: ThisExample.collection(),
+                infiniteScroll: true,
+                increment: 50,
+                windowFactor: 1.4
+            });
+
+        $container.appendTo('body');
+        grid.appendTo($container);
+        // set height and widths for visual resize testing
+        grid.$el.height(400);
+        grid.$el.width(800);
+        // rerender so the height and width changes are pickued up
+        grid.rerender();
+        setTimeout(function() {
+            var text = grid.$el.find('.rows tr:last-child td .loading-text').text();
+            console.log(text);
+            ok(text && text.trim().toLowerCase().indexOf('loading') < 0);
+            start();
+        }, 220);
     });
 
 
