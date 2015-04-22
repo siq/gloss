@@ -115,7 +115,10 @@ define([
 
             this.spinnerOverlay = this.$el.find('.spinner-overlay');
             this.spinner = Spinner(null, {
-                target: this.spinnerOverlay[0]
+                target: this.spinnerOverlay[0],
+                opts: {
+                    zIndex: 2
+                }
             }).appendTo(this.spinnerOverlay);
 
             // for testing and debugging purposes
@@ -536,7 +539,7 @@ define([
                         shadow: false, // Whether to render a shadow
                         hwaccel: false, // Whether to use hardware acceleration
                         className: 'micro-spinner', // The CSS class to assign to the spinner
-                        zIndex: 2e9, // The z-index (defaults to 2000000000)
+                        zIndex: 2, // The z-index (defaults to 2000000000)
                         top: 'auto', // Top position relative to parent in px
                         left: 'auto'
                     }
