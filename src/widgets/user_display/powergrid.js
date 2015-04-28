@@ -1,7 +1,3 @@
-// TODO:
-//  - edit row
-//  - keyboard navigation
-//  - lining up numbers based on decimal point
 define([
     'vendor/jquery',
     'vendor/underscore',
@@ -569,9 +565,16 @@ define([
         _scrollTo: function(model) {
             var models = this.get('models'),
                 headerHeight = this.$el.find('.header-wrapper').height(),
-                trHeight = this.$rowInnerWrapper.find('tr').first().height(),
-                scrollTop = this.$rowInnerWrapper.scrollTop(),
+                trHeight,
+                scrollTop,
                 scrollTo;
+
+            // no height to calculate scrollTo
+            if (!this.$rowInnerWrapper) {
+                return;
+            }
+            trHeight = this.$rowInnerWrapper.find('tr').first().height();
+            scrollTop = this.$rowInnerWrapper.scrollTop();
 
             //  - if we're doing multi-select and only one item is selected were good
             if (model instanceof Array) {
