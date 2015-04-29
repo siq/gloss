@@ -700,6 +700,10 @@ define([
                 selectModels = _.isArray(model)? model : [model],
                 selected = function(m) { return m.get(a); };
 
+            if (this._isDisabled()) {
+                return;
+            }
+
             opts = opts || {};
 
             // first just get a list of all the changes that need to happen
