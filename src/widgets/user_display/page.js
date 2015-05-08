@@ -32,7 +32,7 @@ define([
                 self.load.resolve();
             });
             $(document).ajaxComplete(function(evt, request, settings) {
-                if(request.status===403 && _.last(location.pathname.split('/')) !== 'login') {
+                if(request.status===401 && _.last(location.pathname.split('/')) !== 'login') {
                     location.reload();
                 }
             });
