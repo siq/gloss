@@ -416,7 +416,7 @@ define([
             left: '0px'
         }).appendTo('body').show();
         for (var i = 0, l = values.length; i < l; i++) {
-            $testnode.html(values[i]);
+            $testnode.text(values[i]);
             width = $testnode.outerWidth();
             if (width > minimum) {
                 minimum = width;

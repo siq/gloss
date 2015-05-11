@@ -1,8 +1,9 @@
 define([
     'vendor/jquery',
+    'vendor/underscore',
     '../base/basemenu',
     'css!./menu/menu.css'
-], function($, BaseMenu) {
+], function($, _, BaseMenu) {
     return BaseMenu.extend({
         defaults: {
             animation: null,
@@ -23,7 +24,7 @@ define([
             });
         },
         select: function(entry) {
-            var $entry = this.$entries.find('li[value="' + entry.value + '"]'),
+            var $entry = this.$entries.find('li[value="' + _.escape(entry.value) + '"]'),
                 disabled = entry.disabled || !!$entry.attr('disabled');
             if(this.options.updateDisplay){
                 this.hide();
@@ -40,7 +41,7 @@ define([
 
             if (!entry) return;
             entry.disabled = true;
-            $entry = self.$entries.find('li[value="' + entry.value + '"]');
+            $entry = self.$entries.find('li[value="' + _.escape(entry.value) + '"]');
             if($entry.length < 1) return;
             $entry.attr('disabled', true);
         },
@@ -50,7 +51,7 @@ define([
 
             if (!entry) return;
             delete entry.disabled;
-            $entry = self.$entries.find('li[value="' + entry.value + '"]');
+            $entry = self.$entries.find('li[value="' + _.escape(entry.value) + '"]');
             if($entry.length < 1) return;
             $entry.removeAttr('disabled');
         },
@@ -63,7 +64,7 @@ define([
 
             self.$entries.empty();
             $.each(entries, function(i, entry) {
-                var $node = $('<li>').html(entry.content).data('entry', entry).attr('tabindex', -1);
+                var $node = $('<li>').text(entry.content).data('entry', entry).attr('tabindex', -1);
                 if (entry.classes != null) {
                     $node.addClass(entry.classes);
                 }
@@ -71,7 +72,7 @@ define([
                     $node.attr('title', entry.title);
                 }
                 if (entry.value) {
-                    $node.attr('value', entry.value);
+                    $node.attr('value', _.escape(entry.value));
                 }
                 if (entry.disabled) {
                     $node.attr('disabled', true);

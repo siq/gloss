@@ -30,7 +30,7 @@ define([
                 onselect: function(event, entry) {
                     self.toggle(false);
                     if (self.entry == null || entry.value !== self.entry.value) {
-                        self.setValue(entry.value);
+                        self.setValue(_.escape(entry.value));
                     }
                 }
             });
@@ -85,8 +85,8 @@ define([
             }
             self.$node.append('<span class=arrow>&#x25bc;</span>');
             self.$text = $('<span class=content></span>')
-                .attr('title', self.entry && (self.entry.title || self.entry.content))
-                .html(self.entry ? self.entry.content : '')
+                .attr('title', _.escape(self.entry && (self.entry.title || self.entry.content)))
+                .text(self.entry ? self.entry.content : '')
                 .appendTo(self.$node);
 
             self.$menu = $('<div>').hide().appendTo(self.$node);
@@ -109,10 +109,10 @@ define([
             this.$node.css({width: ''}).find('.content').width(w);
         },
         getContent: function() {
-            return this.entry != null? this.entry.content : null;
+            return this.entry != null? _.escape(this.entry.content) : null;
         },
         getValue: function() {
-            return this.entry != null? this.entry.value : null;
+            return this.entry != null? _.escape(this.entry.value) : null;
         },
         onKeyEvent: function(event) {
             var key = Widget.identifyKeyEvent(event),
@@ -140,8 +140,8 @@ define([
             if(value != null) {
                 this.entry = value;
                 this.$text
-                    .attr('title', this.entry.title || this.entry.content)
-                    .html(this.entry.content);
+                    .attr('title', _.escape(this.entry.title || this.entry.content))
+                    .text(this.entry.content);
                 if(!silent) {
                     this.trigger('change');
                 }
