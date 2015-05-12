@@ -16,7 +16,7 @@ define([
                                         // ]
 
             translator: function(item) {
-                return {value: item.id, content: item.name, title: item.name};
+                return {value: item.id, content: _.escape(item.name), title: item.name};
             },
 
             // optionally set fixed width
@@ -85,7 +85,7 @@ define([
             }
             self.$node.append('<span class=arrow>&#x25bc;</span>');
             self.$text = $('<span class=content></span>')
-                .attr('title', _.escape(self.entry && (self.entry.title || self.entry.content)))
+                .attr('title', self.entry && (self.entry.title || self.entry.content))
                 .text(self.entry ? self.entry.content : '')
                 .appendTo(self.$node);
 
@@ -140,7 +140,7 @@ define([
             if(value != null) {
                 this.entry = value;
                 this.$text
-                    .attr('title', _.escape(this.entry.title || this.entry.content))
+                    .attr('title', this.entry.title || this.entry.content)
                     .text(this.entry.content);
                 if(!silent) {
                     this.trigger('change');
