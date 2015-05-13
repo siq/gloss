@@ -30,7 +30,7 @@ define([
                 onselect: function(event, entry) {
                     self.toggle(false);
                     if (self.entry == null || entry.value !== self.entry.value) {
-                        self.setValue(_.escape(entry.value));
+                        self.setValue(entry.value);
                     }
                 }
             });
@@ -112,7 +112,7 @@ define([
             return this.entry != null? _.escape(this.entry.content) : null;
         },
         getValue: function() {
-            return this.entry != null? _.escape(this.entry.value) : null;
+            return this.entry != null? this.entry.value : null;
         },
         onKeyEvent: function(event) {
             var key = Widget.identifyKeyEvent(event),
