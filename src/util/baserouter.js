@@ -64,7 +64,11 @@ define([
         },
 
         map: function(p, fn) {
-            Path.map(path.join(base, p)).to(fn);
+            if (p === '/' || p === '') {
+                Path.map(base).to(fn);
+            } else {
+                Path.map(path.join(base, p)).to(fn);
+            }
             return this;
         },
 
@@ -74,7 +78,8 @@ define([
             }
         },
         urlFor: function() {
-            var stateObject = {},
+            var url,
+                stateObject = {},
                 os = [this.state]
                         .concat(Array.prototype.slice.call(arguments, 0));
             _.each(os, function(o) {
@@ -84,7 +89,10 @@ define([
                     }
                 }
             });
-            return path.join(base, this._urlFromState(stateObject));
+            url = path.join(base, this._urlFromState(stateObject));
+            // drop the trailing '/'
+            url = url.replace(/\/$/, '');
+            return url;
         }
     });
 
