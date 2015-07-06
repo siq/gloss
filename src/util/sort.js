@@ -1,9 +1,19 @@
 define([
     'vendor/underscore'
 ], function(_) {
+    'use strict';
+
     var normalize = function(text) {
-        return text.toString().toLowerCase()
+        var normalizedTxt = text.toString().toLowerCase()
             .replace(/^\W+/, '').replace(/\W+$/, '');
+        if (!normalizedTxt) {
+            // if there is no text after normalization then we can't normalize
+            // using the reverse 'word character' regex (\W)
+            // so just return the original text
+            // this can occure with international characters like Chinese
+            return text;
+        }
+        return normalizedTxt;
     };
 
     return {
