@@ -90,17 +90,6 @@ define([
             }
             return dfd;
         },
-        show: function() {
-            var fileInputClone;
-            this._super.apply(this, arguments);
-
-            /* IE 8 wont allow programmatic reseting of a file input's value. */
-            // fileInputClone = this.$el.find('.fileupload-input').clone(true);
-            // fileInputClone.val(''); // ff retains this value, ie8 doesn't
-            // this.$el.find('.fileupload-input').remove();
-            // this.$el.find('.button').append(fileInputClone);
-            return this;
-        },
         submit: function(evt) {
             // our base form submit doesn't play well with the file upload
             // prolly cuz we don't have an offical upload model.
