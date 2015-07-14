@@ -4,7 +4,7 @@ define([
     './../fileupload',
     'tmpl!./fileupload.mtpl'
 ], function($, _, FileUpload, template) {
-    
+
     test('instantiation', function() {
         var strings = {
             fileupload: {label: 'fileupload label',

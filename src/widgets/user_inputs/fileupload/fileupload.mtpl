@@ -1,12 +1,11 @@
-<% var strs = data.options.strings; %>
 <form class=fileupload
     action="<%= this.get('action') %>"
     method='POST'
     target="<%= this.get('target') %>"
     enctype='multipart/form-data'
     encoding='multipart/form-data'>
-  <div class='inputs button'><%= strs.input.click %></div>
-  <span class=selectedfile><%= strs.input.none %></span>
+  <div class='button'><%= this.get('display.button') %></div>
+  <span class=selectedfile><%= this.get('display.filename') %></span>
   <div style='height: 0px; width: 0px; overflow: hidden;'>
     	<input class=fileupload-input type='file' name='file'></input>
 	</div>

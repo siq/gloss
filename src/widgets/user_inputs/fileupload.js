@@ -8,12 +8,14 @@ define([
 ], function($, _, fields, Form, template) {
 
     var $submissionFrame,
-        iFrame = ["<iframe",
-            "name='<%= name %>'",
-            "class='submissionFrame hidden'",
-            "src='<%= src %>' >",
-        "</iframe>"].join(' '),
-        
+        iFrame = [
+            "<iframe",
+                "name='<%= name %>'",
+                "class='submissionFrame hidden'",
+                "src='<%= src %>' >",
+            "</iframe>"
+        ].join(' '),
+
         iFrameTmpl = function(name, src) {
             return _.template(iFrame, {name: name, src: src});
         };
@@ -21,10 +23,11 @@ define([
     return Form.extend({
         defaults: {
             action: '/upload',
-            strings: '',
+            strings: null,
             src: '/upload',
             display: {
-                button: 'browse...'
+                button: 'Browse...',
+                filename: 'No file selected.'
             }
         },
         template: template,
@@ -38,24 +41,16 @@ define([
                 this.get('target'),
                 this.get('src')
             )).appendTo(this.$el);
-            this.hiddenButton = this.$el.find('input.fileupload-input').first();
-            this.selectedFile = this.$el.find('span.selectedfile').first();
             return this;
         },
         _bindEvents: function() {
             var self = this;
             this._super.apply(this,arguments);
             this.on('change', 'input[type=file]', function() {
-                var fullFileName = self.$el.find('input[type=file]').val();
-                self.set('filename', fullFileName);
-                var fileName = fullFileName.split('\\');
-                if (fileName && fileName[0] !== '') {
-                    self.selectedFile.text(fileName[fileName.length-1]);
-                }
+                self.set('filename', self.$el.find('input[type=file]').val());
             });
-            // this.visibleButton.on('click', function(event) {
-            this.on('click', '.inputs.button', function(event) {
-                self.hiddenButton.trigger('click');
+            this.on('click', '.button', function(event) {
+                self.$el.find('input.fileupload-input').trigger('click');
             });
             return this;
         },
@@ -103,7 +98,7 @@ define([
             // fileInputClone = this.$el.find('.fileupload-input').clone(true);
             // fileInputClone.val(''); // ff retains this value, ie8 doesn't
             // this.$el.find('.fileupload-input').remove();
-            // this.$el.find('.inputs').append(fileInputClone);
+            // this.$el.find('.button').append(fileInputClone);
             return this;
         },
         submit: function(evt) {
@@ -112,6 +107,19 @@ define([
             // we need to utterly destroy this bubble so it doesn't prpagate.
             if (evt) evt.stopPropagation();
             return this;
-        }
+        },
+        update: function(updated) {
+            var filename;
+            this._super.apply(this, arguments);
+
+            if (updated.filename) {
+                filename = this.get('filename').split('\\');
+                if (filename && filename[0] !== '') {
+                    this.$el.find('span.selectedfile')
+                        .text(filename[filename.length-1]);
+                }
+            }
+            return this;
+        },
     });
 });
