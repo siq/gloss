@@ -21,6 +21,7 @@ define([
     return Form.extend({
         defaults: {
             action: '/upload',
+            strings: '',
             src: '/upload',
             display: {
                 button: 'browse...'
@@ -37,13 +38,24 @@ define([
                 this.get('target'),
                 this.get('src')
             )).appendTo(this.$el);
+            this.hiddenButton = this.$el.find('input.fileupload-input').first();
+            this.selectedFile = this.$el.find('span.selectedfile').first();
             return this;
         },
         _bindEvents: function() {
             var self = this;
             this._super.apply(this,arguments);
             this.on('change', 'input[type=file]', function() {
-                self.set('filename', self.$el.find('input[type=file]').val());
+                var fullFileName = self.$el.find('input[type=file]').val();
+                self.set('filename', fullFileName);
+                var fileName = fullFileName.split('\\');
+                if (fileName && fileName[0] !== '') {
+                    self.selectedFile.text(fileName[fileName.length-1]);
+                }
+            });
+            // this.visibleButton.on('click', function(event) {
+            this.on('click', '.inputs.button', function(event) {
+                self.hiddenButton.trigger('click');
             });
             return this;
         },
@@ -88,10 +100,10 @@ define([
             this._super.apply(this, arguments);
 
             /* IE 8 wont allow programmatic reseting of a file input's value. */
-            fileInputClone = this.$el.find('.fileupload-input').clone(true);
-            fileInputClone.val(''); // ff retains this value, ie8 doesn't
-            this.$el.find('.fileupload-input').remove();
-            this.$el.find('.inputs').append(fileInputClone);
+            // fileInputClone = this.$el.find('.fileupload-input').clone(true);
+            // fileInputClone.val(''); // ff retains this value, ie8 doesn't
+            // this.$el.find('.fileupload-input').remove();
+            // this.$el.find('.inputs').append(fileInputClone);
             return this;
         },
         submit: function(evt) {
