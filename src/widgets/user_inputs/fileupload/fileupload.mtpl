@@ -4,7 +4,7 @@
     target="<%= this.get('target') %>"
     enctype='multipart/form-data'
     encoding='multipart/form-data'>
-  <div class='button'><%= this.get('display.button') %></div>
+  <button class=button type=button><%= this.get('display.button') %></button>
   <span class=selectedfile><%= this.get('display.filename') %></span>
   <div style='height: 0px; width: 0px; overflow: hidden;'>
     	<input class=fileupload-input type='file' name='file'></input>
