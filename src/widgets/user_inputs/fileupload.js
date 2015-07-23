@@ -15,10 +15,17 @@ define([
                 "src='<%= src %>' >",
             "</iframe>"
         ].join(' '),
-
         iFrameTmpl = function(name, src) {
             return _.template(iFrame, {name: name, src: src});
-        };
+        },
+        JSONValidationError = fields.ValidationError.extend({
+            token: 'invalid-json',
+            message: 'failed to parse json response',
+        }),
+        FileIdValidationError = fields.ValidationError.extend({
+            token: 'file_required',
+            message: 'missing file uuid',
+        });
 
     return Form.extend({
         defaults: {
@@ -67,7 +74,7 @@ define([
                 evt.preventDefault();
             }
             if (!this.get('filename')) {
-                dfd.reject(fields.NonNullError('no file selected for upload'));
+                dfd.reject([[FileIdValidationError()]]);
             } else {
                 this.$el.submit();
                 // this.$el.submit(evt);
@@ -75,15 +82,21 @@ define([
                     var postResponse = $submissionFrame[0].contentDocument.body,
                         fileUUID;
                     if (postResponse) {
-                        fileUUID = JSON.parse($(postResponse).html()).file;
+                        try {
+                            fileUUID = JSON.parse($(postResponse).html()).file;
+                        } catch (e) {
+                            console.error('failed to parse json response');
+                            dfd.reject([[JSONValidationError()]]);
+                            return this;
+                        }
                         if (fileUUID) {
                             $submissionFrame.unbind('load');
                             dfd.resolve(fileUUID);
                         } else {
-                            dfd.reject(fields.NonNullError('no file uuid'));
+                            dfd.reject([[FileIdValidationError()]]);
                         }
                     } else {
-                        dfd.reject(fields.NonNullError('no post response'));
+                        dfd.reject([[fields.NonNullError('no post response')]]);
                     }
                     return this;
                 });
