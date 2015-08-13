@@ -16,7 +16,7 @@ define([
                                         // ]
 
             translator: function(item) {
-                return {value: item.id, content: _.escape(item.name), title: item.name};
+                return {value: item.id, content: item.name, title: item.name};
             },
 
             // optionally set fixed width
@@ -109,7 +109,7 @@ define([
             this.$node.css({width: ''}).find('.content').width(w);
         },
         getContent: function() {
-            return this.entry != null? _.escape(this.entry.content) : null;
+            return this.entry != null? this.entry.content : null;
         },
         getValue: function() {
             return this.entry != null? this.entry.value : null;
