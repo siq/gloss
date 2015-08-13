@@ -184,6 +184,7 @@ define([
         },
 
         getTitle: function(formattedValue, value, model) {
+            // the title attribute should not be escaped it displays without XSS issues
             return _.unescape(formattedValue);
         },
 
