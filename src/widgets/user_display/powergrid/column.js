@@ -79,7 +79,7 @@ define([
         _getFristTdCell: function() {
             var selector = '.' + this.columnClass(),
                 $tr = this.get('grid').$tbody.children().first();
-                
+
             return $tr.find(selector);
         },
 
@@ -184,7 +184,7 @@ define([
         },
 
         getTitle: function(formattedValue, value, model) {
-            return formattedValue;
+            return _.unescape(formattedValue);
         },
 
         getValue: function(model) {
