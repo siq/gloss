@@ -76,7 +76,6 @@ define([
                 dfd.reject([[FileIdValidationError()]]);
             } else {
                 this.$el.submit();
-                // this.$el.submit(evt);
                 this.$submissionFrame.on('load', function() {
                     var postResponse = self.$submissionFrame[0].contentDocument.body,
                         fileUUID;
