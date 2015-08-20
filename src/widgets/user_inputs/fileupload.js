@@ -7,8 +7,7 @@ define([
     'css!./fileupload/fileupload.css'
 ], function($, _, fields, Form, template) {
 
-    var $submissionFrame,
-        iFrame = [
+    var iFrame = [
             "<iframe",
                 "name='<%= name %>'",
                 "class='submissionFrame hidden'",
@@ -44,7 +43,7 @@ define([
         },
         _initWidgets: function() {
             this._super.apply(this, arguments);
-            $submissionFrame = $(iFrameTmpl(
+            this.$submissionFrame = $(iFrameTmpl(
                 this.get('target'),
                 this.get('src')
             )).appendTo(this.$el);
@@ -78,8 +77,8 @@ define([
             } else {
                 this.$el.submit();
                 // this.$el.submit(evt);
-                $submissionFrame.on('load', function() {
-                    var postResponse = $submissionFrame[0].contentDocument.body,
+                this.$submissionFrame.on('load', function() {
+                    var postResponse = self.$submissionFrame[0].contentDocument.body,
                         fileUUID;
                     if (postResponse) {
                         try {
@@ -90,7 +89,7 @@ define([
                             return this;
                         }
                         if (fileUUID) {
-                            $submissionFrame.unbind('load');
+                            self.$submissionFrame.unbind('load');
                             dfd.resolve(fileUUID);
                         } else {
                             dfd.reject([[FileIdValidationError()]]);
@@ -98,7 +97,7 @@ define([
                     } else {
                         dfd.reject([[fields.NonNullError('no post response')]]);
                     }
-                    return this;
+                    return self;
                 });
             }
             return dfd;
