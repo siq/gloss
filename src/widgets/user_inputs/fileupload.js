@@ -101,6 +101,11 @@ define([
             }
             return dfd;
         },
+        show: function() {
+            this._super.apply(this, arguments);
+            this.$el.find('span.selectedfile').text(this.get('display.filename'));
+            return this;
+        },
         submit: function(evt) {
             // our base form submit doesn't play well with the file upload
             // prolly cuz we don't have an offical upload model.
