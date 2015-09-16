@@ -103,26 +103,29 @@ define([
         },
         show: function() {
             this._super.apply(this, arguments);
-            this.$el.find('span.selectedfile').text(this.get('display.filename'));
+            this.del('filename');
             return this;
         },
         submit: function(evt) {
             // our base form submit doesn't play well with the file upload
             // prolly cuz we don't have an offical upload model.
-            // we need to utterly destroy this bubble so it doesn't prpagate.
+            // we need to utterly destroy this bubble so it doesn't propagate.
             if (evt) evt.stopPropagation();
             return this;
         },
         update: function(updated) {
-            var filename;
+            var filename = this.get('filename');
             this._super.apply(this, arguments);
 
-            if (updated.filename) {
-                filename = this.get('filename').split('\\');
+            if (updated.filename && filename) {
+                filename = filename.split('\\');
                 if (filename && filename[0] !== '') {
                     this.$el.find('span.selectedfile')
                         .text(filename[filename.length-1]);
                 }
+            }
+            if (updated.filename && !filename) {
+                this.$el.find('span.selectedfile').text(this.get('display.filename'));
             }
             return this;
         },
