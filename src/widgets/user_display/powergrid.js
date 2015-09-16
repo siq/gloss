@@ -146,6 +146,18 @@ define([
             }
         },
 
+        // align the grid header and rows
+        _alignRows: function() {
+            // th width is based on td width so make sure that is set first
+            _.each(this.get('columnModel').columns, function(c) {
+                c._setTdCellWidth(c.get('width'));
+            });
+            _.each(this.get('columnModel').columns, function(c) {
+                c._setThCellWidth();
+            });
+            return this;
+        },
+
         _applyWindow: function(models) {
             var windowOffset,
                 windowLimit,
@@ -261,6 +273,9 @@ define([
                         /*TODO: Figure out a way to calculate scrollTop to ensure scrolling is smooth*/
                         self.set('scrollTop', rowTableHeight-120);
                         self._rerender();
+                        if (self.$el.is(':visible') && !self.$el.is(':disabled')) {
+                            setTimeout(function() {self._alignRows();}, 0);
+                        }
                     }
                     return true;
                 }
@@ -312,6 +327,9 @@ define([
                         self.scrollHead = 'bottom';
                         self.set('scrollTop', (rowTableHeight - rowHeight)/2);
                         self._rerender();
+                        if (self.$el.is(':visible') && !self.$el.is(':disabled')) {
+                            setTimeout(function() {self._alignRows();}, 0);
+                        }
                     }
 
                 }
@@ -817,14 +835,7 @@ define([
             self._super.apply(this, arguments);
             this.spinner.instantiate();
             this._setScrollTop();
-            // post render for columns
-            // th width is based on td width so make sure that is set first
-            _.each(this.get('columnModel').columns, function(c) {
-                c._setTdCellWidth(c.get('width'));
-            });
-            _.each(this.get('columnModel').columns, function(c) {
-                c._setThCellWidth();
-            });
+            this._alignRows();
             return this;
         },
 
