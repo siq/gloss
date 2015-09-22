@@ -22,6 +22,7 @@ define([
                         .hide()
                         .addClass(type)
                         .html(messages[i])
+                        .attr('title', messages[i])
                         .appendTo(this.$node)
                         .slideDown('fast');
                 }
