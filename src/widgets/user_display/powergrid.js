@@ -274,7 +274,7 @@ define([
                         self.set('scrollTop', rowTableHeight-120);
                         self._rerender();
                         if (self.$el.is(':visible') && !self.$el.is(':disabled')) {
-                            setTimeout(function() {self._alignRows();}, 0);
+                            self._alignRows();
                         }
                     }
                     return true;
@@ -328,7 +328,7 @@ define([
                         self.set('scrollTop', (rowTableHeight - rowHeight)/2);
                         self._rerender();
                         if (self.$el.is(':visible') && !self.$el.is(':disabled')) {
-                            setTimeout(function() {self._alignRows();}, 0);
+                            self._alignRows();
                         }
                     }
 
@@ -928,6 +928,7 @@ define([
             }
             if (rerender) {
                 this.rerender();
+                this._alignRows();
                 // this._setRowTableHeight();
             }
             this.trigger('propchange', updated);
