@@ -105,6 +105,7 @@ define([
                 return;
             }
             self.propagate('disable');
+            collection.trigger('powerGridSearchStarting');
 
             params = self._makeQueryParams();
             self._filtered = !!params.query;

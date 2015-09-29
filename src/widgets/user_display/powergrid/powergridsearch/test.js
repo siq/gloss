@@ -4,8 +4,10 @@ define([
     'vendor/underscore',
     '../powergridsearch',
     'mesh/tests/mockedexample',
-    './../utils'
-], function($, _, PowerGridSearch, Example, utils) {
+    'mesh/tests/examplefixtures',
+    './../utils',
+    'mesh/tests/mockutils'
+], function($, _, PowerGridSearch, Example, examplefixtures, utils, mockResource) {
     var setup = utils.setup;
 
     var MySearch = PowerGridSearch.extend({
@@ -314,6 +316,46 @@ define([
             }, 0);
         });
 
+    });
+
+    asyncTest('grid selections are cleared on filter search ', function() {
+        var appendTo = '#qunit-fixture',
+            total = 15,
+            fixtures = examplefixtures.slice(0, total);
+            ExampleResource = mockResource('Example', Example, fixtures);
+        setup({
+            gridOptions: {selectable: true},
+            appendTo: appendTo
+        }).then(function(g) {
+            var collection = ExampleResource.collection(),
+                search = MySearch(null, {
+                    collection: collection
+                }).appendTo(appendTo);
+            g.set('collection', collection);
+            collection.load().then(function(allModels) {
+                var filter = 500,
+                    unfilteredModel = _.find(allModels, function(m) {
+                        return m.integer_field > filter;
+                    });
+                g.select(unfilteredModel);
+                equal(unfilteredModel, g.selected(), 'unfilteredModel is selected');
+                search.getWidget('q').setValue(filter);
+
+                search.submit().then(function() {
+                    setTimeout(function() {
+                        ok(g.get('models').length <= allModels.length, 'filtered models');
+                        ok(!g.selected(), 'no models selected');
+                        start();
+                    }, 10);
+                }, function() {
+                    ok(false, 'failed to submit filter');
+                    start();
+                });
+            }, function() {
+                ok(false, 'failed to load colleciton');
+                start();
+            });
+        });
     });
 
     start();

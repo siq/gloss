@@ -829,7 +829,8 @@ define([
         },
 
         update: function(updated) {
-            var colName, rerender, sort, naturalWidths, collection, isFiltered,
+            var self = this,
+                colName, rerender, sort, naturalWidths, collection, isFiltered,
                 DummyModel, columnModel = this.get('columnModel'),
                 c = function(prop) {
                     return _.find(columnModel.columns, function(column) {
@@ -874,6 +875,13 @@ define([
                     this.get('collection')
                         .on('change', this._onModelChange)
                         .on('powerGridSearchStarted', this.disable)
+                        .on('powerGridSearchStarting', function() {
+                            var selectedAttr = self.get('selectedAttr'),
+                                models = self.get('collection').mwhere(selectedAttr, true);
+                            _.each(models, function(m) {
+                                m.set(selectedAttr, false, {silent: true});
+                            });
+                        })
                         .on('powerGridSearchCompleted', this._onSearchCompleted)
                         .on('powerGridSearchCleared', this._onSearchCleared);
                     if(this.get('collectionLimit')){
