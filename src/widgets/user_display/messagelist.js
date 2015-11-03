@@ -1,8 +1,12 @@
 define([
     'vendor/jquery',
+    'vendor/underscore',
     './../base/widget'
-], function($, Widget) {
+], function($, _, Widget) {
     return Widget.extend({
+        defaults: {
+            escape: true,
+        },
         create: function() {
             this.shown = false;
             this.$node.hide().addClass('messagelist');
@@ -21,7 +25,7 @@ define([
                     $('<div>')
                         .hide()
                         .addClass(type)
-                        .html(messages[i])
+                        .html(this.options.escape ? _.escape(messages[i]) : messages[i])
                         .attr('title', messages[i])
                         .appendTo(this.$node)
                         .slideDown('fast');
