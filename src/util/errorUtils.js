@@ -6,9 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define([
-    'vendor/underscore',
-    'strings'
-], function(_, strings) {
+    'vendor/underscore'
+], function(_) {
 
     var flattenErrors = function(structuralErrors, flattenedErrors, parentFieldName) {
         var self = this;
@@ -35,10 +34,10 @@ define([
         return flattenedErrors;
     };
 
-    var processGlobalErrors =  function(response, xhr, messageList, errorCls, extraStrings) {
+    var processGlobalErrors =  function(response, xhr, messageList, errorCls, errorStrings, extraStrings) {
         var globalErrors = response && response[0],
             allStrings = _.extend.apply(_,
-                    _.compact(_.flatten([{}, strings.errors, extraStrings]))),
+                    _.compact(_.flatten([{}, errorStrings, extraStrings]))),
             tokensToStrings = function(errors) {
                 return _.map(errors, function(error) {
                     return  allStrings[error.token] ||
@@ -58,7 +57,7 @@ define([
             } else {
                 // don't know how we could get here...
                 messageList.append(errorCls,
-                    (strings.errors && strings.errors.invalid) ||
+                    (allStrings && allStrings.invalid) ||
                         'there was an error');
             }
         }
