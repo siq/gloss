@@ -1,11 +1,10 @@
 define([
     'vendor/jquery',
-    'vendor/jquery-ui',
     'vendor/underscore',
     'bedrock/class',
     './../../core/registry',
     'css!./../../style/base.css'
-], function($, ui, _, Class, Registry) {
+], function($, _, Class, Registry) {
     var isPlainObject = $.isPlainObject, $extend = $.extend, slice = Array.prototype.slice;
 
     //  - jquery does not extend arrays on a deep copy so we are using recursiveMerge
@@ -28,7 +27,7 @@ define([
         }
         return original;
     };
-    
+
     var registry = Registry.getInstance();
 
     $.fn.__append__ = $.fn.append;
@@ -78,7 +77,7 @@ define([
         },
 
         _compiledHtml: function(context) {
-            context = context == null? this : context; 
+            context = context == null? this : context;
             return _.isFunction(this.nodeTemplate)?
                 this.nodeTemplate(context) :
                 this.nodeTemplate;
@@ -233,7 +232,7 @@ define([
             if (opts.populateEmptyNode && !$node.children().length && node) {
                 this.render();
             }
-            
+
             if (opts.bindAll) {
                 _.bindAll(this);
             }

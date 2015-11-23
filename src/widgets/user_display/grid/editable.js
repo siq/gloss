@@ -1,12 +1,13 @@
 define([
     'vendor/jquery',
     'vendor/underscore',
+    'vendor/jquery-ui',
     './../../base/widget',
     './../../user_inputs/form',
     './../../user_inputs/textbox',
     'text!./editable.html',
     'css!./editable.css'
-], function($, _, Widget, Form, TextBox, editableTmpl) {
+], function($, _, ui, Widget, Form, TextBox, editableTmpl) {
     var RowForm = Form.extend({
         defaults: { widgetize: false },
         updateModel: function(model) {
@@ -42,7 +43,7 @@ define([
                 var grid = self.options.grid, nextRow, i, l, row;
                 if (Widget.identifyKeyEvent(evt) === 'enter') {
                     i = self.options.idx+1;
-                    l = grid.options.rows.length; 
+                    l = grid.options.rows.length;
                     for (; i < l; i++) {
                         row = grid.options.rows[i];
                         if (row.$node.is(':visible')) {
