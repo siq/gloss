@@ -109,19 +109,14 @@ define([
         //  fieldErrors: either null or an instance of fields.CompoundError
         //  xhr: either null or the jqXHR obj that was returned from an xhr call
         _processErrors: function(globalErrors, fieldErrors, xhr) {
-            var stringErrors;
             // we only want to show the relevant errors but we don't want to hide errors either
             // this means only showing the field specific errors when they're present
             // but sometimes the api doesn't tells us what the global or field errors are :(
-            // shame on you api! 
+            // shame on you api!
             // in this case we still want to process the xhr for error info
             if (globalErrors || (!globalErrors && !fieldErrors)) {
-                if (this.get('globalErrorStrings')) {
-                    stringErrors = 
-                        [$.extend({}, this.get('globalErrorStrings'), this.get('strings.errors'))];
-                }
                 errorUtils.processGlobalErrors([globalErrors], xhr,
-                    this.get('messageList'), null, stringErrors);
+                    this.get('messageList'), null, this.get('globalErrorStrings'), this.get('strings.errors'));
             }
             _.each(this.bindingGroups, function(group) {
                 group.processErrors(fieldErrors);
