@@ -242,7 +242,7 @@ define([
             collection.load({limit: limit, offset: 0}).done(function(data) {
                 grid.set('models', data);
                 verifyGridMatchesData(data, grid, limit);
-                
+
                 // Hide Column
                 isVisible(grid, 'volume_id');
                 grid.hideColumn('volume_id');
@@ -258,7 +258,7 @@ define([
                 isNotVisible(grid, 'volume_id');
                 isNotVisible(grid, 'security_attributes');
 
-                //toggle columns to show these columns 
+                //toggle columns to show these columns
                 grid.toggleColumn('volume_id');
                 grid.toggleColumn('security_attributes');
                 isVisible(grid, 'volume_id');
@@ -300,8 +300,8 @@ define([
             grid.options.rows[0].edit();
             grid.options.rows[0].form.$node.find('[name=name]').val('foo');
             grid.options.rows[0].form.trigger('submit');
-            
-            equal(grid.options.rows[0].options.model.name, 'foo');            
+
+            equal(grid.options.rows[0].options.model.name, 'foo');
             setTimeout(start, 15);
         });
     });
@@ -333,112 +333,112 @@ define([
             dataModel = null,
             $nameColTh = grid.$node.find('thead th.col-name');
         grid.appendTo($('#qunit-fixture'));
-        
+
         collection.load({limit: limit, offset: 0}).done(function(data) {
             grid.set('models', data);
-                        
+
             $nameColTh.trigger('click');
-                        
+
             equal(grid.options.models.length, limit);
-            verifyGridMatchesData(grid.options.models, grid, limit);                
+            verifyGridMatchesData(grid.options.models, grid, limit);
             _.each(grid.options.models, function(model, i){
                 if (prevModel) {
                     equal( (model.name >= prevModel.name), true);
-                }   
-                prevModel = model; 
-                
-                dataModel = _.find(data, function(d) { 
+                }
+                prevModel = model;
+
+                dataModel = _.find(data, function(d) {
                     return d.name === model.name;
                 });
                 equal(model.name, dataModel.name);
                 equal(model.tasks_option, dataModel.tasks_option);
                 equal(model.volume_id, dataModel.volume_id);
                 equal(model.security_attributes, dataModel.security_attributes);
-            });                
+            });
 
             $nameColTh.trigger('click');
-            
-            verifyGridMatchesData(grid.options.models, grid, limit);                
+
+            verifyGridMatchesData(grid.options.models, grid, limit);
             _.each(grid.options.models, function(model, i){
                 if (prevModel) {
                     equal( (model.name <= prevModel.name), true);
-                }   
+                }
                 prevModel = model;
-                
-                dataModel = _.find(data, function(d) { 
+
+                dataModel = _.find(data, function(d) {
                     return d.name === model.name;
                 });
                 equal(model.name, dataModel.name);
                 equal(model.tasks_option, dataModel.tasks_option);
                 equal(model.volume_id, dataModel.volume_id);
                 equal(model.security_attributes, dataModel.security_attributes);
-            });                
+            });
             setTimeout(start, 15);
         });
     });
-    
+
     asyncTest('reset data with sorted column', function() {
         var limit = 100, grid = this.grid, collection = this.collection,
             prevModel = null,
             dataModel = null,
             $nameColTh = grid.$node.find('thead th.col-name');
         grid.appendTo($('#qunit-fixture'));
-        
+
         $.when(
                 collection.load({limit: limit, offset: 0}),
                 collection.load({limit: limit, offset: limit})
             ).done(function(data1, data2) {
             grid.set('models', data1);
-            
-            $nameColTh.trigger('click');    // sort ascending                        
+
+            $nameColTh.trigger('click');    // sort ascending
             $nameColTh.trigger('click');    // sort descending
-            
+
             grid.set('models', data2);
-            
-            verifyGridMatchesData(grid.options.models, grid, limit);                
+
+            verifyGridMatchesData(grid.options.models, grid, limit);
             _.each(grid.options.models, function(model, i){
                 if (prevModel) {
                     equal( (model.name <= prevModel.name), true);
-                }   
+                }
                 prevModel = model;
-                
-                dataModel = _.find(data2, function(d) { 
+
+                dataModel = _.find(data2, function(d) {
                     return d.name === model.name;
                 });
                 equal(model.name, dataModel.name);
                 equal(model.tasks_option, dataModel.tasks_option);
                 equal(model.volume_id, dataModel.volume_id);
                 equal(model.security_attributes, dataModel.security_attributes);
-            });                
+            });
             setTimeout(start, 15);
 
         });
     });
-    
+
     asyncTest('reset data with highlighted row and sorted colum', function() {
         var limit = 100, grid = this.grid, collection = this.collection,
             selectedModel = null,
             $nameColTh = grid.$node.find('thead th.col-name');
         grid.appendTo($('#qunit-fixture'));
-        
+
         $.when(
                 collection.load({limit: limit, offset: 0}),
                 collection.load({limit: limit, offset: limit})
             ).done(function(data1, data2) {
             grid.set('models', data1);
             grid.highlight(grid.options.rows[0]);
-            
+
             selectedModel = grid.highlighted().options.model;
-            
+
             $nameColTh.trigger('click');    // sort ascending
             equal(selectedModel.id, grid.highlighted().options.model.id);
-            
+
             $nameColTh.trigger('click');    // sort descending
             equal(selectedModel.id, grid.highlighted().options.model.id);
-            
+
             grid.set('models', data2);
             equal(null, grid.highlighted());
-            
+
             setTimeout(start, 15);
 
         });
@@ -631,7 +631,7 @@ define([
 
         // check the el props
         for(var i=0, l=$checkedColTds.length; i < l; i++) {
-            
+
             if ($($checkedColTds[i]).prop('checked')) {
                 return false;
             }
@@ -787,17 +787,17 @@ define([
 
     var modelPropertyAjax = function(params) {
             var num = params.data.limit? params.data.limit : 10;
-    
+
             setTimeout(function() {
                 var split, ret = _.reduce(_.range(num), function(memo, i) {
                     var server = {
-                        name: 'item ' + i, 
-                        status_information: {   
+                        name: 'item ' + i,
+                        status_information: {
                             status: 'Status ' + i,
                             message: 'Status Message for item ' + i,
                             storage_summary: [{
                                     name: 'root',
-                                    object_count: (i * 123)  
+                                    object_count: (i * 123)
                                 }
                             ]
                         }
@@ -813,14 +813,14 @@ define([
                 colModel: [
                     {name: 'name', label: 'Name', sortable: true},
                     {
-                        name: 'status', 
-                        label: 'Status', 
+                        name: 'status',
+                        label: 'Status',
                         sortable: true,
                         modelProperty: 'status_information.status'
                     },
                     {
-                        name: 'message', 
-                        label: 'Status Message', 
+                        name: 'message',
+                        label: 'Status Message',
                         sortable: true,
                         modelProperty: 'status_information.message',
                         render: 'renderColStatusMessage',
@@ -831,7 +831,7 @@ define([
                         label: 'Object Count',
                         sortable: true,
                         modelProperty: function (model) {
-                            return model.status_information.storage_summary[0].object_count; 
+                            return model.status_information.storage_summary[0].object_count;
                         }
                     }
                 ]
@@ -862,11 +862,11 @@ define([
         }
         equal(row.$node.find('td.col-' + columnName).text(), value);
     };
-        
+
     asyncTest(' Grid rendering ', function() {
         var collection = Example.collection(), grid;
         collection.query.request.ajax = modelPropertyAjax;
-        
+
         grid = ModelPropertyGridClass().set({
             collection: collection
         }).appendTo('#qunit-fixture');
@@ -882,11 +882,11 @@ define([
             start();
         });
     });
-    
+
     asyncTest('Sorting on nested attribute with simple string as modelProperty', function() {
         var collection = Example.collection(), grid;
         collection.query.request.ajax = modelPropertyAjax;
-        
+
         grid = ModelPropertyGridClass().set({
             collection: collection
         }).appendTo('#qunit-fixture');
@@ -897,7 +897,7 @@ define([
             _.each(collection.models, function(model, i) {
                 modelPropertyRowColumnEquals(grid, i, 'message', 'status_information.message', 'Status Message for item ' + (i));
             });
-            
+
             $colHeader.trigger('click');
             _.each(collection.models, function(model, i) {
                 modelPropertyRowColumnEquals(grid, i, 'message', 'status_information.message', 'Status Message for item ' + (9 - i));
@@ -910,7 +910,7 @@ define([
     asyncTest('Sorting on nested attribute with function as modelProperty', function() {
         var collection = Example.collection(), grid;
         collection.query.request.ajax = modelPropertyAjax;
-        
+
         grid = ModelPropertyGridClass().set({
             collection: collection
         }).appendTo('#qunit-fixture');
@@ -921,7 +921,7 @@ define([
             _.each(collection.models, function(model, i) {
                 modelPropertyRowColumnEquals(grid, i, 'object_count', 'object_count', i * 123);
             });
-            
+
             $colHeader.trigger('click');
             _.each(collection.models, function(model, i) {
                 modelPropertyRowColumnEquals(grid, i, 'object_count', 'object_count', (9 - i) * 123);
@@ -942,11 +942,11 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {
@@ -994,11 +994,11 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {
@@ -1011,7 +1011,7 @@ define([
                 equal(highlightEventCount, 3);
                 equal(grid.$node.find('.highlight').length, 3);
                 start();
-            }, 100);            
+            }, 100);
         });
     });
 
@@ -1021,13 +1021,13 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
-        
+
 
         collection.load().done(function(data) {
             grid.set('models', data.slice(0, 10));
@@ -1049,11 +1049,11 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {
@@ -1069,18 +1069,18 @@ define([
             }, 100);
         });
     });
-    
+
     asyncTest('highlighting a row range then select one in duplicate ', function() {
         TargetVolumeProfile.models.clear();
         var grid = Grid(undefined, {rowWidgetClass: RowClass, multiselect: true}),
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {
@@ -1104,11 +1104,11 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {
@@ -1132,11 +1132,11 @@ define([
             collection = TargetVolumeProfile.collection(),
             highlightEventCount = 0;
 
-        grid.on('highlight', function(evt) { 
+        grid.on('highlight', function(evt) {
             if (evt.target !== grid.node) {
                 return;
             }
-            highlightEventCount++; 
+            highlightEventCount++;
         });
 
         collection.load().done(function(data) {

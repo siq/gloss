@@ -1,10 +1,9 @@
 define([
     'vendor/jquery',
-    'vendor/jquery-ui',
     'vendor/underscore',
     'vendor/t',
     'bedrock/class'
-], function($, ui, _, t, Class) {
+], function($, _, t, Class) {
     var isArray = _.isArray;
 
     var inBody = function($node) {
