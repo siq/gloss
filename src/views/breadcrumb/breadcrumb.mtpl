@@ -2,7 +2,7 @@
         initialCrumbs = _.initial(crumbs),
         lastCrumb = _.last(crumbs),
         strings = this.get('strings');
-    
+
     function displayValue(crumb) {
       var token = (crumb || {}).value,
           content = (crumb || {}).content,

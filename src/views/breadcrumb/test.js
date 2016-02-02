@@ -13,7 +13,7 @@ define([
             crumbs: [
                 {value: 'foo', content: 'Foo'}
             ]
-        });
+        }).appendTo('body');
         equal(bc.get('crumbs').length, 1, 'one crumb');
     });
 

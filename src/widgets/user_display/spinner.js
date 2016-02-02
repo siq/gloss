@@ -30,11 +30,12 @@ define([
             var self = this;
             this._super();
             self.update();
+            self.$node.addClass('spinner');
             if(!self.options.deferInstantiation) {
                 self.instantiate();
             }
         },
-        
+
         enable: function() {
             var self = this;
             self.visible = false;
@@ -60,14 +61,14 @@ define([
             var self = this;
             this._super(updated);
         },
-        
+
         instantiate: function() {
             // Instantiate only once and also when needed to ensure that the spinner gets rendered correctly.
             var self = this;
             if(!self.spinner) {
                 self.spinner = new Spinner(self.options.opts);
             }
-            
+
             // Contextually user may have enabled / disabled widgets so apply the setting now.
             if(self.visible) {
                 self.disable();
