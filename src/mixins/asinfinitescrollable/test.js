@@ -113,14 +113,22 @@ define([
             start();
         });
     });
-    asyncTest('loading via collection with limit works', function() {
+    asyncTest('loading via collection with limit', function() {
+        // the collection will not affect the mixin limit
+        // the affect will be that the collection limit is the initially loaded models
+        // additional models will be loaded at an increment of the mixin limit
         setup({
             appendTo: 'body',
             // we add a load delay so we can see the spinner
             delay: 300,
             params: {limit: 50},
         }).then(function(list, options) {
-            ok(list);
+            // the collection limit does not affect the window limit
+            equal(list.get('limit'), 25);
+            equal(list.get('collection.query.params.limit'), 50);
+            // windowed models equals 2*limit if there are that many models on the first load
+            // *hint* it's setup to match that 2*25=50
+            equal(list._getWindowedModels().length, 2*list.get('limit'), 'window is 2*limit');
             start();
         }, function() {
             ok(false, 'failed setup');
