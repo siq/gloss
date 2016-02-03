@@ -144,7 +144,7 @@ define([
                 limit = this.get('limit'),
                 // current total of models loaded
                 total = (this.get('models') || []).length,
-                windowCount = Math.round(total/limit) || 1,
+                windowCount = Math.ceil(total/limit) || 1,
                 currentWindow = Math.floor(offset/limit) + 1;
             return windowCount === currentWindow;
         };
