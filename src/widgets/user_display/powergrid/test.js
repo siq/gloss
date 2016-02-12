@@ -827,7 +827,10 @@ define([
         }));
         equal(g.get('models').length, exampleFixtures.length);
         equal(g.get('models').length, 1000);
-        equal(g.$el.find('tr').length, 1001);
+        // equal(g.$el.find('tr').length, 1001);
+        // because of the infinitescrollable mixin window the grid will only be
+        // as big at that window plus the header row
+        equal(g.$el.find('tr').length, g._getWindowedModels().length+1);
     });
 
     test('reset to same IDs and make sure manager doesnt blow up', function() {
