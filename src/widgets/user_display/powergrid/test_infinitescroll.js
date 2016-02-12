@@ -280,7 +280,7 @@ define([
         var ThisExample = mockResource('Example', MeshExample, fixturize(exampleFixtures, 25));
         ThisExample.mockDelay(200);
         var $container = $('<div class=container></div>'),
-            grid = GridClass({
+            grid = PowerGrid({
                 columnModelClass: BasicColumnModel,
                 collection: ThisExample.collection(),
                 infiniteScroll: true,
