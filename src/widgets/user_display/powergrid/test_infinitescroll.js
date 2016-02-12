@@ -47,7 +47,6 @@ define([
     CheckBoxColumn, asDateTime, asBytes, asNumber, asFormWidget, MeshExample,
     exampleFixtures, utils, mockResource) {
 
-
     var Example,
         setup = utils.setup,
         teardown = utils.teardown,
@@ -63,9 +62,7 @@ define([
         testyDown = $('<button>Scroll To Bottom</button>'),
         testyUp = $('<button>Scroll To Top</button>'),
         defaults = {
-            increment: 50,
-            limit: 100,
-            windowFactor: 1
+            collectionLimit: 100,
         },
         /* the core test function, accepts options to configure window size*/
         runTest = function(opts) {
@@ -74,21 +71,17 @@ define([
             teardown();
             setup({
                 params: {
-                    limit: opts.limit
+                    limit: opts.collectionLimit
                 },
                 gridOptions: {
                     infiniteScroll: true,
-                    increment: opts.increment,
                     keyboardNavigation: false,
-                    windowFactor: opts.windowFactor
                 },
                 delay: delay,
                 appendTo: 'body',
                 range: opts.range,
             }).then(function(g, options) {
                 var collection = g.get('collection'),
-                    incr = g.get('increment'),
-                    oldLimit = collection.query.params.limit,
                     $rowWrapper = g.$el.find('.row-inner-wrapper'),
                     $rows = g.$el.find('.rows'),
                     inter;
@@ -153,28 +146,21 @@ define([
     module('infinite scroll');
 
     asyncTest('scroll down/up loads the correct number of records', function() {
-        var increment = 100,
-            windowFactor = 1,
-            expectedElements = increment * windowFactor;
         setup({
             params: {
                 limit: 50
             },
             gridOptions: {
                 infiniteScroll: true,
-                increment: increment,
                 keyboardNavigation: false,
-                windowFactor: windowFactor
             },
             delay: delay,
             appendTo: 'body'
         }).then(function(g, options) {
-            var collection = g.get('collection'),
-                incr = g.get('increment'),
-                oldLimit = collection.query.params.limit,
+            var collection  = g.get('collection'),
                 $rowWrapper = g.$el.find('.row-inner-wrapper'),
-                $rows = g.$el.find('.rows'),
-                inter;
+                $rows       = g.$el.find('.rows'),
+                expectedElements = g.get('limit')*2;
 
             // set height and widths for visual resize testing
             g.$el.height(400);
@@ -219,34 +205,33 @@ define([
         scrollToBeginning();
     });
 
-    asyncTest('scroll down when total records is a multiple of increment but not a multiple of virtual window size', function() {
+    asyncTest('scroll down when total records is a multiple of limit but not a multiple of virtual window size', function() {
         teardown();
         totalRecords = 450;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         $dfd = runTest({
-            increment: 50,
-            windowFactor: 2
+            limit: 50,
+            // windowSize = 2*limit = 100
         });
     });
 
-    asyncTest('scroll down when total records is not a multiple of increment but is a multiple of virtual window size', function() {
-        teardown();
-        totalRecords = 400;
-        Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
-        // windowSize = 100 = Math.round(75*1.33)
-        runTest({
-            increment: 75,
-            windowFactor: 1.33
-        });
-    });
+    // This case does not exist anymore
+    // asyncTest('scroll down when total records is not a multiple of limit but is a multiple of virtual window size', function() {
+    //     teardown();
+    //     totalRecords = 400;
+    //     Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
+    //     runTest({
+    //         limit: 75,
+    //     });
+    // });
 
-    asyncTest('scroll down when increment, virtual window size and total records have no common factor', function() {
+    asyncTest('scroll down when limit, virtual window size and total records have no common factor', function() {
         teardown();
         totalRecords = 287;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         runTest({
-            increment: 30,
-            windowFactor: 3.33
+            limit: 30,
+            // windowSize = 2*limit = 60
         });
     });
 
@@ -255,42 +240,39 @@ define([
         totalRecords = 90;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         runTest({
+            collectionLimit: 50,
             limit: 50,
-            increment: 50,
-            windowFactor: 2
+            // windowSize = 2*limit = 100
         });
     });
 
-    asyncTest('scroll down when total records is less than the initial limit', function() {
+    asyncTest('scroll down when total records is less than the initial collection limit', function() {
         teardown();
         totalRecords = 40;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         runTest({
+            collectionLimit: 50,
             limit: 50,
-            increment: 50,
-            windowFactor: 2
         });
     });
 
-    asyncTest('scroll down when total records is equal to the initial limit', function() {
+    asyncTest('scroll down when total records is equal to the initial collection limit', function() {
         teardown();
         totalRecords = 50;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         runTest({
-            limit: 50,
-            increment: 50,
-            windowFactor: 2
+            collectionLimit: 50,
         });
     });
 
-    asyncTest('scroll down with significantly larger increment and virtual window size values', function() {
+    asyncTest('scroll down with significantly larger limit and virtual window size values', function() {
         teardown();
         totalRecords = 900;
         Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
         runTest({
-            limit: 20,
-            increment: 300,
-            windowFactor: 1.666
+            collectionLimit: 20,
+            limit: 300,
+            // windowSize = 2*limit = 600
         });
     });
 
@@ -298,12 +280,10 @@ define([
         var ThisExample = mockResource('Example', MeshExample, fixturize(exampleFixtures, 25));
         ThisExample.mockDelay(200);
         var $container = $('<div class=container></div>'),
-            grid = PowerGrid({
+            grid = GridClass({
                 columnModelClass: BasicColumnModel,
                 collection: ThisExample.collection(),
                 infiniteScroll: true,
-                increment: 50,
-                windowFactor: 1.4
             });
 
         $container.appendTo('body');

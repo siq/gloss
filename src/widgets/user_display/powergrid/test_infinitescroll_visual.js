@@ -1,4 +1,4 @@
-/*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, 
+/*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual,
   raises, getTopBottom*/
 
 
@@ -18,8 +18,8 @@ var getTopBottom = function($, el) {
             first: first,
             last: last,
             total: rowLen - 1
-        }
-    }
+        };
+    };
     return getTopBottom();
 
 };
@@ -47,7 +47,6 @@ define([
     CheckBoxColumn, asDateTime, asBytes, asNumber, asFormWidget, MeshExample,
     exampleFixtures, utils, mockResource) {
 
-
     var Example,
         setup = utils.setup,
         teardown = utils.teardown,
@@ -62,9 +61,7 @@ define([
         testyDown = $('<button>Scroll To Bottom</button>'),
         testyUp = $('<button>Scroll To Top</button>'),
         defaults = {
-            increment: 50,
             limit: 100,
-            windowFactor: 1
         };
 
 
@@ -73,26 +70,22 @@ define([
         var totalRecords = 350;
 
         mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
-            
+
         setup({
             params: {
                 limit: defaults.limit
             },
             gridOptions: {
                 infiniteScroll: true,
-                increment: defaults.increment,
                 keyboardNavigation: false,
-                windowFactor: defaults.windowFactor
             },
             delay: delay,
             appendTo: 'body'
         }).then(function(g, options) {
             var collection = g.get('collection'),
-                incr = g.get('increment'),
                 oldLimit = collection.query.params.limit,
                 $rowWrapper = g.$el.find('.row-inner-wrapper'),
-                $rows = g.$el.find('.rows'),
-                inter;
+                $rows = g.$el.find('.rows');
 
             // set height and widths for visual resize testing
             g.$el.height(400);
@@ -107,33 +100,7 @@ define([
                 $rowWrapper.scrollTop(0);
             };
 
-            /*scrollToBeginning = function() {
-                if (getTopBottom(true).first === 'item 0') {
-                    clearTimeout(inter);
-                    scrollToTop();
-                    ok(true, 'Reached beginning of list');
-                    start();
-                    return;
-                }
-                scrollToTop();
-                inter = setTimeout(scrollToBeginning, delay * 2);
-            };*/
-
-            /*scrollToEnd = function() {
-                if (g._isAllDataLoaded()) {
-                    clearTimeout(inter);
-                    scrollToBottom();
-                    ok(true, 'Reached end of list');
-                    _$dfd.resolve();
-                    start();
-
-                    return;
-                }
-                $rowWrapper.scrollTop($rows.height());
-                inter = setTimeout(scrollToEnd, delay * 2);
-            };*/
-
-            // Utility buttons for one click scroll up/down , uncomment for visual testing      
+            // Utility buttons for one click scroll up/down , uncomment for visual testing
 
             $('body').append(testyDown).append(testyUp);
             testyDown.on('click', scrollToBottom);

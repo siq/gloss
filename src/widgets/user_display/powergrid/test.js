@@ -466,7 +466,7 @@ define([
             _isModelDisabled: isDisabled
         });
     };
-    
+
     asyncTest("selecting a disabled model doesn't select the row", function() {
         setup({
             gridClass: DisabledRowGrid(),
@@ -733,7 +733,7 @@ define([
                     rowTableWidth += getScrollSizes().vertical;
                 }
                 aboutEqual(headerTableWidth, rowTableWidth, 'header and row tables are the same width');
-            
+
                 $headerTable.find('thead th').each(function(i, el) {
                     var col = g.get('columnModel').columns[i],
                         rowSelector = 'tbody tr .' + col.columnClass(),
@@ -842,42 +842,6 @@ define([
             return $.extend(true, {}, f);
         }));
         equal(g.get('models').length, exampleFixtures.length);
-    });
-
-    module('infinite scroll');
-
-    asyncTest('scroll to bottom loads more data no windowFactor', function() {
-        setup({
-            // appendTo: 'body',
-            params: {limit: 25},
-            gridOptions: {
-                infiniteScroll: true,
-                increment: 300,
-                windowFactor: null
-            }
-        }).then(function(g, options) {
-            // set height and widths for visual resize testing
-            g.$el.height(400);
-            g.$el.width(800);
-            // rerender so the height and width changes are pickued up
-            g.rerender();
-
-            var limit = options.params.limit,
-                modelCount = g.get('models').length,
-                $rowWrapper = g.$el.find('.row-inner-wrapper'),
-                $rows = g.$el.find('.rows');
-
-            equal(modelCount, limit, 'number of models is the same as the inital limit');
-
-            $rowWrapper.scrollTop($rows.height());
-            setTimeout(function() {
-                var newModelCount = g.get('models').length,
-                    newLimit = limit + g.get('increment');
-
-                equal(newModelCount, newLimit, 'new number of models has increased to the expectd value');
-                start();
-            }, 500);
-        });
     });
 
     module('spinner');
