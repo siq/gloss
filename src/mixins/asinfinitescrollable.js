@@ -38,10 +38,9 @@ define([
             },
         }, options);
 
-        this.init = _.wrap(this.init, function(init) {
-            var ret = init.apply(this, _.rest(arguments, 1));
+        this._bindEvents = _.wrap(this._bindEvents, function(_bindEvents) {
             this._bindInfiniteScroll();
-            return ret;
+            return _bindEvents.apply(this, _.rest(arguments, 1));
         });
         this._bindInfiniteScroll = function() {
             var self     = this,
