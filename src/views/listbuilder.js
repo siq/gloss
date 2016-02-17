@@ -80,8 +80,8 @@ define([
 
             this.set('selectedListAttr', attr);
 
-            SelectedGridClass = MakeSelectedGridClass(this.get('gridClass'));
-            GridClass = MakeGridClass(this.get('gridClass'));
+            SelectedGridClass = this.processSelectedGrid(MakeSelectedGridClass(this.get('gridClass')));
+            GridClass = this.processGrid(MakeGridClass(this.get('gridClass')));
             this.selectedDataGrid = SelectedGridClass({
                 selectedListAttr: attr,
                 $el: this.$el.find('.selected-data .grid')
@@ -247,7 +247,21 @@ define([
             if (changed.messageList) {
                 this.selectedDataGrid.set('messageList', this.get('messageList'));
             }
-        }
+        },
+
+        /*
+        * Override this method to perform any custom handling of the grid
+        */
+        processGrid: function(dataGrid){
+            return dataGrid;
+        },
+
+        /*
+        * Override this method to perform any custom handling of the selected grid
+        */
+        processSelectedGrid: function(selectedDataGrid){
+            return selectedDataGrid;
+         }
     });
 
     asListenable.call(ListBuilder.prototype);
