@@ -1,12 +1,13 @@
 define([
     'vendor/jquery',
+    'vendor/jquery-ui',
     'vendor/underscore',
     './../base/widget',
     './../base/formwidget',
     './../mixins/collectionviewable',
     './menu',
     'css!./selectbox/selectbox.css'
-], function($, _, Widget, FormWidget, CollectionViewable, Menu) {
+], function($, ui, _, Widget, FormWidget, CollectionViewable, Menu) {
     return FormWidget.extend({
         defaults: {
             entries: null,              // list of the format: [
