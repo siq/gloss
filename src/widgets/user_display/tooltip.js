@@ -1,9 +1,10 @@
 define([
     'vendor/jquery',
+    'vendor/jquery-ui',
     'vendor/underscore',
     './../base/widget',
     'css!./tooltip/tooltip.css'
-], function($, _, Widget) {
+], function($, ui, _, Widget) {
     return Widget.extend({
         defaults: {
             animation: null,
