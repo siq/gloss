@@ -43,7 +43,7 @@ define([
                     return  allStrings[error.token] ||
                             error.message ||
                             error.token ||
-                            '';
+                            'the error format is malformed: ' + JSON.stringify(error);
                 });
             };
 
