@@ -121,6 +121,16 @@ define([
             });
             if (this.get('infiniteScroll')) {
                 this._bindInfiniteScroll();
+                //  - handle reloading link
+                this.on('click', '.loading-text a.reload', function() {
+                    var scrollLoadDfd;
+                    // self.scrollLoadSpinner.disable();
+                    scrollLoadDfd = self.get('collection').load({
+                        reload: true,
+                        skipContinuityCheck:self.get('skipContinuityCheck')
+                    });
+                    self.set('scrollLoadDfd', scrollLoadDfd);
+                });
             }
             if (this.get('keyboardNavigation')) {
                 this._bindKeyboardNavigation();
@@ -649,6 +659,9 @@ define([
                         .off('powerGridSearchStarted', this.disable)
                         .off('powerGridSearchCompleted', this._onSearchCompleted)
                         .off('powerGridSearchCleared', this._onSearchCleared);
+                    if (this.get('infiniteScroll')) {
+                        this.previous('collection').off('load');
+                    }
                 }
                 if (this.get('collection')) {
                     this.get('collection')
@@ -665,6 +678,14 @@ define([
                         .on('powerGridSearchCleared', this._onSearchCleared);
                     if(this.get('collectionLimit')){
                         this.get('collection').query.limit(this.get('collectionLimit'));
+                    }
+                    if (this.get('infiniteScroll')) {
+                        this.get('collection').on('load', function() {
+                            if (!self.scrollLoadSpinner) {
+                                return;
+                            }
+                            self.scrollLoadSpinner.disable();
+                        });
                     }
                 }
                 if (this.previous('collection') && !this.get('collection')) {
