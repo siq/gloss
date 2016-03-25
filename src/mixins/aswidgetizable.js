@@ -59,7 +59,7 @@ define([
         this.getWidget = function(name) {
             return this.get('widgets.' + name);
         };
-        // this real purpose of wanting to do this is to associate messageLists to a view
+        // the real purpose of wanting to do this is to associate messageLists to a view
         // as a bonus you'll be able to access the view with the `getWidget('name')` API
         this.setViews = function(views) {
             this.set('widgets', viewsDict(views));

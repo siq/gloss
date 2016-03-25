@@ -1,7 +1,11 @@
 <div class='off-canvas hidden'>
   <% if (this.get('title')) { %>
     <h1>
-      <%=this.get('title')%>
+      <%==this.get('title')%>
+      <% if (this.get('closeBtn')) { %>
+	      <a class=close-button href='javascript:void(0);'>&#x2715;</a>
+      <% } %>
     </h1>
   <% } %>
+  <%==this.include('content')%>
 </div>

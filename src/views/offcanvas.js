@@ -8,7 +8,9 @@ define([
 
     return SimpleView.extend({
         defaults: {
-            title: null
+            title: null,
+            closeBtn: true, // 'true' to have a close button in the upper corner
+            templates: {content: ''},
         },
         template: template,
 
@@ -30,7 +32,8 @@ define([
             //     }
             // });
             // close on a cancel i.e. form cancel
-            this.on('cancel', this.hide);
+            this.on('cancel', this.hide)
+                .on('click', 'h1 > .close-button', this.hide);
             return this._super.apply(this, arguments);
         },
         close: function() {
