@@ -73,10 +73,10 @@ define([
                 params: {
                     limit: opts.collectionLimit
                 },
-                gridOptions: {
-                    infiniteScroll: true,
-                    keyboardNavigation: false,
-                },
+                gridOptions: $.extend(true, {
+                        infiniteScroll: true,
+                        keyboardNavigation: false,
+                    }, opts.gridOptions),
                 delay: delay,
                 appendTo: 'body',
                 range: opts.range,
@@ -118,7 +118,7 @@ define([
                         clearTimeout(inter);
                         scrollToBottom();
                         ok(true, 'Reached end of list');
-                        _$dfd.resolve();
+                        _$dfd.resolve(g);
                         start();
 
                         return;
@@ -299,6 +299,26 @@ define([
             ok(text && text.trim().toLowerCase().indexOf('loading') < 0,'"Loading.." row is not displayed');
             start();
         }, 220);
+    });
+
+    module('selecting');
+
+    asyncTest('selecting model after scrolling more than 2 pages works', function() {
+        teardown();
+        totalRecords = 200;
+        Example = mockResource('Example', MeshExample, fixturize(exampleFixtures, totalRecords));
+        runTest({
+            gridOptions: {
+                selectable: true,
+            },
+        }).then(function(g) {
+            var lastModel = _.last(g.get('models'));
+            g.select(lastModel);
+            equal(g.$el.find('.selected').length, 1, 'one model selected');
+            equal(trim(g.$el.find('.selected td.col-text_field').text()),
+                lastModel.text_field, 'correct row selected');
+            start();
+        });
     });
 
 

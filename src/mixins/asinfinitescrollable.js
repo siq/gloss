@@ -33,9 +33,11 @@ define([
             limit: 25,
             delegate: null,
             render: 'render',
-            scrollFunction: function() {
-                return 0;
-            },
+            // scrollFunction: function($el) {
+            //     // default scroll function returns current scrollTop position
+            //     var scrollTop = $el ? $el.scrollTop() : 0;
+            //     return scrollTop;
+            // },
         }, options);
 
         this._bindEvents = _.wrap(this._bindEvents, function(_bindEvents) {
@@ -182,8 +184,10 @@ define([
                 $el;
             render.call(this, models);
             // render might wipeout the dom el if we find it first so we do it after
-            $el = delegate ? this.$el.find(delegate) : this.$el;
-            $el.scrollTop(scrollFunction.apply(this));
+            if (scrollFunction) {
+                $el = delegate ? this.$el.find(delegate) : this.$el;
+                $el.scrollTop(scrollFunction.call(this, $el));
+            }
             return this;
         });
     }

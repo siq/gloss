@@ -1,5 +1,5 @@
 <% var i, l, grid = this.get('grid'), columns = this.columns; %>
-<tr class="<%=data.get(grid.get('selectedAttr'))? 'selected' : ''%> <%=grid._isModelDisabled(data)? 'disabled' : ''%>">
+<tr class="<%=data.get(grid.get('selectedAttr'))? 'selected' : ''%> <%=grid._isModelDisabled(data)? 'disabled' : ''%>" data-model-id="<%=data.get('id') || data.get('cid')%>">
   <% for (i = 0, l = columns.length; i < l; i++) { %>
     <%==columns[i].renderTd(data);%>
   <% } %>

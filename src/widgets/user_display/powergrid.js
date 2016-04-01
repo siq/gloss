@@ -223,9 +223,13 @@ define([
         },
 
         _modelFromTr: function(tr) {
-            var idx = this.$tbody.children('tr').index(tr),
-                windowOffset = this._windowOffset || 0;
-            return idx >= 0? this.get('models')[idx+windowOffset] : null;
+            var id = $(tr).attr('data-model-id'),
+                model = _.find(this.get('models'), function(m) {
+                    var _id = m.get('id') || m.get('cid');
+                    // model id will be an int or string so we cast for proper comparison
+                    return id === String(_id);
+                });
+            return model || null;
         },
 
         _onColumnChange: function(evt, data) {
@@ -273,7 +277,7 @@ define([
 
         _onSelectableRowClick: function(evt) {
             var clickedModel = this._modelFromTr(evt.currentTarget);
-            if (clickedModel.get(this.get('selectedAttr'))) {
+            if (!clickedModel || clickedModel.get(this.get('selectedAttr'))) {
                 return;
             }
             this.select(clickedModel);
@@ -290,7 +294,8 @@ define([
         },
 
         _rerender: function(models) {
-            var i, l, rows = [],
+            var self = this,
+                i, l, rows = [],
                 columns = this.get('columnModel'),
                 models = models || this.get('models'),
                 selected = this.selected(),
@@ -345,7 +350,6 @@ define([
                         left: 'auto'
                     }
                 }).appendTo($target);
-                this._setScrollTop();
             }
 
             if (selected && !this.get('infiniteScroll')) {
@@ -353,6 +357,7 @@ define([
             }
             this._alignRows();
             this._renderCount++;
+            setTimeout(function() {self.del('scrollFunction');}, 0);
         },
 
         _rerenderRow: function(model) {
@@ -456,10 +461,12 @@ define([
         },
 
         _trFromModel: function(model) {
-            var idx = _.indexOf(this.get('models'), model),
-                windowOffset = this._windowOffset || 0,
-                trIdx = idx >= windowOffset ? idx - windowOffset : idx;
-            return trIdx >= 0? this.$tbody.children('tr').eq(trIdx) : null;
+            var id;
+            if (!model || _.isEmpty(model)) {
+                return null;
+            }
+            id = model.get('id') || model.get('cid');
+            return this.$tbody.children('tr[data-model-id='+id+']') || null;
         },
 
         col: function(columnName) {
@@ -617,7 +624,6 @@ define([
             var self = this;
             self._super.apply(this, arguments);
             this.spinner.instantiate();
-            this._setScrollTop();
             this._alignRows();
             return this;
         },
@@ -636,7 +642,6 @@ define([
 
             if (updated.models) {
                 rerender = sort = true;
-
             }
             if (updated.data) {
                 if (!(DummyModel = this.get('DummyModel'))) {
