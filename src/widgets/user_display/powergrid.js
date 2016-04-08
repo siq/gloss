@@ -466,7 +466,7 @@ define([
                 return null;
             }
             id = model.get('id') || model.get('cid');
-            return this.$tbody.children('tr[data-model-id='+id+']') || null;
+            return this.$tbody.children('tr[data-model-id="'+id+'"]') || null;
         },
 
         col: function(columnName) {
