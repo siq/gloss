@@ -28,17 +28,28 @@ define([
     //             |_______________|   <-----------------------|
 
     function asInfiniteScrollable(options) {
-        this.defaults = $.extend({}, this.defaults, {
+        this.defaults = $.extend({}, {
             offset: 0,
             limit: 25,
             delegate: null,
             render: 'render',
+            // this is the function that will be called to load more data
+            // the default will just call 'load' on the associated collection
+            // Returns a deferred that resolves when the data is loaded
+            load: function() {
+                var collection = this.get('collection'),
+                    limit   = this.get('limit'),
+                    offset  = this.get('offset');
+                return collection.load({
+                    limit: offset+limit,
+                });
+            },
             // scrollFunction: function($el) {
             //     // default scroll function returns current scrollTop position
             //     var scrollTop = $el ? $el.scrollTop() : 0;
             //     return scrollTop;
             // },
-        }, options);
+        }, this.defaults, options);
 
         this._bindEvents = _.wrap(this._bindEvents, function(_bindEvents) {
             this._bindInfiniteScroll();
@@ -57,7 +68,7 @@ define([
                     return el.scrollHeight/2;
                 };
 
-            $el.on('scroll', function() {
+            $el.on('scroll', _.debounce(function() {
                 var collection,
                     limit   = self.get('limit'),
                     offset  = self.get('offset'),
@@ -68,14 +79,15 @@ define([
                     isFirstWindowLoaded = self._isFirstWindowLoaded(),
                     isLastWindowLoaded  = self._isLastWindowLoaded(),
                     endOfScroll         = isAllDataLoaded && isLastWindowLoaded,
-                    scrollLoadDfd       = self.get('scrollLoadDfd');
+                    scrollLoadDfd       = self.get('scrollLoadDfd'),
+                    load                = self.get('load');
 
                 if (top && !isFirstWindowLoaded) {
                     // handles upward scrolls to fetch local models
                     // offset can't be less than 0
                     self.set('offset', Math.max(0, offset-limit));
                     self.set('scrollFunction', scrollingUp);
-                    self[render]();
+                    setTimeout(function() {self[render]();}, 0);
                 } else if (top && isFirstWindowLoaded) {
                     // console.log('hit top');
                     return;
@@ -101,19 +113,16 @@ define([
                     offset = self.get('offset') + limit;
                     self.set('offset', offset);
                     self.set('scrollFunction', scrollingDown);
-                    scrollLoadDfd = collection.load({
-                        limit: offset+limit,
-                    });
-                    self.set('scrollLoadDfd', scrollLoadDfd);
+                    self.set('scrollLoadDfd', load.call(self));
                 } else {
                     // handles downward scrolls to fetch local models
                     offset = self.get('offset');
                     limit = self.get('limit');
                     self.set('offset', offset+limit);
                     self.set('scrollFunction', scrollingDown);
-                    self[render]();
+                    setTimeout(function() {self[render]();}, 0);
                 }
-            });
+            }, 50));
         };
         if (!this._getTotalModelCount) {
             this._getTotalModelCount = function() {
