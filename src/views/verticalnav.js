@@ -15,12 +15,11 @@ define([
         },
         template: template,
         _bindEvents: function() {
-            _.bindAll(this, '_onMenuItemClick', '_onMenuItemHover', '_onMenuItemLeave');
+            this._super.apply(this, arguments);
+            _.bindAll(this, '_onMenuItemClick');
             // this.on('click', '[role=menuitem]', this._onMenuItemClick);
             this.on('click', 'li', this._onMenuItemClick);
-            this.on('hover', 'li', this._onMenuItemHover);
-            this.on('mouseleave', this._onMenuItemEnter);
-            return this._super.apply(this, arguments);
+            return this;
         },
         _initWidgets: function() {
             // this.$el.addClass('vertical-nav');
@@ -31,40 +30,45 @@ define([
         //     return idx >= 0? this.get('crumbs')[idx] : null;
         // },
         // this will default behavior for click event on breadcrumbs
-        // you should override `onBreadCrumbClick` for additional logic
+        // you should override `onMenuItemClick` for additional logic
         _onMenuItemClick: function(evt) {
             var model,
-                $item = $(evt.currentTarget);
+                $item = $(evt.currentTarget),
+                isItemNested = function($item) {
+                    var $active = this.$el.find('li.active:first');
+                    return $active.has($item).length > 0;
+                };
+            if ($item.is('.active')) {
+                return;
+            }
             if (!evt.metaKey && !evt.ctrlKey) {
-                evt.preventDefault();
+                // evt.preventDefault();
+                evt.stopPropagation();
                 // model = this._modelFromItem(evt.currentTarget);
                 // this.onMenuItemClick(evt, model);
-                this.$el.find('li')
-                    .removeClass('active')
-                    .attr('aria-selected', false);
+
+                // if the item is nested then only remove the active class from
+                // other nested items
+                if (isItemNested.call(this, $item)) {
+                    this.$el.find('li.active')
+                        .find('li')
+                        .removeClass('active')
+                        .attr('aria-selected', false);
+                } else {
+                    this.$el.find('li')
+                        .removeClass('active')
+                        .attr('aria-selected', false);
+                }
                 $item.addClass('active')
                     .attr('aria-selected', true);
+
+                // if the header is selected set the first child as active
+                if ($item.is('.level-2-header')) {
+                    $item.find('li:first')
+                        .addClass('active')
+                        .attr('aria-selected', true);
+                }
             }
-            return this;
-        },
-        _onMenuItemHover: function(evt) {
-            var $item = $(evt.currentTarget),
-                idx = this.$el.find('li:not(.active-bar-vertical)').index($item);
-            this.$el
-                .removeClass(function (index, css) {
-                    return (css.match (/(^|\s)pos-\S+/g) || []).join(' ');
-                }).addClass('pos-'+idx);
-            this.$el.find('.active-bar-vertical').addClass('move');
-            return this;
-        },
-        _onMenuItemLeave: function(evt) {
-            var $item = this.$el.find('li.active'),
-                idx = this.$el.find('li:not(.active-bar-vertical)').index($item);
-            this.$el
-                .removeClass(function (index, css) {
-                    return (css.match (/(^|\s)pos-\S+/g) || []).join(' ');
-                }).addClass('pos-'+idx);
-            // this.$el.find('.active-bar-vertical').removeClass('move');
             return this;
         },
         onMenuItemClick: function(evt) {

@@ -1,15 +1,60 @@
 @blue: #528ce0;
 @white: #fff;
-@active: #366097;
+@dark-blue: #366097;
+@orange: #f8981d;
+@active-bg: @dark-blue;
+@active-fg: @orange;
 
-@vertical-menu-li-width:82px;
-@vertical-menu-li-height: 82px;
+@vertical-menu-li-width: 82px;
+@vertical-menu-li-height: @vertical-menu-li-width;
+@vertical-menu-icon-width: 32px;
+@vertical-menu-icon-height: @vertical-menu-icon-width;
 
-@cubic-bezier: .3s cubic-bezier(.5, .8, 0, 1);
+@cubic-bezier: cubic-bezier(.5, .8, 0, 1);
 @move-transition: cubic-bezier(.8, .005, .2, 1);
+
+@keyframes grow {
+  from {
+    height: 0;
+    visibility: inherit;
+  }
+  to {
+    height: 100%;
+  }
+}
+@keyframes shrink {
+  from {
+    height:100%;
+  }
+  to {
+    height: 0;
+    visibility: hidden;
+  }
+}
+// TODO: make these dynamic based on the number of sub-menu items (that's gonna be hard)
+@level-2-shrink-header-height: 42px;
+// number of sub-menu items * the menu item height + the shrunk menu header height
+@level-2-full-height: 4*@vertical-menu-li-height + @level-2-shrink-header-height;
+@keyframes container-grow {
+  from {
+    height: @vertical-menu-li-height;
+  }
+  to {
+    height: @level-2-full-height;
+  }
+}
+@keyframes container-shrink {
+  from {
+    height: @level-2-full-height;
+  }
+  to {
+    height: @vertical-menu-li-height;
+  }
+}
 
 .vertical-nav {
   background: @blue;
+  color: @white;
   user-select: none;
   left: 0;
   overflow: hidden;
@@ -17,27 +62,12 @@
   width:  @vertical-menu-li-width;
   height: 100%;
 
-  .active-bar-vertical {
-    background: @active;
-    display: block;
-    height:  @vertical-menu-li-height;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transition: width 200ms @move-transition;
-    width: 0;
-  }
-
-  .active-bar-vertical {
-    &.move {
-      transition: transform 500ms @move-transition;
-    }
-  }
-
   ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    height: 100%;
+    overflow: hidden;
   }
 
   li {
@@ -52,23 +82,25 @@
   a {
     display: block;
     width: 100%;
+    height: @vertical-menu-li-height;
+    position: relative;
 
     &:after {
-      background: @active;
+      background: @active-bg;
       bottom: 0;
       content: '';
       position: absolute;
       right: 0;
-    }
-
-    span {
-      color: @white;
+      height: 100%;
+      transition: width 0.3s @cubic-bezier;
+      width: 0;
     }
   }
 
   .icon {
     padding: 10px 0 0;
-    width: 32px;
+    width: @vertical-menu-icon-width;
+    height: @vertical-menu-icon-height;
   }
 
   .icon,
@@ -77,52 +109,109 @@
     z-index: 1;
   }
 
-  // arbitrary large number larger than the total number
-  // of menu items that would realistically fit in order
-  // to avoid JS CSS injection
-  .loop(@i) when (@i >= 0) {
-    &.pos-@{i} .active-bar-vertical {
-      transform: translateY(@i*(@vertical-menu-li-height));
-    }
-    .loop(@i - 1);
+  span {
+    display: block;
+    font-size: .9rem;
   }
-  // start the loop
-  .loop(10);
 
-  li:not(.active-bar-vertical) {
-    height: @vertical-menu-li-height;
+  // animations
+  .icon {
+    // transition: height 0.5s 0.2s @cubic-bezier;
+    transition: height 0.5s @cubic-bezier;
+  }
+  ul {
+    transition: height 0.5s @cubic-bezier;
+  }
+
+  ul li {
+    // height: @vertical-menu-li-height;
     width: 100%;
 
-    &:hover,
-    &:focus,
-    &:active {
-      ~ .active-bar-vertical {
-        background: @active;
-        width: 6px;
-      }
+    &.active {
+      color: @active-fg;
     }
-
+    // transition active BG when selected
     &.active a {
       &:after {
         width: 100%;
+        transition: width 0.3s 0.2s @cubic-bezier;
       }
     }
+  }
 
-    a {
-      height: 100%;
-      position: relative;
+  ul > li {
+    &:hover,
+    &:focus,
+    &:active {
+      color: @active-fg;
+      ul > li {
 
-      &:after {
-        height: 100%;
-        transition: width @cubic-bezier;
-        width: 0;
+        &:hover,
+        &:focus,
+        &:active {
+          color: @active-fg;
+        }
       }
     }
+  }
+  .level-2-header {
+    height: @level-2-full-height;
+    overflow: hidden;
 
-    span {
-      display: block;
-
-      font-size: .9rem;
+    transition: height 0.25s 0.25s @cubic-bezier;
+    animation-fill-mode: forwards;
+    animation-duration: 0.25s;
+    // animation-delay: 0.5s;
+    animation-name: container-shrink;
+    &.active {
+      color: @white;
+    }
+    // hide sub menu items
+    > ul {
+      transition: height 0.25s 0.25s @cubic-bezier;
+      animation-fill-mode: forwards;
+      animation-duration: 0.25s;
+      // animation-delay: 0.5s;
+      animation-name: shrink;
+    }
+    li > a:after {
+      transition: unset;
+      width: inherit;
+    }
+    &:not(.active) > a .icon {
+      transition: height 0.25s 0.5s @cubic-bezier;
+    }
+    &:not(.active) > a {
+      transition: height 0.25s 0.5s @cubic-bezier;
+    }
+    > a:after {
+      transition: width 0.3s 0.25s @cubic-bezier;
+      background: @active-fg;
+    }
+    &.active {
+      &:hover,
+      &:focus,
+      &:active {
+        color: currentColor;
+      }
+      animation-fill-mode: backwards;
+      animation-duration: 0.5s;
+      animation-delay: 0.5s;
+      animation-name: container-grow;
+      // sub-menu items will grow with an animation
+      > ul {
+        animation-fill-mode: backwards;
+        animation-duration: 0.5s;
+        animation-delay: 0.5s;
+        animation-name: grow;
+      }
+      // these selectors will set the proper values that should also trigger animaions
+      > a {
+        height: @level-2-shrink-header-height;
+      }
+      > a .icon {
+        height: 0;
+      }
     }
   }
 }

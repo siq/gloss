@@ -7,6 +7,8 @@ define([
         var bc = VerticalNav()
             .appendTo('body');
         ok(bc);
+        $('[id^=qunit-]').hide();
+        $('body').css('margin', 0);
     });
 
     // test ('one crumb ahaha', function(){
