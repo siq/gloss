@@ -313,13 +313,13 @@ define([
                 if (this._windowSize && this._isAllDataLoaded() && this._isLastWindowLoaded()) {
                     rows.push(loadingRowTmpl({
                         grid: this,
-                        status: this.get('collection').status,
+                        status: this.get('collection.status'),
                         text: 'All objects loaded'
                     }));
                 } else {
                     rows.push(loadingRowTmpl({
                         grid: this,
-                        status: this.get('collection').status,
+                        status: this.get('collection.status'),
                         text: this._isAllDataLoaded() ? 'All objects loaded' : 'Loading ...'
                     }));
                 }

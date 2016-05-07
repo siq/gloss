@@ -3,16 +3,22 @@ define([
     'vendor/underscore',
     './../base/widget'
 ], function($, _, Widget) {
+
+    var timeout = null;
     return Widget.extend({
         defaults: {
             escape: true,
+            autoClear: false,
+            // if autoClear is set then default will clear in 10 seconds
+            autoClearTimeout: 5000,
         },
         create: function() {
             this.shown = false;
             this.$node.hide().addClass('messagelist');
         },
         append: function(type, messages) {
-            var h, i, l;
+            var self = this,
+                h, i, l;
             if(!$.isArray(messages)) {
                 messages = [messages];
             }
@@ -32,6 +38,12 @@ define([
                 }
             }
             this._clearing = false;
+            if (this.options.autoClear) {
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    self.clear();
+                }, this.options.autoClearTimeout);
+            }
             return this;
         },
         clear: function(options) {
