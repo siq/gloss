@@ -170,7 +170,7 @@ define([
                     total = (this.get('models') || []).length,
                     windowCount = Math.ceil(total/limit) || 1,
                     currentWindow = Math.floor(offset/limit) + 1;
-                return windowCount === currentWindow;
+                return currentWindow >= windowCount;
             };
         }
         // This is a utility function to scroll to an element within a scrollable view
