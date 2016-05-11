@@ -1,15 +1,26 @@
 /*global test, asyncTest, ok, equal, deepEqual, start, module, strictEqual, notStrictEqual, raises*/
 define([
-    './../verticalnav'
-], function(VerticalNav) {
+    './../verticalnav',
+    'tmpl!./test.mtpl',
+], function(VerticalNav, testTmpl) {
 
+    var VerticalNavTest = VerticalNav.extend({
+        template: testTmpl,
+    });
     test ('instantiation', function(){
-        var bc = VerticalNav()
+        var bc = VerticalNavTest()
             .appendTo('body');
         ok(bc);
         $('[id^=qunit-]').hide();
         $('body').css('margin', 0);
     });
+    // test ('instantiation', function(){
+    //     var bc = VerticalNav()
+    //         .appendTo('body');
+    //     ok(bc);
+    //     $('[id^=qunit-]').hide();
+    //     $('body').css('margin', 0);
+    // });
 
     // test ('one crumb ahaha', function(){
     //     var bc = BreadCrumb({

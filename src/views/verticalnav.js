@@ -38,14 +38,19 @@ define([
                     var $active = this.$el.find('li.active:first');
                     return $active.has($item).length > 0;
                 };
-            if ($item.is('.active')) {
+            if (!evt.metaKey && !evt.ctrlKey) {
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+            if ($item.is('.active') || evt.metaKey || evt.ctrlKey) {
                 return;
             }
-            if (!evt.metaKey && !evt.ctrlKey) {
-                // evt.preventDefault();
+            // if (!evt.metaKey && !evt.ctrlKey) {
+                evt.preventDefault();
                 evt.stopPropagation();
                 // model = this._modelFromItem(evt.currentTarget);
                 // this.onMenuItemClick(evt, model);
+                this.onMenuItemClick(evt, evt);
 
                 // if the item is nested then only remove the active class from
                 // other nested items
@@ -68,7 +73,7 @@ define([
                         .addClass('active')
                         .attr('aria-selected', true);
                 }
-            }
+            // }
             return this;
         },
         onMenuItemClick: function(evt) {

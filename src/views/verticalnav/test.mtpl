@@ -1,0 +1,139 @@
+<% var getListItem = function(levelIndex, value, content, href) { %>
+  <li class='<%="level-"+levelIndex%>' role='presentation' aria-selected='true'>
+    <a class='<%=value%>' role='menuitem'>
+      <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+      <span><%=content%></span>
+    </a>
+  </li>
+<% }; %>
+
+<nav class=vertical-nav role='navigation'>
+  <ul role='menubar' aria-label='Main Navigation'>
+    <li class='active' role='presentation' aria-selected='true'>
+      <a class='catalog' role='menuitem'>
+        <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+        <span>Catalog</span>
+      </a>
+    </li>
+    <li class='level-1-header' role='presentation' aria-selected='false'>
+      <a class='people' role='menuitem'>
+        <img class='icon' src='./img/people.svg' aria-hidden='true'>
+        <span>People</span>
+      </a>
+      <ul>
+        <li role='presentation' aria-selected='false'>
+          <a class='search' role='menuitem'>
+            <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
+            <span>Search</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='false'>
+          <a class='settings' role='menuitem'>
+            <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
+            <span>Settings</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='false'>
+          <a class='services' role='menuitem'>
+            <img class='icon' src='./img/services.svg' aria-hidden='true'>
+            <span>Services</span>
+          </a>
+        </li>
+        <li class='active' role='presentation' aria-selected='true'>
+          <a class='catalog' role='menuitem'>
+            <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+            <span>Catalog</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li role='presentation' aria-selected='false'>
+      <a class='services' role='menuitem'>
+        <img class='icon' src='./img/services.svg' aria-hidden='true'>
+        <span>Services</span>
+      </a>
+    </li>
+    <li class='level-1-header' role='presentation' aria-selected='false'>
+      <a class='people' role='menuitem'>
+        <img class='icon' src='./img/people.svg' aria-hidden='true'>
+        <span>People</span>
+      </a>
+      <ul>
+        <li role='presentation' aria-selected='false'>
+          <a class='search' role='menuitem'>
+            <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
+            <span>Search</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='false'>
+          <a class='settings' role='menuitem'>
+            <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
+            <span>Settings</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='false'>
+          <a class='services' role='menuitem'>
+            <img class='icon' src='./img/services.svg' aria-hidden='true'>
+            <span>Services</span>
+          </a>
+        </li>
+        <li class='active' role='presentation' aria-selected='true'>
+          <a class='catalog' role='menuitem'>
+            <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+            <span>Catalog</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class='level-1-header' role='presentation' aria-selected='false'>
+      <a class='settings' role='menuitem'>
+        <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
+        <span>Settings</span>
+      </a>
+      <ul>
+        <li role='presentation' aria-selected='false'>
+          <a class='search' role='menuitem'>
+            <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
+            <span>Search</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='true'>
+          <a class='catalog' role='menuitem'>
+            <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+            <span>Catalog</span>
+          </a>
+        </li>
+        <li role='presentation' aria-selected='false'>
+          <a class='services' role='menuitem'>
+            <img class='icon' src='./img/services.svg' aria-hidden='true'>
+            <span>Services</span>
+          </a>
+        </li>
+        <li class='active' role='presentation' aria-selected='true'>
+          <a class='catalog' role='menuitem'>
+            <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+            <span>Catalog</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li role='presentation' aria-selected='false'>
+      <a class='search' role='menuitem'>
+        <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
+        <span>Search</span>
+      </a>
+    </li>
+    <li role='presentation' aria-selected='true'>
+      <a class='catalog' role='menuitem'>
+        <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
+        <span>Catalog</span>
+      </a>
+    </li>
+    <li role='presentation' aria-selected='false'>
+      <a class='services' role='menuitem'>
+        <img class='icon' src='./img/services.svg' aria-hidden='true'>
+        <span>Services</span>
+      </a>
+    </li>
+  </ul>
+</nav>

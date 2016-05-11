@@ -31,21 +31,22 @@
     visibility: hidden;
   }
 }
+
+@level-1-shrink-header-height: 42px;
 // TODO: make these dynamic based on the number of sub-menu items (that's gonna be hard)
-@level-2-shrink-header-height: 42px;
 // number of sub-menu items * the menu item height + the shrunk menu header height
-@level-2-full-height: 4*@vertical-menu-li-height + @level-2-shrink-header-height;
+@level-1-full-height: 4*@vertical-menu-li-height + @level-1-shrink-header-height;
 @keyframes container-grow {
   from {
     height: @vertical-menu-li-height;
   }
   to {
-    height: @level-2-full-height;
+    height: @level-1-full-height;
   }
 }
 @keyframes container-shrink {
   from {
-    height: @level-2-full-height;
+    height: @level-1-full-height;
   }
   to {
     height: @vertical-menu-li-height;
@@ -74,7 +75,8 @@
     text-align: center;
 
     &:active,
-    &:focus {
+    &:focus,
+    a {
       outline: none;
     }
   }
@@ -111,7 +113,6 @@
 
   span {
     display: block;
-    font-size: .9rem;
   }
 
   // animations
@@ -129,6 +130,9 @@
 
     &.active {
       color: @active-fg;
+      > a.menuitem {
+        color: @active-fg;
+      }
     }
     // transition active BG when selected
     &.active a {
@@ -154,8 +158,7 @@
       }
     }
   }
-  .level-2-header {
-    height: @level-2-full-height;
+  .level-1-header {
     overflow: hidden;
 
     transition: height 0.25s 0.25s @cubic-bezier;
@@ -165,6 +168,9 @@
     animation-name: container-shrink;
     &.active {
       color: @white;
+      > a.menuitem {
+        color: @white;
+      }
     }
     // hide sub menu items
     > ul {
@@ -207,7 +213,7 @@
       }
       // these selectors will set the proper values that should also trigger animaions
       > a {
-        height: @level-2-shrink-header-height;
+        height: @level-1-shrink-header-height;
       }
       > a .icon {
         height: 0;
