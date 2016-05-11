@@ -3,11 +3,10 @@ var level=0,
     getListItem = function(item, i) {
       var children = item.children,
           classes = '';
-      classes += i===0 ? 'active' : '';
       classes += !_.isEmpty(children)? ' level-'+(level+1)+'-header' : '';
 %>
-      <li class='<%=classes%>' value='<%=item.value%>' role='presentation' aria-selected='true' >
-        <a class=menuitem role=menuitem href='<%=item.url%>'>
+      <li class='<%=classes%>' name='<%=item.value%>' role='presentation' aria-selected='true'>
+        <a class=menuitem role=menuitem href='<%=item.value%>'>
           <img class='icon' src='<%=item.icon%>' aria-hidden='true'>
           <span><%=item.content || item.value%></span>
         </a>

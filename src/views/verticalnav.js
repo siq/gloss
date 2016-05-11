@@ -4,6 +4,7 @@ define([
     'tmpl!./verticalnav/verticalnav.mtpl',
     'css!./verticalnav/verticalnav.css'
 ], function(_, SimpleView, template) {
+    'use strict';
 
     return SimpleView.extend({
         defaults: {
@@ -25,10 +26,6 @@ define([
             // this.$el.addClass('vertical-nav');
             return this._super.apply(this, arguments);
         },
-        // _modelFromItem: function(crumb) {
-        //     var idx = this.$el.children('.breadcrumb').index(crumb);
-        //     return idx >= 0? this.get('crumbs')[idx] : null;
-        // },
         // this will default behavior for click event on breadcrumbs
         // you should override `onMenuItemClick` for additional logic
         _onMenuItemClick: function(evt) {
@@ -45,34 +42,30 @@ define([
             if ($item.is('.active') || evt.metaKey || evt.ctrlKey) {
                 return;
             }
-            // if (!evt.metaKey && !evt.ctrlKey) {
-                evt.preventDefault();
-                evt.stopPropagation();
-                // model = this._modelFromItem(evt.currentTarget);
-                // this.onMenuItemClick(evt, model);
-                this.onMenuItemClick(evt, evt);
 
-                // if the item is nested then only remove the active class from
-                // other nested items
-                if (isItemNested.call(this, $item)) {
-                    this.$el.find('li.active')
-                        .find('li')
-                        .removeClass('active')
-                        .attr('aria-selected', false);
-                } else {
-                    this.$el.find('li')
-                        .removeClass('active')
-                        .attr('aria-selected', false);
-                }
-                $item.addClass('active')
-                    .attr('aria-selected', true);
+            // if the item is nested then only remove the active class from
+            // other nested items
+            if (isItemNested.call(this, $item)) {
+                this.$el.find('li.active')
+                    .find('li')
+                    .removeClass('active')
+                    .attr('aria-selected', false);
+            } else {
+                this.$el.find('li')
+                    .removeClass('active')
+                    .attr('aria-selected', false);
+            }
+            $item.addClass('active')
+                .attr('aria-selected', true);
 
-                // if the header is selected set the first child as active
-                if ($item.is('.level-2-header')) {
-                    $item.find('li:first')
-                        .addClass('active')
-                        .attr('aria-selected', true);
-                }
+            this.onMenuItemClick(evt);
+            // I don't think we want to do this here.
+            // There maybe cases we the header selection is a route too.
+            // if the header is selected set the first child as active
+            // if ($item.is('.level-1-header')) {
+            //     $item.find('li:first')
+            //         .addClass('active')
+            //         .attr('aria-selected', true);
             // }
             return this;
         },
