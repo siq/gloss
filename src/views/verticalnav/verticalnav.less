@@ -148,8 +148,8 @@
     &:focus,
     &:active {
       color: @active-fg;
-      ul > li {
-
+      ul > li,
+      a.menuitem {
         &:hover,
         &:focus,
         &:active {
@@ -170,6 +170,11 @@
       color: @white;
       > a.menuitem {
         color: @white;
+        &:hover,
+        &:focus,
+        &:active {
+          color: @white;
+        }
       }
     }
     // hide sub menu items
