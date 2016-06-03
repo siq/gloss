@@ -130,8 +130,11 @@
 
     &.active {
       color: @active-fg;
-      > a.menuitem {
+      > a.menuitem,
+      path,
+      polygon {
         color: @active-fg;
+        fill: @active-fg;
       }
     }
     // transition active BG when selected
@@ -148,6 +151,10 @@
     &:focus,
     &:active {
       color: @active-fg;
+      path,
+      polygon {
+        fill: @active-fg;
+      }
       ul > li,
       a.menuitem {
         &:hover,

@@ -7,7 +7,11 @@ var level=0,
 %>
       <li class='<%=classes%>' name='<%=item.value%>' role='presentation' aria-selected='true'>
         <a class=menuitem role=menuitem href='<%=item.value%>'>
+        <% if (_.isFunction(item.icon)) { %>
+            <%==item.icon()%>
+        <% } else { %>
           <img class='icon' src='<%=item.icon%>' aria-hidden='true'>
+        <% } %>
           <span><%=item.content || item.value%></span>
         </a>
         <%
