@@ -78,6 +78,12 @@
     &:focus,
     a {
       outline: none;
+      color: currentColor;
+
+      path,
+      polygon {
+        fill: currentColor;
+      }
     }
   }
 
@@ -130,11 +136,13 @@
 
     &.active {
       color: @active-fg;
-      > a.menuitem,
-      path,
-      polygon {
+      > a.menuitem {
         color: @active-fg;
-        fill: @active-fg;
+
+        path,
+        polygon {
+          fill: @active-fg;
+        }
       }
     }
     // transition active BG when selected
@@ -151,16 +159,18 @@
     &:focus,
     &:active {
       color: @active-fg;
-      path,
-      polygon {
-        fill: @active-fg;
-      }
+
       ul > li,
       a.menuitem {
         &:hover,
         &:focus,
         &:active {
           color: @active-fg;
+
+          path,
+          polygon {
+            fill: @active-fg;
+          }
         }
       }
     }
@@ -175,6 +185,7 @@
     animation-name: container-shrink;
     &.active {
       color: @white;
+
       > a.menuitem {
         color: @white;
         &:hover,
