@@ -10,37 +10,37 @@
 <nav class=vertical-nav role='navigation'>
   <ul role='menubar' aria-label='Main Navigation'>
     <li class='active' role='presentation' aria-selected='true'>
-      <a class='catalog' role='menuitem'>
+      <a class='catalog' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
         <span>Catalog</span>
       </a>
     </li>
     <li class='level-1-header' role='presentation' aria-selected='false'>
-      <a class='people' role='menuitem'>
+      <a class='people' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/people.svg' aria-hidden='true'>
         <span>People</span>
       </a>
       <ul>
         <li role='presentation' aria-selected='false'>
-          <a class='search' role='menuitem'>
+          <a class='search' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
             <span>Search</span>
           </a>
         </li>
         <li role='presentation' aria-selected='false'>
-          <a class='settings' role='menuitem'>
+          <a class='settings' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
             <span>Settings</span>
           </a>
         </li>
         <li role='presentation' aria-selected='false'>
-          <a class='services' role='menuitem'>
+          <a class='services' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/services.svg' aria-hidden='true'>
             <span>Services</span>
           </a>
         </li>
         <li class='active' role='presentation' aria-selected='true'>
-          <a class='catalog' role='menuitem'>
+          <a class='catalog' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
             <span>Catalog</span>
           </a>
@@ -48,37 +48,37 @@
       </ul>
     </li>
     <li role='presentation' aria-selected='false'>
-      <a class='services' role='menuitem'>
+      <a class='services' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/services.svg' aria-hidden='true'>
         <span>Services</span>
       </a>
     </li>
     <li class='level-1-header' role='presentation' aria-selected='false'>
-      <a class='people' role='menuitem'>
+      <a class='people' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/people.svg' aria-hidden='true'>
         <span>People</span>
       </a>
       <ul>
         <li role='presentation' aria-selected='false'>
-          <a class='search' role='menuitem'>
+          <a class='search' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
             <span>Search</span>
           </a>
         </li>
         <li role='presentation' aria-selected='false'>
-          <a class='settings' role='menuitem'>
+          <a class='settings' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
             <span>Settings</span>
           </a>
         </li>
         <li role='presentation' aria-selected='false'>
-          <a class='services' role='menuitem'>
+          <a class='services' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/services.svg' aria-hidden='true'>
             <span>Services</span>
           </a>
         </li>
         <li class='active' role='presentation' aria-selected='true'>
-          <a class='catalog' role='menuitem'>
+          <a class='catalog' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
             <span>Catalog</span>
           </a>
@@ -86,31 +86,31 @@
       </ul>
     </li>
     <li class='level-1-header' role='presentation' aria-selected='false'>
-      <a class='settings' role='menuitem'>
+      <a class='settings' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/gears-menu.svg' aria-hidden='true'>
         <span>Settings</span>
       </a>
       <ul>
         <li role='presentation' aria-selected='false'>
-          <a class='search' role='menuitem'>
+          <a class='search' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
             <span>Search</span>
           </a>
         </li>
         <li role='presentation' aria-selected='true'>
-          <a class='catalog' role='menuitem'>
+          <a class='catalog' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
             <span>Catalog</span>
           </a>
         </li>
         <li role='presentation' aria-selected='false'>
-          <a class='services' role='menuitem'>
+          <a class='services' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/services.svg' aria-hidden='true'>
             <span>Services</span>
           </a>
         </li>
         <li class='active' role='presentation' aria-selected='true'>
-          <a class='catalog' role='menuitem'>
+          <a class='catalog' role='menuitem' href='' tabindex='1'>
             <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
             <span>Catalog</span>
           </a>
@@ -118,19 +118,19 @@
       </ul>
     </li>
     <li role='presentation' aria-selected='false'>
-      <a class='search' role='menuitem'>
+      <a class='search' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/search-white.svg' aria-hidden='true'>
         <span>Search</span>
       </a>
     </li>
     <li role='presentation' aria-selected='true'>
-      <a class='catalog' role='menuitem'>
+      <a class='catalog' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/catalog.svg' aria-hidden='true'>
         <span>Catalog</span>
       </a>
     </li>
     <li role='presentation' aria-selected='false'>
-      <a class='services' role='menuitem'>
+      <a class='services' role='menuitem' href='' tabindex='1'>
         <img class='icon' src='./img/services.svg' aria-hidden='true'>
         <span>Services</span>
       </a>

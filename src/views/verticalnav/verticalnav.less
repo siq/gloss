@@ -74,6 +74,24 @@
     overflow: hidden;
   }
 
+  a {
+    &:active,
+    &:focus {
+      color: currentColor;
+      color: @orange;
+
+      path,
+      polygon,
+      rect,
+      circle {
+        fill: currentColor;
+        stroke: currentColor;
+        fill: @orange;
+        stroke: @orange;
+      }
+    }
+  }
+
   li {
     text-align: center;
 
