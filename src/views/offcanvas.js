@@ -86,10 +86,18 @@ define([
             return this.hide.apply(this, arguments);
         },
         hide: function() {
+            var self = this;
             this.$el.blur();
             this.$backdrop.addClass('hidden');
             this._super.apply(this, arguments);
             this.trigger('hide');
+
+            // make contained elements un-focusable on tab
+            // we're waiting for the transition before resetting the visibility
+            // back to the default so we still get animations
+            setTimeout(function() {
+                self.$el.css('visibility', 'hidden');
+            }, 300);
         },
         open: function() {
             return this.show.apply(this, arguments);
@@ -98,6 +106,9 @@ define([
             if (!this.$backdrop.parent().length && this.$el.parent().length) {
                 this.$backdrop.insertBefore(this.$el);
             }
+            // make the element focusable
+            this.$el.css('visibility', 'visible');
+
             this.$backdrop.removeClass('hidden');
             this._super.apply(this, arguments);
             this.trigger('show');

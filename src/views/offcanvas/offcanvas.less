@@ -2,39 +2,42 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  /*height: 100%;*/
+  // height: 100%;
   overflow: auto;
 
-  /* we need to stick to the right if we slide out from the right*/
+  // we need to stick to the right if we slide out from the right
   right: 0;
 
-  /*prevent flickering on some browsers*/
+  // prevent flickering on some browsers
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 
   background-color: #f5f5f5;
 }
 
-/*default state is hidden*/
+// default state is hidden
 .off-canvas.hidden {
   margin-right: -100%;
-  /*animations*/
+  // animations
   -webkit-transition: margin-right .3s ease;
   transition: margin-right .3s ease;
 
-  /*override base.css otherwise we won't get our nifty transitions*/
+  // override base.css otherwise we won't get our nifty transitions
   display: block !important;
-  visibility: visible;
+  // we still need to set `visibility: visible` to get transistions
+  // we're option to do that in Javascript so elements will not be focusable on tab
+  // during the first page load without even more Javascript during init.
+  // visibility: visible;
 }
 
 .off-canvas {
   margin-right: 0%;
-  /*animations*/
+  // animations
   -webkit-transition: margin-right 1s ease;
   transition: margin-right 1s ease;
 }
 
-/*header*/
+// header
 .off-canvas > h1 {
   margin: 0;
   border: 0;
