@@ -37,7 +37,6 @@ define([
                 };
             if (!evt.metaKey && !evt.ctrlKey) {
                 evt.preventDefault();
-                evt.stopPropagation();
             }
             if ($item.is('.active') || evt.metaKey || evt.ctrlKey) {
                 return;
