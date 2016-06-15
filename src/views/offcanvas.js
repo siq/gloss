@@ -97,6 +97,8 @@ define([
             setTimeout(function() {
                 self.$el.css('visibility', 'hidden');
             }, 300);
+            // let body scroll again
+            $('body').css('overflow', '');
         },
         open: function() {
             return this.show.apply(this, arguments);
@@ -107,6 +109,8 @@ define([
             }
             // make the element focusable
             this.$el.css('visibility', 'visible');
+            // don't let the body scroll
+            $('body').css('overflow', 'hidden');
 
             this.$backdrop.removeClass('hidden');
             this._super.apply(this, arguments);
