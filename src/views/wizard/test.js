@@ -98,6 +98,19 @@ define([
         start();
     });
 
+    asyncTest('wizard with no header', function() {
+        var m, ml, appendTo = 'body',
+            tw = TestWizard({
+                templates: {header: null, fieldsets: testTemplate}
+            }).appendTo(appendTo);
+        tw.set('model', m = window.m = Resource());
+        tw.show();
+
+        ok(!tw.header);
+
+        start();
+    });
+
     // TODO: write tests for corner cases:
     //  - calling model.set() w/ an invalid value after the value was already
     //    set to something valid

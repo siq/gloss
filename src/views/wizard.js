@@ -14,6 +14,7 @@ define([
     var registry = Registry.getInstance(),
 
         Header = SimpleView.extend({
+            template: headerTemplate,
             update: function(changed) {
                 this._super.apply(this, arguments);
                 if (changed.totalPanes || changed.currentPane) {
@@ -36,13 +37,13 @@ define([
         _initWidgets: function() {
             var ret = this._super.apply(this, arguments);
             this.$panes = this.getPanes();
-            this.header = Header({
-                strings: this.get('strings'),
-                totalPanes: this.$panes.length,
-                $el: this.$el.children('h2')
-            });
-            // provide a header template than can be overridden
-            this.header.template = this.get('templates.header');
+            if (this.get('templates.header')) {
+                this.header = Header({
+                    strings: this.get('strings'),
+                    totalPanes: this.$panes.length,
+                    $el: this.$el.children('h2')
+                });
+            }
             return ret;
         },
         _bindEvents: function() {
@@ -109,7 +110,7 @@ define([
                         earliest = pane < earliest? pane : earliest;
                     });
                 });
-            } 
+            }
             if (!fieldErrors && !globalErrors) {
                 this.set('currentPane', this.get('currentPane')+1);
             } else {
@@ -178,7 +179,9 @@ define([
             self._super.apply(self, arguments);
             if (changed.currentPane) {
                 self.waitForInitialRender.then(function() {
-                    self.header.set('currentPane', self.get('currentPane'));
+                    if (self.header) {
+                        self.header.set('currentPane', self.get('currentPane'));
+                    }
                     self._showPane(self.get('currentPane'));
                 });
             }
