@@ -32,7 +32,6 @@ define([
                 }
             });
             this.on('transitionend', function(evt) {
-                console.log('transitionend');
                 var $el = $(evt.target),
                     marginRight = $el.css('margin-right'),
                     visible = marginRight === '0px';
