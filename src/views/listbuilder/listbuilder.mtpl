@@ -1,16 +1,13 @@
 <div class=listbuilder>
 	<div class=selected-data>
-    <label><%=this.get('strings.label.selected_data') || ''%></label>
+    <button type=button name=remove><%=this.get('strings.button.remove') || 'remove' %></button>
+    <label><%=this.get('strings.label.selected_data') || 'selected'%></label>
 		<div class=grid></div>
 	</div>
   <div class=data>
-    <label><%=this.get('strings.label.available_data') || ''%></label>
+    <button type=button name=add><%=this.get('strings.button.add') || 'add'%></button>
+    <label><%=this.get('strings.label.available_data') || 'available'%></label>
     <div class=grid></div>
     <div class=filter></div>
-  </div>
-
-  <div class=action>
-    <button type=button name=add><%=this.get('strings.button.add') || 'add'%></button><br/>
-    <button type=button name=remove><%=this.get('strings.button.remove') || 'remove' %></button>
   </div>
 </div>

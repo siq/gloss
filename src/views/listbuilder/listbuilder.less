@@ -1,16 +1,29 @@
-.listbuilder .selected-data {
-  float: left;
-}
-.listbuilder .data {
-  float: right;
-}
-
 .listbuilder .grid {
-	width: 380px;
-	height: 340px;
+  // width: 380px;
+  // height: 340px;
 }
 
-.listbuilder .action {
-	text-align: center;
-	padding-top: 30px;
+.listbuilder {
+  .selected-data {
+    // padding-right: 1em;
+    margin-bottom: 1em;
+  }
+  .data {
+    .powergrid {
+      margin-bottom: 1em;
+    }
+  }
+  .powergrid {
+    clear: both;
+  }
+  .selected-data,
+  .data {
+    box-sizing: border-box;
+    // float: left;
+    // width: 50%;
+
+    & > button {
+      float: right;
+    }
+  }
 }
