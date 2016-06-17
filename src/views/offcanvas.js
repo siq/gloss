@@ -89,6 +89,7 @@ define([
             this.$el.blur();
             this.$backdrop.addClass('hidden');
             this._super.apply(this, arguments);
+            this.propagate('hide');
             this.trigger('hide');
 
             // make contained elements un-focusable on tab
@@ -99,6 +100,7 @@ define([
             }, 300);
             // let body scroll again
             $('body').css('overflow', '');
+            return this;
         },
         open: function() {
             return this.show.apply(this, arguments);
@@ -114,7 +116,9 @@ define([
 
             this.$backdrop.removeClass('hidden');
             this._super.apply(this, arguments);
+            this.propagate('show');
             this.trigger('show');
+            return this;
         }
     });
 });
