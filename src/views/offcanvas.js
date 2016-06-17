@@ -119,6 +119,16 @@ define([
             this.propagate('show');
             this.trigger('show');
             return this;
-        }
+        },
+        update: function(changed) {
+            var self = this;
+            this._super.apply(this, arguments);
+            if (changed.title) {
+                this.waitForInitialRender.then(function() {
+                    self.$el.find('h1').text(self.get('title'));
+                });
+            }
+            return this;
+        },
     });
 });
