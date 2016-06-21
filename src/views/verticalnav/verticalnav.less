@@ -232,6 +232,8 @@
       animation-duration: 0.25s;
       // animation-delay: 0.5s;
       animation-name: shrink;
+      height: 0;
+      visibility: hidden;
     }
     li > a:after {
       transition: unset;
@@ -263,6 +265,8 @@
         animation-duration: 0.5s;
         animation-delay: 0.5s;
         animation-name: grow;
+        height: 100%;
+        visibility: inherit;
       }
       // these selectors will set the proper values that should also trigger animaions
       > a {
