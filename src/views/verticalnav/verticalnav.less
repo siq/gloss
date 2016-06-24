@@ -4,6 +4,7 @@
 @orange: #f8981d;
 @active-bg: @dark-blue;
 @active-fg: @orange;
+@disabled-color: #bbbbbb;
 
 @vertical-menu-li-width: 82px;
 @vertical-menu-li-height: @vertical-menu-li-width;
@@ -200,6 +201,35 @@
           circle {
             fill: @active-fg;
             stroke: @active-fg;
+          }
+        }
+      }
+    }
+    &.disabled,
+    &[disabled=disabled] {
+      color: @disabled-color;
+      cursor: default;
+
+      path,
+      polygon,
+      rect,
+      circle {
+        fill: @disabled-color;
+        stroke: @disabled-color;
+      }
+      a.menuitem {
+        &:hover,
+        &:focus,
+        &:active {
+          color: @disabled-color;
+          cursor: default;
+
+          path,
+          polygon,
+          rect,
+          circle {
+            fill: @disabled-color;
+            stroke: @disabled-color;
           }
         }
       }
