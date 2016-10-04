@@ -38,6 +38,10 @@ define([
             if (!evt.metaKey && !evt.ctrlKey) {
                 evt.preventDefault();
             }
+            if ($item.is('.disabled') || $item.is('[disabled]')) {
+                evt.preventDefault();
+                return;
+            }
             if ($item.is('.active') || evt.metaKey || evt.ctrlKey) {
                 return;
             }

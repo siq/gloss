@@ -46,6 +46,10 @@ define([
         },
         disable: function() {
             var tabindex = this.$node.attr('tabindex');
+            // lose focus when disabled
+            this.state.focused = false;
+            this.removeState('focused');
+
             this.state.disabled = true;
             this.addState('disabled');
             this.propagate('disable');
