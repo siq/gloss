@@ -150,7 +150,16 @@ define([
             return this;
         },
         toggle: function(open) {
-            var self = this;
+            var self = this,
+                calculate_menu_top = function() {
+                    return self.$node.position().top + self.$node.height() + 1;
+                },
+                remainingPageYSpace = $(window).height() - calculate_menu_top(),
+                clear_calculated_menu_styles = function() {
+                    self.menu.$node.css('top', '');
+                    self.menu.$node.css('max-height', '');
+                    self.menu.$node.css('overflow-y', '');
+                };
             if(typeof open !== 'boolean') {
                 open = !self.opened;
             }
@@ -160,9 +169,18 @@ define([
                 });
                 self.$node.addClass('open').find('.arrow').html('&#x25b2;');
                 self.menu.show();
+                self.menu.$node.css('top', calculate_menu_top() + 'px' ); // Force menu to open down
+
+                if( remainingPageYSpace < self.menu.$node.height() ) {
+                    self.menu.$node.css('max-height', (remainingPageYSpace-10) + 'px' );
+                    self.menu.$node.css('overflow-y', 'scroll');
+                }
+
                 self.opened = true;
             } else if(!open && self.opened) {
+                clear_calculated_menu_styles();
                 self.menu.hide();
+
                 self.$node.removeClass('open').find('.arrow').html('&#x25bc;');
                 self.opened = false;
                 self.node.focus();
