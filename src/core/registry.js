@@ -5,6 +5,8 @@ define([
     'bedrock/class'
 ], function($, _, t, Class) {
     var isArray = _.isArray;
+    
+    var enableUG;
 
     var inBody = function($node) {
         return $node.parents('body').length > 0;
@@ -15,6 +17,7 @@ define([
             this.roots = [];
             this.widgets = {};
             this.views = {};
+            //enableUG = false;
         },
 
         add: function(widget, parentWidget, childWidgets) {
