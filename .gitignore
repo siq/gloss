@@ -15,3 +15,4 @@ testResult.xml
 static/
 gloss/
 *.css
+/.settings/
