@@ -13,7 +13,7 @@
       "name": "Ralph Smith"
     }
   ],
-  "version": "1.0.131",
+  "version": "1.0.135",
   "repository": {
     "type": "git",
     "url": "git+ssh://github.ibm.com/storediq/gloss.git"
