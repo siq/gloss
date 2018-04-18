@@ -6,6 +6,7 @@
 // disclosure restricted by GSA ADP Schedule Contract with
 // IBM Corp.
 //*********************** COPYRIGHT END ***********************************
+
 define([
     'vendor/jquery',
     'vendor/underscore',
