@@ -168,7 +168,9 @@ define([
                     limit = this.get('limit'),
                     // current total of models loaded
                     total = (this.get('models') || []).length,
-                    windowCount = Math.ceil(total/limit) || 1,
+                    totalModelCount = this._getTotalModelCount(),
+                    // Defect 9224 and 9227: totalModelCount must be used for calculation to be able to scroll to the end of all rows
+                    windowCount = Math.ceil(totalModelCount/limit) || 1,
                     currentWindow = Math.floor(offset/limit) + 1;
                 return currentWindow >= windowCount;
             };
