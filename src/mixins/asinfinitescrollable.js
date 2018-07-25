@@ -113,6 +113,9 @@ define([
                     offset = self.get('offset') + limit;
                     self.set('offset', offset);
                     self.set('scrollFunction', scrollingDown);
+
+//                    console.log("asinfinitescrollable.js-onScroll (!AllDataLoaded & LastWindowLoaded) - callLoad - offset: " + offset + "  limit: " + limit + 
+//                    		    "  modelLength: " + collection.models.length);
                     self.set('scrollLoadDfd', load.call(self));
                 } else {
                     // handles downward scrolls to fetch local models
@@ -137,14 +140,18 @@ define([
                     total = this._getTotalModelCount(),
                     startIndex,
                     endIndex;
-
+                // Fix for defect 9224, 9227, 11611 and 11614
+                // if a query request was used in order to retrieve items 
+                // only 100 items where shown on the UI, the rest were ignored.
+                if (models.length == total) {
+                	limit = total;
+                }
                 // the offset can't be greater than the total-1imit
                 offset = Math.min(offset, total-limit);
                 // create a window that is 2*limit
                 startIndex = Math.max(0, offset-limit);
                 endIndex = startIndex === 0 ? limit*2 : offset+limit;
-                // console.log('startIndex:', startIndex);
-                // console.log('endIndex:', endIndex);
+//                console.log("asinfinitescrollable.js-_getWindowedModels - startIndex: " + startIndex + "  endIndex: " + endIndex + "  limit: " + limit + "  offset: " + offset + "  total: " + total);
                 return models.slice(startIndex, endIndex);
             };
         }
@@ -182,7 +189,7 @@ define([
                 // offsetTop = $el.height();
                 scrollY = $el.offset().top + this.$el.scrollTop() - offsetTop;
                 this.$el.scrollTop(scrollY);
-                // console.log(offsetTop);
+//                console.log("asinfinitescrollable.js-_scrollTo - offsetTop: " + offsetTop + "  scrollY: " + scrollY);
                 return this;
             };
         }
