@@ -129,6 +129,22 @@ define([
         };
         if (!this._getTotalModelCount) {
             this._getTotalModelCount = function() {
+            	// Fix for defect 11956: 
+            	// Only 100 items are listed on the Create Filter panel and the status in the filter list is missing
+            	// 'collectionMap.call(this, collection.currentPage())' must be called in order 
+            	// to retrieve the items which are shown in the UI (the function might elimiates some items)
+            	var collectionMap = this.get('collectionMap'),
+            	   collection = this.get('collection'),
+            	   uiColl;
+            	
+            	if (collectionMap && collection) {
+                    uiColl = collectionMap.call(this, collection.currentPage());
+            	}
+                if (uiColl) {
+//                    console.log("asinfinitescrollable.js-_getTotalModelCount - uicoll returned: " + uiColl.length);
+                	return uiColl.length;
+                }
+//                console.log("asinfinitescrollable.js-_getTotalModelCount - retVal  returned: " + retVal);
                 return this.get('collection.total') || this.get('data.length') || 0;
             };
         }
@@ -145,6 +161,7 @@ define([
                 // only 100 items where shown on the UI, the rest were ignored.
                 if (models.length == total) {
                 	limit = total;
+                	this.set('limit',limit);
                 }
                 // the offset can't be greater than the total-1imit
                 offset = Math.min(offset, total-limit);
@@ -177,6 +194,7 @@ define([
                     total = (this.get('models') || []).length,
                     windowCount = Math.ceil(total/limit) || 1,
                     currentWindow = Math.floor(offset/limit) + 1;
+//                console.log("asinfinitescrollable.js-_isLastWindowLoaded - offset: " + offset + "  limit: " + limit + "  total: " + total + "  windowCount: " + windowCount + "  currentWindow: " + currentWindow);
                 return currentWindow >= windowCount;
             };
         }
