@@ -129,21 +129,7 @@ define([
         };
         if (!this._getTotalModelCount) {
             this._getTotalModelCount = function() {
-            	// Fix for defect 11956: 
-            	// Only 100 items are listed on the Create Filter panel and the status in the filter list is missing
-            	// 'collectionMap.call(this, collection.currentPage())' must be called in order 
-            	// to retrieve the items which are shown in the UI (the function might elimiates some items)
-            	var collectionMap = this.get('collectionMap'),
-            	   collection = this.get('collection'),
-            	   uiColl;
-            	
-            	if (collectionMap && collection) {
-                    uiColl = collectionMap.call(this, collection.currentPage());
-            	}
-                if (uiColl) {
-//                    console.log("asinfinitescrollable.js-_getTotalModelCount - uicoll returned: " + uiColl.length);
-                	return uiColl.length;
-                }
+//                var retVal = this.get('collection.total') || this.get('data.length') || 0;
 //                console.log("asinfinitescrollable.js-_getTotalModelCount - retVal  returned: " + retVal);
                 return this.get('collection.total') || this.get('data.length') || 0;
             };
@@ -161,7 +147,8 @@ define([
                 // only 100 items where shown on the UI, the rest were ignored.
                 if (models.length == total) {
                 	limit = total;
-                	this.set('limit',limit);
+//                	this.set('limit',limit);
+//                	console.log("asinfinitescrollable.js-_getWindowedModels limit not set - total: " + total + "  limit: " + limit + "  offset: " + offset);
                 }
                 // the offset can't be greater than the total-1imit
                 offset = Math.min(offset, total-limit);
@@ -175,6 +162,7 @@ define([
         if (!this._isAllDataLoaded) {
             this._isAllDataLoaded = function() {
                 var models = this.get('models') || [];
+//            	console.log("asinfinitescrollable.js-_isAllDataLoaded modelLength: " + models.length + "  totalModelCount: " + this._getTotalModelCount());
                 return this._getTotalModelCount() === models.length;
             };
         }
